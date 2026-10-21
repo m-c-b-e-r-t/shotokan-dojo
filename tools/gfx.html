@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="utf-8">
+  <title>Grafik-Vorschau</title>
+  <style>
+    body { font-family: sans-serif; margin: 8px; background: #fff; }
+    .g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    figure { margin: 0; font-size: 11px; }
+    svg { width: 100%; height: auto; display: block; }
+    .mini { display: flex; gap: 6px; flex-wrap: wrap; }
+    .mini svg { width: 40px; height: 40px; border: 1px solid #ddd; }
+  </style>
+</head>
+
+<body>
+  <div id="out"></div>
+  <script src="../js/core.js"></script>
+  <script src="../js/graphics.js"></script>
+  <script>
+    const G = SK.gfx, parts = [];
+    const sec = (t, items) => parts.push(`<h3>${t}</h3><div class="g">${items.filter((x, i) => i >= from).join('')}</div>`);
+    const from = Number(new URLSearchParams(location.search).get('from') || 0);
+    const only = new URLSearchParams(location.search).get('s');
+    const cols = new URLSearchParams(location.search).get('c');
+    if (cols) document.head.insertAdjacentHTML('beforeend', `<style>.g{grid-template-columns:repeat(${Number(cols)},1fr)}</style>`);
+    if (!only || only === 'st') sec('Stände', Object.keys(G.STANCES).map((k) => G.stanceFigure(k)));
+    if (!only || only === 'st') parts.push(`<div class="mini">${Object.keys(G.STANCES).map((k) => G.stanceSvg(k, false, { mini: true })).join('')}</div>`);
+    if (!only || only === 'wp') sec('Waffen', Object.keys(G.WEAPONS).map((k) => G.figure(G.WEAPONS[k](), k)));
+    if (!only || only === 'mv') sec('Bewegungen', Object.keys(G.MOVES).map((k) => G.figure(G.MOVES[k](), k)));
+    if (!only || only === 'fig') sec('Figuren', [G.figure(G.levels(), 'Stufen'), G.figure(G.targets(), 'Ziele')]);
+    document.getElementById('out').innerHTML = parts.join('');
+    if (only === 'img') {
+      const all = Object.keys(G.STANCES).map((k) => [k, G.stanceSvg(k)])
+        .concat(Object.keys(G.WEAPONS).map((k) => [k, G.WEAPONS[k]()]), Object.keys(G.MOVES).map((k) => [k, G.MOVES[k]()]), [['levels', G.levels()], ['targets', G.targets()]]);
+      let bad = [], left = all.length;
+      const done = () => { if (--left === 0) document.getElementById('out').textContent = `Bilder: ${all.length}, fehlerhaft: ${bad.length ? bad.join(', ') : 'keine'}`; };
+      all.forEach(([k, svg]) => { const i = new Image(); i.onload = done; i.onerror = () => { bad.push(k); done(); }; i.src = G.dataUri(svg); });
+    }
+  </script>
+</body>
+
+</html>
