@@ -44,10 +44,11 @@
         (r) =>
           `<tr${k.kiai.includes(r[0]) ? ' class="kiai"' : ''}><td>${r[0]}</td><td>${util.esc(r[1])}</td><td>${util.esc(r[2])}${
             k.kiai.includes(r[0]) ? ' <span class="badge">Kiai</span>' : ''
-          }</td></tr>`
+          }${r[4] ? `<br><span class="muted small">${util.esc(r[4])}</span>` : ''}</td></tr>`
       )
       .join('');
     return `<table class="moves"><thead><tr><th>#</th><th>Stand</th><th>Technik</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="muted small">Bei mehrteiligen Bewegungen ist die Endstellung angegeben (im Buch jeweils zuletzt aufgeführt); Zwischenschritte stehen grau darunter.</p>
       <p class="src">Quelle: ${util.esc(SK.PDF_SOURCE)}, ab PDF-Seite ${k.seq.find((r) => r[0] === from)[3]}</p>`;
   }
 
@@ -117,8 +118,9 @@
       L = SK.qb(lid, P(k.firstPage));
       for (let n = from; n <= to; n++) {
         const row = k.seq[n - 1];
-        L.mc(`${k.name}, Bewegung ${n}: In welchem Stand?`, [row[1]].concat(distractors(row[1], stancePool, 3)), `Technik: ${row[2]}`, P(row[3]));
-        L.mc(`${k.name}, Bewegung ${n}: Welche Technik?`, [row[2]].concat(distractors(row[2], techs, 3)), `Stand: ${row[1]}`, P(row[3]));
+        const note = row[4] ? ` (${row[4]})` : '';
+        L.mc(`${k.name}, Bewegung ${n}: In welchem Stand endet die Bewegung?`, [row[1]].concat(distractors(row[1], stancePool, 3)), `Technik: ${row[2]}${note}`, P(row[3]));
+        L.mc(`${k.name}, Bewegung ${n}: Welche Technik?`, [row[2]].concat(distractors(row[2], techs, 3)), `Stand: ${row[1]}${note}`, P(row[3]));
         if (n < k.moves) {
           const nxt = k.seq[n];
           L.mc(
