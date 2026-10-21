@@ -210,15 +210,23 @@
     const list = el('div');
     list.innerHTML = SK.glossaryHtml(SK.glossary);
     const count = el('p', { class: 'muted small' });
+    // Bindestriche, Leerzeichen, Groß-/Kleinschreibung und Umlaute ignorieren: „mae geri“ findet „Mae-geri“.
+    const norm = (s) => s.toLowerCase().replace(/ß/g, 'ss').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+    list.querySelectorAll('.lex-card').forEach((c) => {
+      const n = norm(c.dataset.text);
+      c.dataset.words = n;
+      c.dataset.compact = n.replace(/ /g, '');
+    });
     function filter() {
-      const term = search.value.trim().toLowerCase();
+      const tokens = norm(search.value).split(' ').filter(Boolean);
       let shown = 0;
       list.querySelectorAll('.lex-card').forEach((c) => {
-        const ok = (!cat || c.dataset.cat === cat) && (!term || c.dataset.text.includes(term));
+        const hit = !tokens.length || c.dataset.compact.includes(tokens.join('')) || tokens.every((t) => c.dataset.words.includes(t));
+        const ok = (!cat || c.dataset.cat === cat) && hit;
         c.hidden = !ok;
         if (ok) shown++;
       });
-      count.textContent = `${shown} Einträge`;
+      count.textContent = shown === 1 ? '1 Eintrag' : `${shown} Einträge`;
     }
     search.addEventListener('input', filter);
     app.append(
