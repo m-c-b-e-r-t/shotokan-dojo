@@ -135,12 +135,14 @@
     const [x, y] = pts[pts.length - 1];
     const fill = ghost ? GHOST : SKIN;
     const line = ghost ? '' : ` stroke="${INK}" stroke-width="1.5"`;
-    if (kind === 'open') {
+    if (kind === 'open' || kind === 'vopen') {
       const [px, py] = pts[pts.length - 2];
       const a = Math.atan2(y - py, x - px);
-      const cx = (x + Math.cos(a) * 6).toFixed(1);
-      const cy = (y + Math.sin(a) * 6).toFixed(1);
-      return `<ellipse cx="${cx}" cy="${cy}" rx="10" ry="5.5" transform="rotate(${((a * 180) / Math.PI).toFixed(1)} ${cx} ${cy})" fill="${fill}"${line}/>`;
+      const off = kind === 'vopen' ? 3 : 6;
+      const cx = (x + Math.cos(a) * off).toFixed(1);
+      const cy = (y + Math.sin(a) * off).toFixed(1);
+      const deg = (a * 180) / Math.PI + (kind === 'vopen' ? 90 : 0);
+      return `<ellipse cx="${cx}" cy="${cy}" rx="10" ry="5.5" transform="rotate(${deg.toFixed(1)} ${cx} ${cy})" fill="${fill}"${line}/>`;
     }
     return `<circle cx="${x}" cy="${y}" r="7" fill="${fill}"${line}/>`;
   }
@@ -191,8 +193,8 @@
   }
 
   const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="${ARR}"/></marker></defs>`;
-  function arrow(d, dashed) {
-    return `<path d="${d}" stroke="#fff" stroke-width="7" ${CAP} opacity=".9"/><path d="${d}" stroke="${ARR}" stroke-width="3.2" ${CAP}${dashed ? ' stroke-dasharray="7 5"' : ''} marker-end="url(#ah)"/>`;
+  function arrow(d, dashed, both) {
+    return `<path d="${d}" stroke="#fff" stroke-width="7" ${CAP} opacity=".9"/><path d="${d}" stroke="${ARR}" stroke-width="3.2" ${CAP}${dashed ? ' stroke-dasharray="7 5"' : ''}${both ? ' marker-start="url(#ah)"' : ''} marker-end="url(#ah)"/>`;
   }
   const hit = (x, y) => `<circle cx="${x}" cy="${y}" r="6" fill="${HL}" stroke="#fff" stroke-width="2"/>`;
   const ground = (w, y) => `<path d="M14 ${y} H${w - 14}" stroke="#cfd8dc" stroke-width="2"/>`;
@@ -297,19 +299,23 @@
       return scene('Arm', 220, front([HIKITE_L, arm([[93, 62], [86, 102], [76, 60]])]), `<path d="M86 96 L78 66" stroke-width="13" ${HLS}/>`, ['von vorne'], o);
     }
     if (kind === 'hiji') {
-      return scene('Arm', 240, Object.assign({}, SIDE, { parts: [
-        Object.assign(arm([[112, 62], [104, 94], [116, 106]]), { far: true }),
-        { p: [[106, 116], [72, 172], [38, 226]], w: 15, foot: [56, 232], far: true },
-        { p: [[110, 116], [142, 168], [138, 228]], w: 15, foot: [158, 232] },
-        arm([[112, 62], [152, 72], [120, 80]]),
-      ] }), `<circle cx="161" cy="72" r="10" ${HLF}/>`, ['seitlich: Schlag nach vorne'], o);
+      return scene('Arm', 240, Object.assign({}, SIDE, {
+        parts: [
+          Object.assign(arm([[112, 62], [104, 94], [116, 106]]), { far: true }),
+          { p: [[106, 116], [72, 172], [38, 226]], w: 15, foot: [56, 232], far: true },
+          { p: [[110, 116], [142, 168], [138, 228]], w: 15, foot: [158, 232] },
+          arm([[112, 62], [152, 72], [120, 80]]),
+        ]
+      }), `<circle cx="161" cy="72" r="10" ${HLF}/>`, ['seitlich: Schlag nach vorne'], o);
     }
-    return scene('Bein', 240, Object.assign({}, SIDE, { parts: [
-      Object.assign(arm([[112, 62], [132, 84], [146, 98]]), { far: true }),
-      { p: [[106, 116], [104, 176], [100, 228]], w: 15, foot: [118, 232], far: true },
-      arm([[112, 62], [138, 80], [150, 96]]),
-      { p: [[108, 116], [152, 94], [126, 146]], w: 15, foot: [118, 160] },
-    ] }), `<circle cx="161" cy="90" r="11" ${HLF}/>`, ['seitlich: Sto\u00df nach oben'], o);
+    return scene('Bein', 240, Object.assign({}, SIDE, {
+      parts: [
+        Object.assign(arm([[112, 62], [132, 84], [146, 98]]), { far: true }),
+        { p: [[106, 116], [104, 176], [100, 228]], w: 15, foot: [118, 232], far: true },
+        arm([[112, 62], [138, 80], [150, 96]]),
+        { p: [[108, 116], [152, 94], [126, 146]], w: 15, foot: [118, 160] },
+      ]
+    }), `<circle cx="161" cy="90" r="11" ${HLF}/>`, ['seitlich: Sto\u00df nach oben'], o);
   }
   const WEAPONS = {
     seiken: () => fist('seiken'), uraken: () => fist('uraken'), tettsui: () => fist('tettsui'),
@@ -340,45 +346,55 @@
     'soto-uke': block('Soto-uke', [[93, 62], [98, 102], [104, 58]], [[93, 62], [64, 70], [62, 34]], 'M56 46 C60 80 86 86 102 74'),
     'uchi-uke': block('Uchi-uke', [[93, 62], [86, 102], [76, 60]], [[93, 62], [108, 98], [128, 108]], 'M126 100 C106 120 80 108 74 74'),
     'mae-geri': () =>
-      scene('Mae-geri', 240, Object.assign({}, SIDE, { parts: [
-        Object.assign(arm([[112, 62], [128, 90], [142, 80]]), { far: true }),
-        { p: [[108, 116], [104, 176], [100, 228]], w: 15, foot: [118, 232], far: true },
-        arm([[112, 62], [104, 96], [118, 106]]),
-        { p: [[108, 116], [152, 116], [194, 112]], w: 15, foot: [199, 96] },
-        ghost({ p: [[108, 116], [146, 100], [136, 152]], w: 15, foot: [150, 158] }),
-      ] }), arrow('M152 166 C176 160 192 140 196 122') + hit(201, 100), ['seitlich: Knie hochziehen, Unterschenkel', 'nach vorne schnappen – Fußballen trifft']),
+      scene('Mae-geri', 240, Object.assign({}, SIDE, {
+        parts: [
+          Object.assign(arm([[112, 62], [128, 90], [142, 80]]), { far: true }),
+          { p: [[108, 116], [104, 176], [100, 228]], w: 15, foot: [118, 232], far: true },
+          arm([[112, 62], [104, 96], [118, 106]]),
+          { p: [[108, 116], [152, 116], [194, 112]], w: 15, foot: [199, 96] },
+          ghost({ p: [[108, 116], [146, 100], [136, 152]], w: 15, foot: [150, 158] }),
+        ]
+      }), arrow('M152 166 C176 160 192 140 196 122') + hit(201, 100), ['seitlich: Knie hochziehen, Unterschenkel', 'nach vorne schnappen – Fußballen trifft']),
     'yoko-geri': () =>
-      scene('Yoko-geri', 240, { head: [96, 40], view: 'front', torso: [[80, 62], [114, 56], [121, 118], [97, 122]], belt: [[97, 115], [121, 112]], parts: [
-        { p: [[101, 120], [95, 178], [91, 228]], w: 15, foot: [85, 234], under: true },
-        arm([[82, 66], [66, 96], [84, 100]]),
-        arm([[112, 62], [134, 84], [118, 96]]),
-        { p: [[117, 118], [162, 114], [206, 108]], w: 15, foot: [208, 122] },
-        ghost({ p: [[117, 118], [150, 102], [128, 150]], w: 15, foot: [122, 158] }),
-      ] }, arrow('M126 164 C162 162 190 144 202 128') + hit(215, 115), ['von vorne: Knie hochziehen, Bein zur Seite', 'strecken – Fußkante trifft']),
+      scene('Yoko-geri', 240, {
+        head: [96, 40], view: 'front', torso: [[80, 62], [114, 56], [121, 118], [97, 122]], belt: [[97, 115], [121, 112]], parts: [
+          { p: [[101, 120], [95, 178], [91, 228]], w: 15, foot: [85, 234], under: true },
+          arm([[82, 66], [66, 96], [84, 100]]),
+          arm([[112, 62], [134, 84], [118, 96]]),
+          { p: [[117, 118], [162, 114], [206, 108]], w: 15, foot: [208, 122] },
+          ghost({ p: [[117, 118], [150, 102], [128, 150]], w: 15, foot: [122, 158] }),
+        ]
+      }, arrow('M126 164 C162 162 190 144 202 128') + hit(215, 115), ['von vorne: Knie hochziehen, Bein zur Seite', 'strecken – Fußkante trifft']),
     'mawashi-geri': () =>
-      scene('Mawashi-geri', 220, { head: [108, 134], view: 'top', trunk: [[78, 142], [140, 128]], trunkW: 20, parts: [
-        { p: [[124, 140], [134, 100], [118, 64]], w: 15, foot: [112, 52], under: true },
-        ghost({ p: [[126, 140], [176, 136], [166, 176]], w: 15, foot: [156, 184] }),
-      ] }, arrow('M172 188 C214 150 198 74 128 56') + hit(112, 50), ['von oben: Bein schwingt seitlich', 'im Halbkreis nach vorne zum Ziel'], {
+      scene('Mawashi-geri', 220, {
+        head: [108, 134], view: 'top', trunk: [[78, 142], [140, 128]], trunkW: 20, parts: [
+          { p: [[124, 140], [134, 100], [118, 64]], w: 15, foot: [112, 52], under: true },
+          ghost({ p: [[126, 140], [176, 136], [166, 176]], w: 15, foot: [156, 184] }),
+        ]
+      }, arrow('M172 188 C214 150 198 74 128 56') + hit(112, 50), ['von oben: Bein schwingt seitlich', 'im Halbkreis nach vorne zum Ziel'], {
         top: true,
         pre: `${foot(96, 172, -70, 1, { side: 'L' })}<circle cx="110" cy="40" r="11" fill="none" stroke="#78909c" stroke-width="2" stroke-dasharray="4 3"/><text x="128" y="38" font-size="9" fill="#78909c" ${FONT}>Ziel</text>`,
       }),
     'ushiro-geri': () =>
-      scene('Ushiro-geri', 240, { head: [150, 50], view: 'side', trunk: [[142, 70], [114, 118]], parts: [
-        Object.assign(arm([[140, 76], [160, 98], [170, 82]]), { far: true }),
-        { p: [[116, 118], [126, 176], [120, 228]], w: 15, foot: [138, 232], far: true },
-        arm([[140, 76], [150, 106], [162, 96]]),
-        { p: [[112, 118], [72, 116], [30, 112]], w: 15, foot: [32, 128] },
-        ghost({ p: [[112, 118], [134, 148], [108, 166]], w: 15, foot: [100, 176] }),
-      ] }, arrow('M100 186 C70 186 46 162 36 138') + hit(24, 112), ['seitlich: Knie anziehen, Ferse stößt', 'in gerader Linie nach hinten']),
+      scene('Ushiro-geri', 240, {
+        head: [150, 50], view: 'side', trunk: [[142, 70], [114, 118]], parts: [
+          Object.assign(arm([[140, 76], [160, 98], [170, 82]]), { far: true }),
+          { p: [[116, 118], [126, 176], [120, 228]], w: 15, foot: [138, 232], far: true },
+          arm([[140, 76], [150, 106], [162, 96]]),
+          { p: [[112, 118], [72, 116], [30, 112]], w: 15, foot: [32, 128] },
+          ghost({ p: [[112, 118], [134, 148], [108, 166]], w: 15, foot: [100, 176] }),
+        ]
+      }, arrow('M100 186 C70 186 46 162 36 138') + hit(24, 112), ['seitlich: Knie anziehen, Ferse stößt', 'in gerader Linie nach hinten']),
     'mikazuki-geri': () =>
-      scene('Mikazuki-geri', 220, Object.assign({}, FRONT, { parts: [
-        { p: [[118, 118], [124, 176], [129, 228]], w: 15, foot: [135, 234], under: true },
-        HIKITE_R,
-        arm([[127, 62], [156, 74], [176, 80]], 'open'),
-        { p: [[102, 118], [142, 112], [166, 94]], w: 15, foot: [170, 80] },
-        ghost(LEG_R),
-      ] }), arrow('M78 222 C36 176 46 104 100 90 C124 84 142 84 156 90') + hit(177, 86), ['von vorne (wie Heian Godan 15): Fuß schwingt', 'im Bogen von außen nach innen in die Hand']),
+      scene('Mikazuki-geri', 220, Object.assign({}, FRONT, {
+        parts: [
+          { p: [[118, 118], [124, 176], [129, 228]], w: 15, foot: [135, 234], under: true },
+          HIKITE_R,
+          arm([[127, 62], [156, 74], [176, 80]], 'open'),
+          { p: [[102, 118], [142, 112], [166, 94]], w: 15, foot: [170, 80] },
+          ghost(LEG_R),
+        ]
+      }), arrow('M78 222 C36 176 46 104 100 90 C124 84 142 84 156 90') + hit(177, 86), ['von vorne (wie Heian Godan 15): Fuß schwingt', 'im Bogen von außen nach innen in die Hand']),
     'oi-zuki': () => punch(false),
     'gyaku-zuki': () => punch(true),
   };
@@ -409,4 +425,6 @@
   }
 
   SK.gfx = { STANCES, stanceSvg, stanceFor, stanceKey, stanceFigure, figure, levels, WEAPONS, MOVES, targets, dataUri };
+  // Bausatz für weitere Technik-Grafiken (js/graphics-tech.js)
+  SK.gfx.kit = { person, scene, frame, arm, ghost, front, FRONT, SIDE, LEG_R, LEG_L, HIKITE_R, HIKITE_L, arrow, hit, foot, FONT, HL, HLF, HLS, INK, GHOST, ARR };
 })();

@@ -5,12 +5,40 @@
   <meta charset="utf-8">
   <title>Grafik-Vorschau</title>
   <style>
-    body { font-family: sans-serif; margin: 8px; background: #fff; }
-    .g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    figure { margin: 0; font-size: 11px; }
-    svg { width: 100%; height: auto; display: block; }
-    .mini { display: flex; gap: 6px; flex-wrap: wrap; }
-    .mini svg { width: 40px; height: 40px; border: 1px solid #ddd; }
+    body {
+      font-family: sans-serif;
+      margin: 8px;
+      background: #fff;
+    }
+
+    .g {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    figure {
+      margin: 0;
+      font-size: 11px;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .mini {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .mini svg {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #ddd;
+    }
   </style>
 </head>
 
@@ -18,6 +46,7 @@
   <div id="out"></div>
   <script src="../js/core.js"></script>
   <script src="../js/graphics.js"></script>
+  <script src="../js/graphics-tech.js"></script>
   <script>
     const G = SK.gfx, parts = [];
     const sec = (t, items) => parts.push(`<h3>${t}</h3><div class="g">${items.filter((x, i) => i >= from).join('')}</div>`);
@@ -30,10 +59,11 @@
     if (!only || only === 'wp') sec('Waffen', Object.keys(G.WEAPONS).map((k) => G.figure(G.WEAPONS[k](), k)));
     if (!only || only === 'mv') sec('Bewegungen', Object.keys(G.MOVES).map((k) => G.figure(G.MOVES[k](), k)));
     if (!only || only === 'fig') sec('Figuren', [G.figure(G.levels(), 'Stufen'), G.figure(G.targets(), 'Ziele')]);
+    if (!only || only === 'te') sec('Techniken', Object.keys(G.TECH).map((k) => G.figure(G.TECH[k](), k)));
     document.getElementById('out').innerHTML = parts.join('');
     if (only === 'img') {
       const all = Object.keys(G.STANCES).map((k) => [k, G.stanceSvg(k)])
-        .concat(Object.keys(G.WEAPONS).map((k) => [k, G.WEAPONS[k]()]), Object.keys(G.MOVES).map((k) => [k, G.MOVES[k]()]), [['levels', G.levels()], ['targets', G.targets()]]);
+        .concat(Object.keys(G.WEAPONS).map((k) => [k, G.WEAPONS[k]()]), Object.keys(G.MOVES).map((k) => [k, G.MOVES[k]()]), Object.keys(G.TECH).map((k) => [k, G.TECH[k]()]), [['levels', G.levels()], ['targets', G.targets()]]);
       let bad = [], left = all.length;
       const done = () => { if (--left === 0) document.getElementById('out').textContent = `Bilder: ${all.length}, fehlerhaft: ${bad.length ? bad.join(', ') : 'keine'}`; };
       all.forEach(([k, svg]) => { const i = new Image(); i.onload = done; i.onerror = () => { bad.push(k); done(); }; i.src = G.dataUri(svg); });
