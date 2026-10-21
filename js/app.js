@@ -62,6 +62,11 @@
     window.scrollTo(0, 0);
     renderTopStats();
   }
+  // Gleiche Adresse löst kein hashchange aus – dann direkt neu rendern.
+  function go(hash) {
+    if (location.hash === hash) route();
+    else location.hash = hash;
+  }
   function award(results, bonus) {
     const ok = results.filter((r) => r.ok).length;
     const xp = ok * 10 + (bonus || 0);
@@ -295,7 +300,7 @@
     SK.runQuiz(app, qs, {
       mode: 'lesson',
       title: `${entry.unit.title} · ${entry.lesson.title}`,
-      onExit: () => (location.hash = back),
+      onExit: () => go(back),
       onFinish: (results) => {
         const ratio = results.filter((r) => r.ok).length / results.length;
         const prev = lessonState(id) || { best: 0, passed: false, runs: 0 };
@@ -335,7 +340,7 @@
       SK.runQuiz(app, qs, {
         mode: 'review',
         title: `Zufallsmix · ${scope.title}`,
-        onExit: () => (location.hash = `#/zufall/${scope.id}`),
+        onExit: () => go(`#/zufall/${scope.id}`),
         onFinish: (results) => {
           const r = award(results);
           showResult({ results, ratio: r.ratio, xp: r.xp, pass: r.ratio >= PASS_LESSON, again: `#/zufall/${scope.id}`, back: '#/quiz' });
@@ -399,6 +404,16 @@
   function showResult({ results, ratio, xp, pass, again, back, next, extra }) {
     app.innerHTML = '';
     const wrong = results.filter((r) => !r.ok);
+    const link = (cls, href, text) =>
+      el('a', {
+        class: cls,
+        href,
+        text,
+        onclick: (e) => {
+          e.preventDefault();
+          go(href);
+        },
+      });
     app.append(
       el(
         'section',
@@ -410,9 +425,9 @@
         el(
           'div',
           { class: 'actions' },
-          next ? el('a', { class: 'btn primary', href: next.href, text: `Nächste Lektion: ${next.title}` }) : '',
-          el('a', { class: `btn ${next ? '' : 'primary'}`, href: again, text: 'Nochmal' }),
-          el('a', { class: 'btn', href: back, text: 'Zurück' })
+          next ? link('btn primary', next.href, `Nächste Lektion: ${next.title}`) : '',
+          link(`btn ${next ? '' : 'primary'}`, again, 'Nochmal'),
+          link('btn', back, 'Zurück')
         )
       )
     );
@@ -454,7 +469,7 @@
       SK.runQuiz(app, ids.map((id) => qById[id]), {
         mode: 'review',
         title,
-        onExit: () => (location.hash = '#/review'),
+        onExit: () => go('#/review'),
         onFinish: (results) => {
           const r = award(results);
           showResult({ results, ratio: r.ratio, xp: r.xp, pass: r.ratio >= PASS_LESSON, again: '#/review', back: '#/quiz' });
@@ -547,7 +562,7 @@
     SK.runQuiz(app, examQuestions(g), {
       mode: 'exam',
       title: `Prüfung ${g.name}`,
-      onExit: () => (location.hash = `#/exam/${g.id}`),
+      onExit: () => go(`#/exam/${g.id}`),
       onFinish: (results) => {
         const ratio = results.filter((r) => r.ok).length / results.length;
         const prev = store.data.exams[g.id] || { best: 0, passed: false };
