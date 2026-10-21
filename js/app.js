@@ -96,9 +96,14 @@
         tile('#/zufall', 'Zufallsmix', `${SK.questions.length - asked} Fragen noch nie gestellt`),
         tile('#/review', 'Wiederholen', due ? `${due} Fragen fällig` : 'Heute nichts fällig'),
         tile('#/exam', 'Prüfung', 'Theorieprüfung 9. Kyu bis 3. Dan simulieren')
-      )
+      ),
+      versionLine()
     );
     finishView();
+  }
+
+  function versionLine() {
+    return el('p', { class: 'version', text: `Version ${SK.VERSION} · Stand ${SK.VERSION_DATE}` });
   }
 
   // ---------- Wissen ----------
@@ -703,7 +708,8 @@
         el('h3', { text: 'Quellen' }),
         el('ul', {}, Object.values(SK.sources).map((s) => el('li', { text: s }))),
         el('p', { class: 'muted small', text: 'Kata-Fragen sind sinngemäße deutsche Zusammenfassungen aus „Karate-Do Kata Vol. 1“ (JKA Shihan-kai, 2003) mit Seitenangabe der PDF-Ausgabe. Prüfungsangaben ohne Gewähr – maßgeblich ist die jeweils gültige DJKB-Prüfungsordnung.' })
-      )
+      ),
+      versionLine()
     );
     finishView();
   }

@@ -11,6 +11,9 @@
   });
 
   SK.PDF_SOURCE = 'Karate-Do Kata Vol. 1 (JKA)';
+  // Bei jeder veröffentlichten Änderung hochzählen
+  SK.VERSION = '1.6.0';
+  SK.VERSION_DATE = '21.10.2026';
 
   SK.util = {
     shuffle(arr) {
