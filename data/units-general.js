@@ -1,0 +1,370 @@
+/* Allgemeine Lerneinheiten (Etikette, Geschichte, Begriffe, Stände, Kihon, Kumite, Prüfungen).
+   Quellen: DJKB-Prüfungsordnung 2013, DJKB-Verfahrensordnung 2024, allgemeines Shotokan-Wissen. */
+(function () {
+  'use strict';
+
+  /* Einfache Fußstellungs-Grafik (Draufsicht, vorne = oben). feet: [x, y, Drehung, Gewicht 0..1] */
+  function stance(title, feet, note) {
+    const f = feet
+      .map(
+        ([x, y, r, w]) =>
+          `<g transform="translate(${x} ${y}) rotate(${r})"><ellipse rx="11" ry="24" fill="${w > 0.5 ? '#b71c1c' : w > 0 ? '#e57373' : '#9e9e9e'}"/><circle cy="-27" r="4" fill="${
+            w > 0.5 ? '#b71c1c' : w > 0 ? '#e57373' : '#9e9e9e'
+          }"/></g>`
+      )
+      .join('');
+    return `<figure class="stance"><svg viewBox="0 0 200 200" role="img" aria-label="${title}">
+      <rect x="1" y="1" width="198" height="198" rx="12" fill="#fafafa" stroke="#ddd"/>
+      <path d="M100 8 l-8 12 h16 z" fill="#555"/><text x="100" y="34" font-size="11" text-anchor="middle" fill="#555">vorne</text>
+      ${f}</svg><figcaption><b>${title}</b>${note ? `<br>${note}` : ''}</figcaption></figure>`;
+  }
+  const S = {
+    musubi: stance('Musubi-dachi', [[88, 120, -28, 0.5], [112, 120, 28, 0.5]], 'Fersen zusammen, Fußspitzen V-förmig geöffnet'),
+    heisoku: stance('Heisoku-dachi', [[88, 115, 0, 0.5], [112, 115, 0, 0.5]], 'Füße geschlossen und parallel'),
+    hachiji: stance('Hachiji-dachi', [[68, 115, -15, 0.5], [132, 115, 15, 0.5]], 'Füße etwa schulterbreit, Spitzen leicht nach außen (Shizentai)'),
+    zenkutsu: stance('Hidari Zenkutsu-dachi', [[78, 70, 0, 0.8], [122, 160, 20, 0.3]], 'Vorderes Knie gebeugt, hinteres Bein gestreckt – Gewicht überwiegend vorne'),
+    kokutsu: stance('Migi Kokutsu-dachi', [[100, 70, 0, 0.3], [100, 155, 90, 0.8]], 'Gewicht überwiegend auf dem hinteren Bein, vorderer Fuß berührt den Boden leicht'),
+    kiba: stance('Kiba-dachi', [[50, 115, 0, 0.5], [150, 115, 0, 0.5]], 'Reiterstand: Füße parallel, Knie nach außen, Gewicht gleich verteilt'),
+    kosa: stance('Migi Ashi-mae Kosa-dachi', [[105, 90, 0, 0.8], [88, 140, -30, 0.2]], 'Kreuzstand: linker Fuß hinter der rechten Ferse, Beine gekreuzt'),
+    neko: stance('Neko-ashi-dachi', [[100, 72, 0, 0.1], [108, 150, 35, 0.8]], 'Katzenfußstand: fast das gesamte Gewicht auf dem hinteren Bein'),
+  };
+
+  SK.generalUnits = [
+    {
+      id: 'etikette', title: 'Dojo & Etikette', kind: 'general', desc: 'Gruß, Kommandos, Dojo-Kun',
+      lessons: [
+        {
+          id: 'et-dojo', title: 'Im Dojo', minGrade: '9kyu',
+          learn: `
+            <p><b>Dojo</b> bedeutet „Ort des Weges“. Karate beginnt und endet mit Respekt (Rei).</p>
+            <ul>
+              <li><b>Rei</b> – Gruß / Verbeugung. Im Stand meist aus <b>Musubi-dachi</b>.</li>
+              <li><b>Seiza</b> – kniender Sitz (Fersensitz) zum An- und Abgrüßen.</li>
+              <li><b>Mokuso</b> – Augen schließen, sammeln, meditieren. <b>Mokuso yame</b> – Meditation beenden.</li>
+              <li><b>Shomen ni rei</b> – Gruß nach vorne (zur Stirnseite des Dojo). <b>Sensei ni rei</b> – Gruß an den Lehrer. <b>Otagai ni rei</b> – Gruß untereinander.</li>
+              <li><b>Kiritsu</b> – Aufstehen.</li>
+              <li><b>Yoi</b> – Bereit. <b>Hajime</b> – Beginnen. <b>Yame</b> – Aufhören. <b>Naore</b> – Zurück in die Ausgangsstellung. <b>Mawatte</b> – Wenden.</li>
+              <li><b>Sensei</b> – Lehrer; <b>Senpai</b> – Fortgeschrittener; <b>Kohai</b> – Jüngerer/Anfänger.</li>
+              <li>Laut DJKB-Prüfungsordnung muss man zum 9. Kyu die Etikette des An- und Abgrüßens beherrschen.</li>
+            </ul>`,
+        },
+        {
+          id: 'et-dojokun', title: 'Dojo-Kun', minGrade: '9kyu',
+          learn: `
+            <p>Das <b>Dojo-Kun</b> sind die fünf Leitsätze des Shotokan-Karate. Jeder beginnt mit <b>„Hitotsu“</b> („eins“ / „erstens“) – das zeigt, dass alle gleich wichtig sind.</p>
+            <ol>
+              <li><b>Hitotsu! Jinkaku kansei ni tsutomuru koto</b> – Nach Vollendung des Charakters streben.</li>
+              <li><b>Hitotsu! Makoto no michi o mamoru koto</b> – Den Weg der Aufrichtigkeit/Wahrhaftigkeit bewahren.</li>
+              <li><b>Hitotsu! Doryoku no seishin o yashinau koto</b> – Den Geist des Bemühens (Ausdauer) pflegen.</li>
+              <li><b>Hitotsu! Reigi o omonzuru koto</b> – Etikette und Höflichkeit achten.</li>
+              <li><b>Hitotsu! Kekki no yu o imashimuru koto</b> – Sich vor unkontrolliertem Draufgängertum hüten (Selbstbeherrschung).</li>
+            </ol>`,
+        },
+      ],
+    },
+    {
+      id: 'geschichte', title: 'Geschichte & Philosophie', kind: 'general', desc: 'Funakoshi, JKA, DJKB, Niju-Kun',
+      lessons: [
+        {
+          id: 'ge-funakoshi', title: 'Gichin Funakoshi', minGrade: '9kyu',
+          learn: `
+            <ul>
+              <li><b>Gichin Funakoshi</b> (1868–1957) stammt aus <b>Shuri auf Okinawa</b> und gilt als Vater des modernen Karate.</li>
+              <li>Seine Lehrer waren u. a. <b>Anko Azato</b> und <b>Anko Itosu</b>.</li>
+              <li>1922 stellte er Karate in Tokio auf dem japanischen Festland vor.</li>
+              <li><b>Shoto</b> („Pinienrauschen“) war sein Künstlername; <b>Shotokan</b> = „Haus des Shoto“ – der Name seines Dojo in Tokio.</li>
+              <li>In den 1930er-Jahren wurde das Schriftzeichen „Kara“ von „China“ (唐) zu „leer“ (空) geändert: <b>Karate = „leere Hand“</b>, <b>Karate-Do = „Weg der leeren Hand“</b>.</li>
+              <li>Bücher: <i>Rentan Goshin Karate-Jutsu</i> (1925), <i>Karate-Do Kyohan</i>.</li>
+            </ul>`,
+        },
+        {
+          id: 'ge-jka', title: 'JKA & DJKB', minGrade: '8kyu',
+          learn: `
+            <ul>
+              <li>Die <b>Japan Karate Association (JKA)</b> wurde 1949 gegründet; Funakoshi wird im JKA-Kata-Buch als ihr „Grand Master“ bezeichnet.</li>
+              <li><b>Masatoshi Nakayama</b> (1913–1987) war langjähriger Chefausbilder der JKA und Autor von <i>Best Karate</i> und <i>Dynamic Karate</i>. Unter ihm entstand das JKA-Instruktorenprogramm.</li>
+              <li>Der <b>Deutsche JKA-Karate Bund (DJKB)</b> ist der Fachverband für traditionelles japanisches Shotokan-Karate und offizielle Vertretung der JKA in Deutschland.</li>
+              <li>Die DJKB-Prüfungsordnung ist von <b>Hideo Ochi</b> als Chefausbilder unterzeichnet.</li>
+              <li>Das offizielle Kata-Lehrbuch der JKA ist <i>Karate-Do Kata</i> (Shihan-kai).</li>
+            </ul>`,
+        },
+        {
+          id: 'ge-nijukun', title: 'Niju-Kun (20 Regeln)', minGrade: '6kyu',
+          learn: `
+            <p>Die <b>Shoto Niju-Kun</b> sind Funakoshis 20 Leitsätze. Eine Auswahl:</p>
+            <ol>
+              <li>Karate beginnt mit Rei und endet mit Rei.</li>
+              <li><b>Karate ni sente nashi</b> – Im Karate gibt es keinen ersten Angriff.</li>
+              <li>Karate ist ein Helfer der Gerechtigkeit.</li>
+              <li>Erkenne zuerst dich selbst, dann den anderen.</li>
+              <li>Die Kunst des Geistes kommt vor der Kunst der Technik.</li>
+              <li>Befreie deinen Geist.</li>
+              <li>Unheil entsteht durch Nachlässigkeit.</li>
+              <li>Denke nicht, dass Karate nur im Dojo stattfindet.</li>
+              <li>Karate üben heißt, ein Leben lang zu arbeiten.</li>
+              <li>Verbinde dein alltägliches Leben mit Karate – dann findest du den Geist.</li>
+              <li>Karate ist wie heißes Wasser: Ohne ständige Wärme kühlt es ab.</li>
+              <li>Denke nicht ans Gewinnen, sondern daran, nicht zu verlieren.</li>
+              <li>Wandle dich abhängig vom Gegner.</li>
+              <li>Der Kampf hängt vom Umgang mit Treffen und Nicht-Treffen ab.</li>
+              <li>Stelle dir die Hände und Füße des Gegners wie Schwerter vor.</li>
+              <li>Wenn du das Tor verlässt, warten Millionen Feinde.</li>
+              <li><b>Kamae</b> ist für Anfänger, später steht man in <b>Shizentai</b>.</li>
+              <li>Übe die Kata korrekt – im echten Kampf ist es anders.</li>
+              <li>Vergiss nicht: Stärke und Schwäche der Kraft, Dehnen und Zusammenziehen des Körpers, Langsamkeit und Schnelligkeit der Technik.</li>
+              <li>Denke immer nach und versuche ständig Neues.</li>
+            </ol>`,
+        },
+      ],
+    },
+    {
+      id: 'begriffe', title: 'Begriffe & Zählen', kind: 'general', desc: 'Japanische Grundbegriffe',
+      lessons: [
+        {
+          id: 'te-zahlen', title: 'Zählen & Richtungen', minGrade: '9kyu',
+          learn: `
+            <table class="moves"><tbody>
+              <tr><td>1</td><td>Ichi</td><td>6</td><td>Roku</td></tr>
+              <tr><td>2</td><td>Ni</td><td>7</td><td>Shichi (Nana)</td></tr>
+              <tr><td>3</td><td>San</td><td>8</td><td>Hachi</td></tr>
+              <tr><td>4</td><td>Shi (Yon)</td><td>9</td><td>Ku (Kyu)</td></tr>
+              <tr><td>5</td><td>Go</td><td>10</td><td>Ju</td></tr>
+            </tbody></table>
+            <ul>
+              <li><b>Hidari</b> = links, <b>Migi</b> = rechts</li>
+              <li><b>Mae</b> = vorne, <b>Ushiro</b> = hinten, <b>Yoko</b> = seitlich</li>
+              <li><b>Jodan</b> = obere Stufe (Gesicht), <b>Chudan</b> = mittlere Stufe (Brust/Rumpf), <b>Gedan</b> = untere Stufe (Unterbauch)</li>
+              <li>Graduierungen: <b>Kyu</b> = Schülergrad (zählt abwärts bis 1. Kyu), <b>Dan</b> = Meistergrad (Shodan = 1. Dan, Nidan = 2. Dan, Sandan = 3. Dan)</li>
+              <li>Kata-Namen: <b>Shodan, Nidan, Sandan, Yondan, Godan</b> = 1. bis 5. Stufe</li>
+            </ul>`,
+        },
+        {
+          id: 'te-koerper', title: 'Körperwaffen', minGrade: '8kyu',
+          learn: `
+            <ul>
+              <li><b>Seiken</b> – Vorderseite der Faust (Knöchel von Zeige- und Mittelfinger)</li>
+              <li><b>Uraken</b> – Faustrücken</li>
+              <li><b>Tettsui / Kentsui</b> – Hammerfaust (Kleinfingerseite der Faust)</li>
+              <li><b>Shuto</b> – Handkante; <b>Haito</b> – innere Handkante (Daumenseite)</li>
+              <li><b>Nukite</b> – Speerhand (Fingerspitzen); <b>Teisho</b> – Handballen; <b>Haishu</b> – Handrücken</li>
+              <li><b>Enpi / Hiji</b> – Ellbogen</li>
+              <li><b>Koshi</b> (Josokutei) – Fußballen (Mae-geri, Mawashi-geri)</li>
+              <li><b>Sokuto</b> – Fußkante (Yoko-geri); <b>Kakato</b> – Ferse (Ushiro-geri); <b>Haisoku</b> – Fußrücken</li>
+              <li><b>Hiza</b> – Knie; <b>Zenwan</b> – Unterarm</li>
+            </ul>`,
+        },
+        {
+          id: 'te-konzepte', title: 'Wichtige Konzepte', minGrade: '7kyu',
+          learn: `
+            <ul>
+              <li><b>Kiai</b> – Kampfschrei; Vereinigung von Kraft und Geist im Moment der Technik.</li>
+              <li><b>Kime</b> – Konzentration aller Kraft im Treffpunkt; <b>Kime-Waza</b> – entscheidende (abschließende) Technik.</li>
+              <li><b>Hikite</b> – zurückziehende Hand zur Hüfte.</li>
+              <li><b>Hanmi</b> – Oberkörper halb seitlich (45°); <b>Shomen</b> – frontal; <b>Gyaku-hanmi</b> – umgekehrt halbseitlich.</li>
+              <li><b>Kamae</b> – Kampfhaltung (z. B. Chudan-, Gedan-, Shuto-Kamae); <b>Shizentai</b> – natürliche Haltung.</li>
+              <li><b>Zanshin</b> – wache Aufmerksamkeit nach der Technik.</li>
+              <li><b>Maai</b> – Kampfdistanz; <b>Deai</b> – Treffen/Kontern im Moment des gegnerischen Angriffs.</li>
+              <li><b>Kogeki</b> – Angriff; <b>Uke</b> – Abwehr (auch: der Abwehrende).</li>
+              <li><b>Te</b> – Hand; <b>Do</b> – Weg; <b>Dojo</b> – Ort des Weges.</li>
+              <li><b>Suri-ashi</b> – Gleitschritt; <b>Yori-ashi</b> – Nachziehschritt (beide Füße gleiten, Stand bleibt).</li>
+              <li><b>Sun-dome</b> – Technik kontrolliert kurz vor dem Ziel abstoppen.</li>
+              <li><b>Tai-sabaki</b> – Körperausweichen; <b>Ashi-barai</b> – Fußfeger.</li>
+              <li><b>Shiai</b> – Wettkampf.</li>
+              <li><b>Bunkai</b> – Anwendung/Analyse der Kata-Techniken.</li>
+            </ul>`,
+        },
+      ],
+    },
+    {
+      id: 'dachi', title: 'Dachi – Stände', kind: 'general', desc: 'Grundstellungen mit Grafiken',
+      lessons: [
+        {
+          id: 'da-grund', title: 'Grund- & Natürliche Stände', minGrade: '9kyu',
+          learn: `<div class="stance-grid">${S.musubi}${S.heisoku}${S.hachiji}</div>
+            <ul>
+              <li><b>Musubi-dachi</b>: Grußstellung – Fersen zusammen, Fußspitzen geöffnet.</li>
+              <li><b>Heisoku-dachi</b>: Füße geschlossen (z. B. Yoi von Tekki, Bassai Dai, Jion, Enpi).</li>
+              <li><b>Hachiji-dachi</b> (Soto-Hachiji-dachi): natürlicher Stand, Füße schulterbreit – Yoi der Heian-Kata; eine Form von <b>Shizentai</b>.</li>
+            </ul>`,
+        },
+        {
+          id: 'da-kampf', title: 'Zenkutsu, Kokutsu, Kiba', minGrade: '9kyu',
+          learn: `<div class="stance-grid">${S.zenkutsu}${S.kokutsu}${S.kiba}</div>
+            <ul>
+              <li><b>Zenkutsu-dachi (Zk)</b> – Vorwärtsstellung: vorderes Knie gebeugt (über dem Fuß), hinteres Bein gestreckt, Gewicht überwiegend vorne.</li>
+              <li><b>Kokutsu-dachi (Kk)</b> – Rückwärtsstellung: Gewicht überwiegend hinten, hinterer Fuß quer, vorderer Fuß zeigt nach vorne.</li>
+              <li><b>Kiba-dachi (Kb)</b> – Reiterstellung: breit, Füße parallel, Gewicht gleich verteilt.</li>
+              <li>Abkürzungen in der DJKB-Prüfungsordnung: <b>Zk, Kk, Kb</b>.</li>
+              <li><b>Hidari</b> Zenkutsu-dachi = linkes Bein vorne.</li>
+            </ul>`,
+        },
+        {
+          id: 'da-weitere', title: 'Weitere Stände', minGrade: '5kyu',
+          learn: `<div class="stance-grid">${S.kosa}${S.neko}</div>
+            <ul>
+              <li><b>Kosa-dachi</b> – Kreuzstand (Begriff der Theorie zum 1. Dan).</li>
+              <li><b>Neko-ashi-dachi</b> – Katzenfußstand, fast das ganze Gewicht hinten.</li>
+              <li><b>Fudo-dachi</b> (Sochin-dachi) – „unbeweglicher Stand“.</li>
+              <li><b>Hangetsu-dachi</b> – Halbmondstand (aus der Kata Hangetsu).</li>
+              <li><b>Renoji-dachi</b> – L-förmiger Stand; <b>Teiji-dachi</b> – T-förmiger Stand.</li>
+              <li><b>Sanchin-dachi</b> – Sanduhrstand, Knie nach innen gespannt.</li>
+            </ul>`,
+        },
+      ],
+    },
+    {
+      id: 'kihon', title: 'Kihon – Techniken', kind: 'general', desc: 'Tsuki, Uke, Uchi, Geri',
+      lessons: [
+        {
+          id: 'ki-tsuki', title: 'Tsuki – Fauststöße', minGrade: '9kyu',
+          learn: `
+            <ul>
+              <li><b>Choku-zuki</b> – gerader Fauststoß im Stand.</li>
+              <li><b>Oi-zuki</b> (Jun-zuki) – Stoß mit der Hand der Seite des vorderen Beins, meist mit Schritt.</li>
+              <li><b>Gyaku-zuki</b> – Stoß mit der Hand der Gegenseite zum vorderen Bein, mit Hüftdrehung.</li>
+              <li><b>Kizami-zuki</b> – Stoß mit der vorderen Hand ohne Schritt.</li>
+              <li><b>Sanbon-zuki</b> – drei Fauststöße (in der DJKB-Prüfung: Jodan/Chudan/Chudan).</li>
+              <li><b>Ren-zuki</b> – schnelle Folge von Stößen; <b>Morote-zuki</b> – Doppelfauststoß.</li>
+              <li><b>Kagi-zuki</b> – Hakenstoß; <b>Ura-zuki</b> – kurzer Stoß mit Handrücken nach unten; <b>Age-zuki</b> – Aufwärtsstoß; <b>Yama-zuki</b> – „Bergfauststoß“.</li>
+              <li>Laut DJKB-Prüfungsordnung werden alle Fauststöße generell <b>Chudan</b> ausgeführt, sofern nichts anderes angegeben ist.</li>
+            </ul>`,
+        },
+        {
+          id: 'ki-uke', title: 'Uke – Abwehrtechniken', minGrade: '9kyu',
+          learn: `
+            <ul>
+              <li><b>Gedan-barai</b> – Abwehr nach unten (fegend).</li>
+              <li><b>Age-uke</b> – Abwehr nach oben (Jodan).</li>
+              <li><b>Soto-uke</b> – Abwehr von außen nach innen (Chudan).</li>
+              <li><b>Uchi-uke</b> – Abwehr von innen nach außen (Chudan).</li>
+              <li><b>Shuto-uke</b> – Handkantenabwehr, meist in Kokutsu-dachi.</li>
+              <li><b>Morote-uke</b> – unterstützte Abwehr (zweite Faust am Ellbogen).</li>
+              <li><b>Juji-uke / Kosa-uke</b> – gekreuzte Abwehr; <b>Kakiwake-uke</b> – auseinanderdrückende Abwehr.</li>
+              <li><b>Nagashi-uke</b> – fließende, ablenkende Abwehr (Theorie 1. Dan); <b>Osae-uke</b> – drückende Abwehr.</li>
+              <li><b>Kake-uke</b> – Hakenabwehr; <b>Teisho-uke</b> – Handballenabwehr; <b>Sukui-uke</b> – schöpfende Abwehr.</li>
+            </ul>`,
+        },
+        {
+          id: 'ki-uchi', title: 'Uchi – Schläge', minGrade: '7kyu',
+          learn: `
+            <ul>
+              <li><b>Uraken-uchi</b> – Faustrückenschlag (z. B. Tate-uraken, Yoko-mawashi-uchi).</li>
+              <li><b>Tettsui-uchi / Kentsui-uchi</b> – Hammerfaustschlag.</li>
+              <li><b>Shuto-uchi</b> – Handkantenschlag.</li>
+              <li><b>Empi-uchi / Enpi-uchi</b> – Ellbogenschlag (Mae-, Yoko-, Ushiro-, Mawashi-, Tate-, Otoshi-enpi).</li>
+              <li><b>Haito-uchi</b> – Schlag mit der inneren Handkante.</li>
+              <li>In der Prüfungsordnung ab dem 6. Kyu: Soto-uke / umsetzen in Kb mit <b>Yoko-Empi-Uchi</b>; ab dem 5. Kyu zusätzlich <b>Tate-Uraken</b>.</li>
+            </ul>`,
+        },
+        {
+          id: 'ki-geri', title: 'Geri – Fußtritte', minGrade: '8kyu',
+          learn: `
+            <ul>
+              <li><b>Mae-geri</b> – Fußtritt nach vorne (Fußballen); Keage = schnappend, Kekomi = stoßend.</li>
+              <li><b>Yoko-geri-keage</b> – seitlicher Schnapptritt; <b>Yoko-geri-kekomi</b> – seitlicher Stoßtritt (Fußkante).</li>
+              <li><b>Mawashi-geri</b> – Halbkreisfußtritt.</li>
+              <li><b>Ushiro-geri</b> – Fußtritt nach hinten (Ferse).</li>
+              <li><b>Mikazuki-geri</b> – Sicheltritt; <b>Fumikomi</b> – Stampftritt.</li>
+              <li><b>Ren-geri</b> – Kombination mehrerer Fußtritte (Theorie 3. Kyu).</li>
+              <li><b>Sonoba-geri</b> – Fußtritte am Platz (Standübung, Theorie 1. Kyu).</li>
+              <li><b>Kizami-geri</b> – Tritt mit dem vorderen Bein (Theorie 2. Kyu).</li>
+              <li>DJKB: <b>Ushiro-geri und Yoko-geri-kekomi</b> generell Chudan; alle übrigen Fußtritte (auch Kizami-mae-geri) generell <b>Jodan</b>. Seitliche Fußtritte in beide Richtungen.</li>
+            </ul>`,
+        },
+      ],
+    },
+    {
+      id: 'kumite', title: 'Kumite', kind: 'general', desc: 'Partnerformen und Prinzipien',
+      lessons: [
+        {
+          id: 'ku-formen', title: 'Kumite-Formen', minGrade: '9kyu',
+          learn: `
+            <ul>
+              <li><b>Gohon-Kumite</b> – Fünfschritt-Kumite: 5 Angriffe fortlaufend, 5 Abwehren, dann Gegenangriff mit Kiai (DJKB: 8. und 7. Kyu).</li>
+              <li><b>Kihon-Ippon-Kumite</b> – Einschritt-Grundkumite: ein angesagter Angriff, Abwehr und Konter (DJKB: 9. Kyu sowie 6.–3. Kyu).</li>
+              <li><b>Jiyu-Ippon-Kumite</b> – freies Einschritt-Kumite aus Chudan-Kamae (DJKB: 2. Kyu bis 1. Dan).</li>
+              <li><b>Okuri-Jiyu-Ippon-Kumite</b> – Jiyu-Ippon-Kumite mit Folgeangriff (Theorie 1. Kyu).</li>
+              <li><b>Kaeshi-Ippon-Kumite</b> – Einschritt-Kumite mit Gegenangriff des Verteidigers und erneuter Abwehr.</li>
+              <li><b>Jiyu-Kumite</b> – freier Kampf (DJKB: ab 2. Dan, alternativ Jiyu-Ippon je nach Alter).</li>
+              <li><b>Happo-Kumite</b> – Kumite in acht Richtungen (Theorie 2. Dan).</li>
+            </ul>`,
+        },
+        {
+          id: 'ku-prinzipien', title: 'Prinzipien im Kumite', minGrade: '6kyu',
+          learn: `
+            <p>Aus den Vorbemerkungen der DJKB-Prüfungsordnung:</p>
+            <ul>
+              <li><b>Stufe I (9.–7. Kyu)</b>: Kihon nur vorwärts, damit sich Anfänger auf die Stellung konzentrieren können. Im Kumite zielgenau und mit korrekter Distanz – der Abwehrende blockt dicht vor seinem Körper kraftvoll.</li>
+              <li><b>Stufe II (6.–4. Kyu)</b>: Hüftdrehung in der Abwehr und kraftvoller Konter; Abwehr und Konter aus der gleichen Stellung.</li>
+              <li>Kihon-Ippon: Der Angreifer greift so an, als gäbe es nur eine Chance; der Verteidiger steht zunächst ruhig in <b>Shizentai</b> – das schult die psychische Stabilität.</li>
+              <li><b>Stufe III (3. Kyu – Dan)</b>: Konter aus einer <i>anderen</i> Stellung als die Abwehr – der Stellungswechsel verstärkt den Konter (Gewichtsverlagerung und Hüftdrehung).</li>
+              <li>Jiyu-Ippon-Kumite schult Distanz, Timing, schnelle Entscheidungen und das Überwinden eigener Unsicherheiten. Der Abwehrende darf den Abstand nicht vergrößern, sondern blockt bzw. weicht auf kurzer Distanz aus und kontert kraftvoll.</li>
+            </ul>`,
+        },
+      ],
+    },
+    {
+      id: 'pruefung', title: 'DJKB-Prüfungen', kind: 'general', desc: '9. Kyu bis 3. Dan: Gürtel, Kata, Kihon, Kumite, Theorie',
+      lessons: [
+        { id: 'pr-allgemein', title: 'Gürtel & Fristen', minGrade: '9kyu', learn: 'GRADES_TABLE' },
+        {
+          id: 'pr-kata', title: 'Prüfungs-Kata', minGrade: '9kyu',
+          learn: `
+            <ul>
+              <li>9. Kyu: keine Kata (Theorie: Ablauf Taikyoku Shodan)</li>
+              <li>8. Kyu: Heian Shodan · 7. Kyu: Heian Nidan · 6. Kyu: Heian Sandan · 5. Kyu: Heian Yondan · 4. Kyu: Heian Godan</li>
+              <li>3. Kyu: Tekki Shodan</li>
+              <li>2. und 1. Kyu: eine <b>Sentei-Kata</b> nach Wahl – Bassai Dai, Kanku Dai, Jion, Enpi, Hangetsu (zum 1. Kyu auch dieselbe wie zum 2. Kyu)</li>
+              <li>1. Dan: Sentei-Kata nach Wahl + vom Prüfer angegebene Kata aus Heian 1–5 oder Tekki Shodan</li>
+              <li>2. Dan: Prüferwahl aus Heian 1–5, Tekki Shodan, Tekki Nidan, Sentei-Kata + Kata nach Wahl aus Bassai Sho, Kanku Sho, Nijushiho, Jitte, Chinte, Meikyo, Gankaku, Sochin</li>
+              <li>3. Dan: <b>Tokui-Kata</b> frei (nicht Unsu, Gojushiho Sho, Gojushiho Dai und keine bereits bei einer Dan-Prüfung gezeigte) + Prüferwahl aus Sentei-Kata, Heian/Tekki 1–3 und Bassai Sho … Sochin</li>
+            </ul>`,
+        },
+        { id: 'pr-kihon', title: 'Kihon-Programm', minGrade: '9kyu', learn: 'GRADES_KIHON' },
+        { id: 'pr-kumite', title: 'Kumite-Programm', minGrade: '9kyu', learn: 'GRADES_KUMITE' },
+        { id: 'pr-theorie', title: 'Theorie-Begriffe', minGrade: '9kyu', learn: 'GRADES_THEORY' },
+        {
+          id: 'pr-dan', title: 'Dan-Prüfungen', minGrade: '1kyu',
+          learn: `
+            <ul>
+              <li>Für alle Dan-Grade sind allein die <b>DJKB A-Lizenz-Prüfer</b> prüfungsberechtigt.</li>
+              <li>Anmeldung bei der Geschäftsstelle spätestens <b>14 Tage</b> vor dem Termin; neue DJKB-Mitglieder erst nach <b>einem Jahr</b> Mitgliedschaft.</li>
+              <li>1. Dan: vollständige Teilnahme an dem Lehrgang, an dem die Prüfung stattfindet.</li>
+              <li>Ab 2. Dan: jährlich mindestens 1 Lehrgang mit dem Chefausbilder (oder ein mehrtägiger Lehrgang ≥ 3 Tage in den letzten 2 Jahren) und Registrierung bei der JKA (JKA Membership Card).</li>
+              <li>Mindestalter/Vorbereitungszeit: 1. Dan – vollendetes 16. Lebensjahr (8 Jahre Karate), 1 Jahr nach dem 1. Kyu; 2. Dan – 20 Jahre, 2 Jahre (4 Jahre, wenn Shodan mit 16); 3. Dan – 25 Jahre, 3 Jahre.</li>
+              <li>Nicht bestandene Dan-Prüfung: Wiederholung frühestens nach <b>1 Jahr</b>; nach dreimaligem Nichtbestehen desselben Grades keine weitere Prüfung.</li>
+              <li>Theorie 1. Dan: Kosa-dachi, Sun-dome, Tai-sabaki, Ashi-barai, Nagashi-uke; Kata-Bunkai aus Heian 1–5 und Tekki Shodan.</li>
+              <li>2. Dan: Happo-Kumite; Lehrprobe aus den Kyu-Programmen; Bunkai aus den Sentei-Kata. 3. Dan: Lehrprobe aus Shodan-/Nidan-Programm.</li>
+            </ul>`,
+        },
+      ],
+    },
+  ];
+
+  SK.fillGradeLearn = function () {
+    const { esc } = SK.util;
+    const pr = SK.generalUnits.find((u) => u.id === 'pruefung');
+    const byId = (id) => pr.lessons.find((l) => l.id === id);
+    byId('pr-allgemein').learn =
+      `<table class="moves"><thead><tr><th>Grad</th><th>Gürtel</th><th>Vorbereitungszeit</th></tr></thead><tbody>${SK.grades
+        .map((g) => `<tr><td>${esc(g.name)}</td><td><span class="belt ${g.cls}"></span> ${esc(g.belt)}</td><td>${esc(g.wait)}</td></tr>`)
+        .join('')}</tbody></table>
+      <ul>
+        <li>Stufe I: 9.–7. Kyu · Stufe II: 6.–4. Kyu · Stufe III: 3.–1. Kyu und Dan-Grade.</li>
+        <li>Für Kyu-Prüfungen gibt es keine Altersgrenze. Kinder bis 12 Jahre haben längere Vorbereitungszeiten (ab 7. Kyu mind. 6 Monate, ab 3. Kyu mind. 10 Monate).</li>
+        <li>Den Vorbereitungszeiten liegt ununterbrochenes Training mindestens <b>2-mal wöchentlich</b> zugrunde.</li>
+        <li>Nicht bestandene Kyu-Prüfung: Wiederholung frühestens nach <b>einem Monat</b>; nach dreimaligem Nichtbestehen desselben Grades erst nach einem Jahr.</li>
+        <li>Empfehlung: höchstens <b>4–6 Prüflinge</b> gleichzeitig. Die Prüfungsinhalte werden vom Prüfer angesagt.</li>
+        <li>Wer länger trainiert, kann direkt zum 8. Kyu antreten; reicht die Leistung nicht, kann der 9. Kyu bescheinigt werden.</li>
+        <li>Man ist berechtigt und verpflichtet, den Gürtel des zuletzt erworbenen Grades zu tragen.</li>
+      </ul>`;
+    byId('pr-kihon').learn =
+      `<p>Kihon-Techniken werden zum 9. Kyu je 2x oder 4x (nach Wahl des Prüfers), ab dem 8. Kyu je 3x ausgeführt. Auszug:</p>${SK.grades
+        .map((g) => `<h4>${esc(g.name)}</h4><ul>${g.kihon.map((k) => `<li>${esc(k)}</li>`).join('')}</ul>`)
+        .join('')}`;
+    byId('pr-kumite').learn = `<ul>${SK.grades.map((g) => `<li><b>${esc(g.name)}</b>: ${esc(g.kumite)}</li>`).join('')}</ul>`;
+    byId('pr-theorie').learn = `<p>Was zu den einzelnen Graden bekannt sein sollte (DJKB-Prüfungsordnung):</p><ul>${SK.grades
+      .map((g) => `<li><b>${esc(g.name)}</b>: ${esc(g.theory)}</li>`)
+      .join('')}</ul>`;
+  };
+})();

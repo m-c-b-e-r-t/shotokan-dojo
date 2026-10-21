@@ -1,0 +1,255 @@
+/* Fragen zu den allgemeinen Lerneinheiten. Richtige Antwort steht jeweils zuerst (Anzeige wird gemischt). */
+(function () {
+  'use strict';
+  const S = SK.sources;
+  let L;
+
+  // ---------- Etikette ----------
+  L = SK.qb('et-dojo', S.allg);
+  L.mc('Was bedeutet „Dojo“?', ['Ort des Weges (Übungsraum)', 'Kampfschrei', 'Lehrer', 'Gürtel'], '', S.po);
+  L.mc('Was bedeutet „Rei“?', ['Gruß / Verbeugung', 'Bereit', 'Anfangen', 'Aufhören'], '');
+  L.mc('Was bedeutet „Seiza“?', ['Kniender Fersensitz', 'Schneidersitz', 'Stand mit geschlossenen Füßen', 'Liegen'], 'Begriff der Theorie zum 9. Kyu.', S.po);
+  L.mc('Was bedeutet „Mokuso“?', ['Augen schließen, sammeln, meditieren', 'Aufstehen', 'Sich verbeugen', 'Kampf beginnen'], '', S.po);
+  L.mc('Was bedeutet „Mokuso yame“?', ['Meditation beenden', 'Meditation beginnen', 'Kampf beenden', 'Gürtel binden'], '', S.po);
+  L.mc('Was bedeutet „Shomen ni rei“?', ['Gruß nach vorne (zur Stirnseite des Dojo)', 'Gruß an den Lehrer', 'Gruß untereinander', 'Gruß an den Prüfer'], '', S.po);
+  L.mc('Was bedeutet „Sensei ni rei“?', ['Gruß an den Lehrer', 'Gruß nach vorne', 'Gruß untereinander', 'Gruß an die Fortgeschrittenen'], '', S.po);
+  L.mc('Was bedeutet „Otagai ni rei“?', ['Gruß untereinander', 'Gruß an den Lehrer', 'Gruß nach vorne', 'Gruß am Ende der Kata'], '');
+  L.mc('Was bedeutet „Kiritsu“?', ['Aufstehen', 'Hinknien', 'Umdrehen', 'Anfangen'], '', S.po);
+  L.mc('Was bedeutet „Hajime“?', ['Beginnen', 'Aufhören', 'Bereit', 'Zurück'], '');
+  L.mc('Was bedeutet „Yame“?', ['Aufhören / Stopp', 'Beginnen', 'Bereit', 'Wenden'], '');
+  L.mc('Was bedeutet „Yoi“?', ['Bereit (Bereitschaftsstellung)', 'Aufhören', 'Verbeugen', 'Aufstehen'], '');
+  L.mc('Was bedeutet „Naore“?', ['Zurück in die Ausgangsstellung', 'Wenden', 'Schneller', 'Kiai'], '');
+  L.mc('Was bedeutet „Mawatte“?', ['Wenden / Umdrehen', 'Aufstehen', 'Verbeugen', 'Hinsetzen'], '');
+  L.mc('Was bedeutet „Sensei“?', ['Lehrer', 'Schüler', 'Prüfer', 'Kampfrichter'], '');
+  L.mc('Was bedeutet „Senpai“?', ['Fortgeschrittener / älterer Schüler', 'Anfänger', 'Großmeister', 'Kampfrichter'], '');
+  L.mc('Aus welchem Stand wird der Gruß (Rei) im Stehen meist ausgeführt?', ['Musubi-dachi', 'Kiba-dachi', 'Zenkutsu-dachi', 'Kokutsu-dachi'], 'Musubi-dachi gehört zur Theorie zum 9. Kyu.', S.po);
+  L.order('Typische Reihenfolge beim Angrüßen im Sitzen:', ['Seiza', 'Mokuso', 'Mokuso yame', 'Shomen ni rei', 'Sensei ni rei', 'Kiritsu'], 'Die genaue Abfolge kann je nach Dojo leicht abweichen.');
+  L.mc('Was muss man laut DJKB-Prüfungsordnung zum 9. Kyu (neben Begriffen) zeigen können?', ['Die Etikette des An- und Abgrüßens zu Beginn und Ende des Trainings', 'Eine Sentei-Kata', 'Jiyu-Kumite', 'Eine Lehrprobe'], '', S.po);
+
+  L = SK.qb('et-dojokun', S.allg);
+  L.mc('Wie viele Leitsätze hat das Dojo-Kun?', ['5', '3', '10', '20'], '');
+  L.mc('Mit welchem Wort beginnt jeder Satz des Dojo-Kun?', ['Hitotsu', 'Osu', 'Hajime', 'Rei'], '„Hitotsu“ = „eins“ – alle Leitsätze sind gleich wichtig.');
+  L.mc('Was bedeutet „Jinkaku kansei ni tsutomuru koto“?', ['Nach Vollendung des Charakters streben', 'Den Weg der Aufrichtigkeit bewahren', 'Den Geist des Bemühens pflegen', 'Etikette achten'], '');
+  L.mc('Was bedeutet „Makoto no michi o mamoru koto“?', ['Den Weg der Aufrichtigkeit bewahren', 'Nach Vollendung des Charakters streben', 'Selbstbeherrschung üben', 'Etikette achten'], '');
+  L.mc('Was bedeutet „Doryoku no seishin o yashinau koto“?', ['Den Geist des Bemühens (Ausdauer) pflegen', 'Etikette achten', 'Aufrichtig sein', 'Unkontrollierte Gewalt vermeiden'], '');
+  L.mc('Was bedeutet „Reigi o omonzuru koto“?', ['Etikette und Höflichkeit achten', 'Den Charakter vervollkommnen', 'Fleißig sein', 'Sich beherrschen'], '');
+  L.mc('Was bedeutet „Kekki no yu o imashimuru koto“?', ['Sich vor unkontrolliertem Draufgängertum hüten', 'Den Weg der Aufrichtigkeit bewahren', 'Etikette achten', 'Den Geist des Bemühens pflegen'], '');
+  L.order('Bringe die Leitsätze des Dojo-Kun in die übliche Reihenfolge:', ['Charakter vervollkommnen', 'Aufrichtigkeit', 'Bemühen / Ausdauer', 'Etikette', 'Selbstbeherrschung'], '');
+  L.mc('Was drückt das „Hitotsu“ am Anfang jedes Dojo-Kun-Satzes aus?', ['Jeder Leitsatz ist gleich wichtig', 'Nur der erste Satz zählt', 'Die Sätze werden nur einmal im Leben gesprochen', 'Es ist ein Kampfschrei'], '');
+
+  // ---------- Geschichte ----------
+  L = SK.qb('ge-funakoshi', S.allg);
+  L.mc('Wer gilt als Begründer des Shotokan-Karate?', ['Gichin Funakoshi', 'Masatoshi Nakayama', 'Hideo Ochi', 'Mas Oyama'], '');
+  L.mc('Woher stammt Gichin Funakoshi?', ['Aus Shuri auf Okinawa', 'Aus Tokio', 'Aus Kyoto', 'Aus Osaka'], '');
+  L.mc('In welchem Jahr wurde Gichin Funakoshi geboren?', ['1868', '1898', '1913', '1922'], '');
+  L.mc('In welchem Jahr starb Gichin Funakoshi?', ['1957', '1949', '1968', '1987'], '');
+  L.mc('In welchem Jahr stellte Funakoshi Karate in Tokio vor?', ['1922', '1868', '1949', '1957'], '');
+  L.multi('Wer gehörte zu den Lehrern Funakoshis?', ['Anko Itosu', 'Anko Azato'], ['Masatoshi Nakayama', 'Hideo Ochi'], '');
+  L.mc('Was bedeutet „Shotokan“?', ['Haus des Shoto (Funakoshis Künstlername)', 'Weg der leeren Hand', 'Japanische Karate-Vereinigung', 'Schule der Kata'], '');
+  L.mc('Was bedeutet „Shoto“?', ['Pinienrauschen – Funakoshis Künstlername', 'Leere Hand', 'Haus', 'Schwert'], '');
+  L.mc('Was bedeutet „Karate-Do“?', ['Weg der leeren Hand', 'Kunst des Schwertes', 'Weg der Harmonie', 'Chinesische Faust'], '');
+  L.mc('Was bedeutet das „Do“ in Karate-Do?', ['Weg', 'Hand', 'Leer', 'Kampf'], 'Theoriebegriff zum 6. Kyu.', S.po);
+  L.mc('Was bedeutet „Te“?', ['Hand', 'Fuß', 'Weg', 'Haus'], 'Theoriebegriff zum 6. Kyu.', S.po);
+  L.mc('Welche Bedeutung hatte das Schriftzeichen „Kara“ ursprünglich, bevor es in „leer“ geändert wurde?', ['China (Tang)', 'Holz', 'Himmel', 'Kampf'], '');
+  L.mc('Welches Buch schrieb Funakoshi 1925?', ['Rentan Goshin Karate-Jutsu', 'Best Karate', 'Dynamic Karate', 'Karate-Do Kata'], '', S.pdf);
+  L.mc('Welches bekannte Lehrbuch stammt von Gichin Funakoshi?', ['Karate-Do Kyohan', 'Best Karate', 'Dynamic Karate', 'Das Buch der fünf Ringe'], '', S.pdf);
+
+  L = SK.qb('ge-jka', S.allg);
+  L.mc('Wofür steht die Abkürzung JKA?', ['Japan Karate Association', 'Japanese Kata Academy', 'Junior Karate Association', 'Japan Kumite Alliance'], '');
+  L.mc('In welchem Jahr wurde die JKA gegründet?', ['1949', '1922', '1957', '1968'], '');
+  L.mc('Wofür steht die Abkürzung DJKB?', ['Deutscher JKA-Karate Bund', 'Deutscher Judo- und Karate-Bund', 'Deutscher Jugend-Karate-Bund', 'Deutsche JKA-Kata-Bühne'], '');
+  L.mc('Welche Rolle hat der DJKB in Deutschland?', ['Fachverband für traditionelles Shotokan-Karate und offizielle Vertretung der JKA', 'Olympischer Dachverband aller Kampfsportarten', 'Verband für Vollkontakt-Karate', 'Nur ein Wettkampfveranstalter'], '');
+  L.mc('Wer unterzeichnete die DJKB-Prüfungsordnung (Stand 2013) als Chefausbilder?', ['Hideo Ochi', 'Masatoshi Nakayama', 'Gichin Funakoshi', 'Motokuni Sugiura'], '', S.po);
+  L.mc('Wer war langjähriger Chefausbilder der JKA und schrieb „Best Karate“?', ['Masatoshi Nakayama', 'Gichin Funakoshi', 'Hideo Ochi', 'Anko Itosu'], '');
+  L.mc('Wie wird Funakoshi im JKA-Kata-Buch bezeichnet?', ['Grand Master of the Japan Karate Association', 'Chief Instructor of DJKB', 'President of WKF', 'Founder of Kyokushin'], '', S.pdf);
+  L.mc('Welches ist das offizielle Kata-Lehrbuch der JKA?', ['Karate-Do Kata (Shihan-kai)', 'Dynamic Karate', 'Karate-Do Nyumon', 'Bubishi'], '', S.pdf);
+
+  L = SK.qb('ge-nijukun', S.allg);
+  L.mc('Was sind die „Niju-Kun“?', ['Funakoshis 20 Leitsätze', 'Die 20 Kata des Shotokan', 'Die 20 Grundstände', 'Die 20 Prüfungsfächer'], '');
+  L.mc('Was bedeutet „Karate ni sente nashi“?', ['Im Karate gibt es keinen ersten Angriff', 'Karate kennt keine Grenzen', 'Karate beginnt mit Kiai', 'Karate ist nur für Starke'], '');
+  L.mc('Womit beginnt und endet Karate laut erstem Leitsatz der Niju-Kun?', ['Mit Rei (Respekt/Gruß)', 'Mit Kiai', 'Mit Kata', 'Mit Kumite'], '');
+  L.mc('Womit vergleicht Funakoshi Karate in den Niju-Kun – es kühlt ohne ständige Wärme ab?', ['Mit heißem Wasser', 'Mit einem Schwert', 'Mit einem Baum', 'Mit einem Berg'], '');
+  L.mc('Was soll man laut Niju-Kun über die Hände und Füße des Gegners denken?', ['Dass sie wie Schwerter sind', 'Dass sie harmlos sind', 'Dass sie langsam sind', 'Dass man sie ignorieren kann'], '');
+  L.mc('Was gilt laut Niju-Kun für Kamae?', ['Kamae ist für Anfänger, später steht man in Shizentai', 'Man soll niemals Kamae einnehmen', 'Kamae nur im Wettkampf', 'Kamae nur in der Kata'], '');
+  L.mc('Was soll man laut Niju-Kun beim Kampf denken?', ['Nicht ans Gewinnen, sondern daran, nicht zu verlieren', 'Nur ans Gewinnen', 'An die Zuschauer', 'An die Technik des Gegners'], '');
+  L.mc('Was kommt laut Niju-Kun vor der Kunst der Technik?', ['Die Kunst des Geistes', 'Die Kraft', 'Die Schnelligkeit', 'Die Ausdauer'], '');
+  L.mc('Was erwartet dich laut Niju-Kun, wenn du das Tor (dein Haus) verlässt?', ['Millionen Feinde', 'Deine Schüler', 'Dein Lehrer', 'Ein neuer Weg'], '');
+  L.multi('Welche drei Gegensatzpaare soll man laut 19. Leitsatz nicht vergessen?', ['Stärke und Schwäche der Kraft', 'Dehnen und Zusammenziehen des Körpers', 'Langsamkeit und Schnelligkeit der Technik'], ['Laut und leise des Kiai', 'Hoch und tief des Blicks'], '');
+
+  // ---------- Begriffe ----------
+  L = SK.qb('te-zahlen', S.allg);
+  const zahlen = ['Ichi', 'Ni', 'San', 'Shi', 'Go', 'Roku', 'Shichi', 'Hachi', 'Ku', 'Ju'];
+  zahlen.forEach((w, i) => {
+    const others = SK.util.shuffle(zahlen.filter((x) => x !== w)).slice(0, 3);
+    L.mc(`Wie lautet die Zahl ${i + 1} auf Japanisch?`, [w].concat(others), '');
+  });
+  L.mc('Was bedeutet „Hachi“?', ['Acht', 'Sechs', 'Vier', 'Zwei'], '');
+  L.mc('Was bedeutet „Roku“?', ['Sechs', 'Neun', 'Drei', 'Zehn'], '');
+  L.order('Zähle von 1 bis 5:', ['Ichi', 'Ni', 'San', 'Shi', 'Go'], '');
+  L.order('Zähle von 6 bis 10:', ['Roku', 'Shichi', 'Hachi', 'Ku', 'Ju'], '');
+  L.mc('Was bedeutet „Hidari“?', ['Links', 'Rechts', 'Vorne', 'Hinten'], '');
+  L.mc('Was bedeutet „Migi“?', ['Rechts', 'Links', 'Oben', 'Unten'], '');
+  L.mc('Was bedeutet „Mae“?', ['Vorne', 'Hinten', 'Seitlich', 'Oben'], '');
+  L.mc('Was bedeutet „Ushiro“?', ['Hinten', 'Vorne', 'Seitlich', 'Unten'], '');
+  L.mc('Was bedeutet „Yoko“?', ['Seitlich', 'Vorne', 'Hinten', 'Oben'], '');
+  L.mc('Was bedeutet „Jodan“?', ['Obere Stufe (Gesicht/Kopf)', 'Mittlere Stufe', 'Untere Stufe', 'Fußhöhe'], 'Theoriebegriff zum 8. Kyu.', S.po);
+  L.mc('Was bedeutet „Chudan“?', ['Mittlere Stufe (Brust/Rumpf)', 'Obere Stufe', 'Untere Stufe', 'Kopfhöhe'], 'Theoriebegriff zum 8. Kyu.', S.po);
+  L.mc('Was bedeutet „Gedan“?', ['Untere Stufe (Unterbauch)', 'Obere Stufe', 'Mittlere Stufe', 'Schulterhöhe'], 'Theoriebegriff zum 8. Kyu.', S.po);
+  L.order('Ordne die Stufen von oben nach unten:', ['Jodan', 'Chudan', 'Gedan'], '');
+  L.mc('Was bedeutet „Kyu“?', ['Schülergrad', 'Meistergrad', 'Lehrer', 'Gürtel'], '');
+  L.mc('Was bedeutet „Dan“?', ['Meistergrad', 'Schülergrad', 'Kampf', 'Übungsraum'], '');
+  L.mc('Wie heißt der 1. Dan auf Japanisch?', ['Shodan', 'Nidan', 'Sandan', 'Ichidan'], '');
+  L.mc('Wie heißt der 3. Dan auf Japanisch?', ['Sandan', 'Nidan', 'Yondan', 'Godan'], '');
+  L.mc('Was bedeutet „Yondan“ in „Heian Yondan“?', ['Vierte Stufe', 'Zweite Stufe', 'Fünfte Stufe', 'Dritte Stufe'], '');
+  L.mc('Was bedeutet „Kata“?', ['Festgelegte Form – Abfolge von Techniken gegen gedachte Gegner', 'Partnerübung', 'Grundschule', 'Wettkampf'], 'Theoriebegriff zum 8. Kyu.', S.po);
+  L.mc('Was bedeutet „Kihon“?', ['Grundschule / Grundtechniken', 'Freikampf', 'Form', 'Gruß'], '');
+  L.mc('Was bedeutet „Kumite“?', ['Partnerübung / Kampf', 'Form', 'Grundschule', 'Meditation'], '');
+
+  L = SK.qb('te-koerper', S.allg);
+  L.mc('Was ist „Seiken“?', ['Die Vorderseite der Faust (Knöchel von Zeige- und Mittelfinger)', 'Der Faustrücken', 'Die Handkante', 'Der Handballen'], '');
+  L.mc('Was ist „Uraken“?', ['Der Faustrücken', 'Die Faustvorderseite', 'Der Ellbogen', 'Die Hammerfaust'], '');
+  L.mc('Was ist „Tettsui“ bzw. „Kentsui“?', ['Hammerfaust (Kleinfingerseite der Faust)', 'Handkante', 'Speerhand', 'Handballen'], '');
+  L.mc('Was ist „Shuto“?', ['Handkante (Kleinfingerseite der offenen Hand)', 'Innere Handkante', 'Handballen', 'Fingerspitzen'], '');
+  L.mc('Was ist „Haito“?', ['Innere Handkante (Daumenseite)', 'Äußere Handkante', 'Handrücken', 'Faustrücken'], '');
+  L.mc('Was ist „Nukite“?', ['Speerhand (Stoß mit den Fingerspitzen)', 'Handballen', 'Hammerfaust', 'Ellbogen'], '');
+  L.mc('Was ist „Teisho“?', ['Handballen', 'Handrücken', 'Fingerspitzen', 'Faustrücken'], '');
+  L.mc('Was ist „Enpi“ bzw. „Hiji“?', ['Ellbogen', 'Knie', 'Ferse', 'Schulter'], '');
+  L.mc('Was ist „Hiza“?', ['Knie', 'Ellbogen', 'Hüfte', 'Ferse'], '');
+  L.mc('Mit welchem Teil des Fußes wird Mae-geri ausgeführt?', ['Mit dem Fußballen (Koshi / Josokutei)', 'Mit der Ferse', 'Mit der Fußkante', 'Mit den Zehenspitzen'], '');
+  L.mc('Was ist „Sokuto“?', ['Fußkante', 'Fußballen', 'Ferse', 'Fußrücken'], '');
+  L.mc('Mit welchem Fußteil wird Yoko-geri ausgeführt?', ['Mit der Fußkante (Sokuto)', 'Mit dem Fußballen', 'Mit dem Fußrücken', 'Mit den Zehen'], '');
+  L.mc('Mit welchem Fußteil wird Ushiro-geri typischerweise ausgeführt?', ['Mit der Ferse (Kakato)', 'Mit dem Fußballen', 'Mit dem Fußrücken', 'Mit der Fußkante'], '');
+  L.mc('Was ist „Haisoku“?', ['Fußrücken', 'Fußsohle', 'Ferse', 'Fußkante'], '');
+  L.mc('Was ist „Zenwan“?', ['Unterarm', 'Oberarm', 'Schulter', 'Handgelenk'], '');
+
+  L = SK.qb('te-konzepte', S.po);
+  L.mc('Was bedeutet „Kiai“?', ['Kampfschrei – Vereinigung von Kraft und Geist im Moment der Technik', 'Gruß', 'Atempause', 'Fußfeger'], 'Theorie zum 7. und 5. Kyu.');
+  L.mc('Was bedeutet „Hiki-te“?', ['Die zurückziehende Hand zur Hüfte', 'Die vordere Hand', 'Der Handrücken', 'Die offene Hand'], 'Theorie zum 7. Kyu.');
+  L.mc('Was bedeutet „Hanmi“?', ['Halbseitliche Körperhaltung (ca. 45°)', 'Frontale Haltung', 'Rückwärtsstellung', 'Kniende Haltung'], 'Theorie zum 7. Kyu.');
+  L.mc('Was bedeutet „Shizentai“?', ['Natürliche, normale Körperhaltung', 'Kampfhaltung mit Fäusten', 'Kniende Haltung', 'Reiterstellung'], 'Theorie zum 7. Kyu. Im Kihon-Ippon-Kumite steht der Abwehrende zunächst in Shizentai.');
+  L.mc('Was bedeutet „Chudan-Kamae“?', ['Kampfhaltung mit den Händen auf mittlerer Höhe', 'Kampfhaltung mit den Händen unten', 'Kampfhaltung mit offenen Händen', 'Grußhaltung'], 'Theorie zum 7. Kyu.');
+  L.mc('Was bedeutet „Gedan-Kamae“?', ['Kampfhaltung mit der vorderen Hand in Gedan-Barai-Position', 'Kampfhaltung mit Händen auf Kopfhöhe', 'Kniende Haltung', 'Haltung mit gekreuzten Armen'], 'Theorie zum 7. Kyu.');
+  L.mc('Was bedeutet „Kime“?', ['Konzentration aller Kraft im Moment des Treffens', 'Kampfschrei', 'Ausweichen', 'Distanz'], 'Theorie zum 4. Kyu.');
+  L.mc('Was bedeutet „Kime-Waza“?', ['Entscheidende, abschließende Technik', 'Wurftechnik', 'Fußfegetechnik', 'Atemtechnik'], 'Theorie zum 4. Kyu.');
+  L.mc('Was bedeutet „Kogeki“?', ['Angriff', 'Abwehr', 'Gruß', 'Stellung'], 'Theorie zum 6. Kyu.');
+  L.mc('Was bedeutet „Uke“ (Theorie zum 6. Kyu)?', ['Abwehr', 'Angriff', 'Fußtritt', 'Kampfhaltung'], '');
+  L.mc('Was bedeutet „Zanshin“?', ['Wache Aufmerksamkeit / Kampfbereitschaft nach der Technik', 'Erste Technik', 'Kampfschrei', 'Verbeugung'], 'Theorie zum 1. Kyu.');
+  L.mc('Was bedeutet „Maai“?', ['Kampfdistanz', 'Kampfschrei', 'Ausgangsstellung', 'Gürtelfarbe'], 'Theorie zum 2. Kyu.');
+  L.mc('Was bedeutet „Deai“?', ['Treffen/Kontern im Moment, in dem der Gegner angreift', 'Rückzug', 'Der erste Gruß', 'Einschritt-Kumite'], 'Theorie zum 2. Kyu.');
+  L.mc('Was bedeutet „Suri-ashi“?', ['Gleitschritt', 'Sprung', 'Stampfen', 'Kreuzschritt'], 'Theorie zum 3. Kyu.');
+  L.mc('Was bedeutet „Shiai“?', ['Wettkampf', 'Training', 'Prüfung', 'Gruß'], 'Theorie zum 3. Kyu.');
+  L.mc('Was bedeutet „Sun-dome“?', ['Technik kontrolliert kurz vor dem Ziel abstoppen', 'Volle Trefferwirkung', 'Ausweichbewegung', 'Kiai unterdrücken'], 'Theorie zum 1. Dan.');
+  L.mc('Was bedeutet „Tai-sabaki“?', ['Körperausweichbewegung', 'Fußfeger', 'Kreuzstand', 'Gleitschritt'], 'Theorie zum 1. Dan.');
+  L.mc('Was bedeutet „Ashi-barai“?', ['Fußfeger', 'Fußtritt nach hinten', 'Stampfen', 'Fußballen'], 'Theorie zum 1. Dan.');
+  L.mc('Was bedeutet „Bunkai“?', ['Anwendung bzw. Analyse der Kata-Techniken', 'Grußformel', 'Freikampf', 'Meditation'], 'Kata-Bunkai ist Teil der Dan-Prüfungen.');
+  L.mc('Was bedeutet „Yori-ashi“?', ['Beide Füße gleiten gemeinsam in eine Richtung, der Stand bleibt erhalten', 'Kreuzschritt', 'Sprung', 'Halbkreisschritt'], '', S.pdf);
+
+  // ---------- Stände ----------
+  L = SK.qb('da-grund', S.allg);
+  L.mc('Welcher Stand: Fersen zusammen, Fußspitzen V-förmig geöffnet?', ['Musubi-dachi', 'Heisoku-dachi', 'Hachiji-dachi', 'Kiba-dachi'], '');
+  L.mc('Welcher Stand: Füße geschlossen und parallel?', ['Heisoku-dachi', 'Musubi-dachi', 'Hachiji-dachi', 'Kosa-dachi'], '');
+  L.mc('Welcher Stand: Füße etwa schulterbreit, Spitzen leicht nach außen?', ['Hachiji-dachi', 'Heisoku-dachi', 'Kiba-dachi', 'Zenkutsu-dachi'], '');
+  L.mc('In welchem Stand steht man zum 9. Kyu beim Choku-zuki im Stand?', ['Soto-Hachiji-dachi', 'Kiba-dachi', 'Zenkutsu-dachi', 'Kokutsu-dachi'], '', S.po);
+  L.mc('Welcher Stand ist die Yoi-Position der Heian-Kata laut JKA-Buch?', ['Hachiji-dachi', 'Heisoku-dachi', 'Musubi-dachi', 'Kiba-dachi'], '', S.pdf);
+  L.mc('Welcher Begriff beschreibt die „natürliche Haltung“?', ['Shizentai', 'Hanmi', 'Kamae', 'Zanshin'], '', S.po);
+
+  L = SK.qb('da-kampf', S.allg);
+  L.mc('Wofür steht die Abkürzung „Zk“ in der DJKB-Prüfungsordnung?', ['Zenkutsu-dachi', 'Zenwan-kamae', 'Zuki-kihon', 'Zanshin-kamae'], '', S.po);
+  L.mc('Wofür steht die Abkürzung „Kk“?', ['Kokutsu-dachi', 'Kiba-kamae', 'Kosa-dachi', 'Kizami-kamae'], '', S.po);
+  L.mc('Wofür steht die Abkürzung „Kb“?', ['Kiba-dachi', 'Kokutsu-dachi', 'Kake-barai', 'Kosa-barai'], '', S.po);
+  L.mc('Wo liegt das Gewicht hauptsächlich im Zenkutsu-dachi?', ['Überwiegend auf dem vorderen Bein', 'Überwiegend auf dem hinteren Bein', 'Genau gleich verteilt', 'Nur auf den Zehen'], '');
+  L.mc('Wo liegt das Gewicht hauptsächlich im Kokutsu-dachi?', ['Überwiegend auf dem hinteren Bein', 'Überwiegend auf dem vorderen Bein', 'Gleich verteilt', 'Auf den Fersen beider Füße'], '', S.pdf);
+  L.mc('Wie wird Kiba-dachi auf Deutsch genannt?', ['Reiterstellung', 'Vorwärtsstellung', 'Rückwärtsstellung', 'Katzenfußstellung'], '');
+  L.mc('Wie ist das Gewicht im Kiba-dachi verteilt?', ['Gleichmäßig auf beide Beine', 'Überwiegend vorne', 'Überwiegend hinten', 'Nur auf einem Bein'], '');
+  L.mc('Was bedeutet „Hidari Zenkutsu-dachi“?', ['Vorwärtsstellung mit dem linken Bein vorne', 'Vorwärtsstellung mit dem rechten Bein vorne', 'Rückwärtsstellung mit links vorne', 'Reiterstellung nach links'], '');
+  L.mc('In welchem Stand wird Shuto-uke in der Kihon-Prüfung typischerweise ausgeführt?', ['Kokutsu-dachi', 'Zenkutsu-dachi', 'Kiba-dachi', 'Heisoku-dachi'], '', S.po);
+  L.mc('In welchem Stand wird Yoko-geri-keage im DJKB-Kihon ausgeführt?', ['Kiba-dachi', 'Zenkutsu-dachi', 'Kokutsu-dachi', 'Neko-ashi-dachi'], '', S.po);
+  L.mc('Wie heißt Zenkutsu-dachi auf Deutsch?', ['Vorwärtsstellung', 'Rückwärtsstellung', 'Reiterstellung', 'Kreuzstellung'], '');
+  L.mc('Wie heißt Kokutsu-dachi auf Deutsch?', ['Rückwärtsstellung', 'Vorwärtsstellung', 'Reiterstellung', 'Katzenfußstellung'], '');
+
+  L = SK.qb('da-weitere', S.allg);
+  L.mc('Was ist „Kosa-dachi“?', ['Kreuzstand', 'Katzenfußstand', 'Reiterstand', 'Halbmondstand'], 'Theoriebegriff zum 1. Dan.', S.po);
+  L.mc('Was ist „Neko-ashi-dachi“?', ['Katzenfußstand – Gewicht fast vollständig hinten', 'Kreuzstand', 'Reiterstand', 'Unbeweglicher Stand'], '');
+  L.mc('Was bedeutet „Fudo-dachi“?', ['Unbeweglicher Stand', 'Katzenfußstand', 'Halbmondstand', 'Sanduhrstand'], '');
+  L.mc('Aus welcher Kata stammt der Name „Hangetsu-dachi“?', ['Hangetsu', 'Heian Shodan', 'Tekki Shodan', 'Jion'], '');
+  L.mc('Welche Form hat „Renoji-dachi“?', ['L-Form', 'T-Form', 'V-Form', 'X-Form'], '');
+  L.mc('Was ist „Sanchin-dachi“?', ['Sanduhrstand mit nach innen gespannten Knien', 'Reiterstand', 'Kreuzstand', 'Vorwärtsstand'], '');
+
+  // ---------- Kihon ----------
+  L = SK.qb('ki-tsuki', S.allg);
+  L.mc('Was ist „Oi-zuki“?', ['Fauststoß mit der Hand der Seite des vorderen Beins (meist mit Schritt)', 'Fauststoß mit der hinteren Hand', 'Fauststoß mit der vorderen Hand ohne Schritt', 'Aufwärtshaken'], '', S.pdf);
+  L.mc('Was ist „Gyaku-zuki“?', ['Fauststoß mit der Hand der Gegenseite zum vorderen Bein', 'Fauststoß mit der Hand derselben Seite', 'Doppelfauststoß', 'Hakenstoß'], '', S.pdf);
+  L.mc('Was ist „Kizami-zuki“?', ['Stoß mit der vorderen Hand ohne Schritt', 'Stoß mit Schritt', 'Doppelstoß', 'Stoß nach hinten'], '');
+  L.mc('Was ist „Choku-zuki“?', ['Gerader Fauststoß im Stand', 'Fauststoß mit Schritt', 'Aufwärtsstoß', 'Hakenstoß'], '', S.po);
+  L.mc('Wie wird Sanbon-zuki in der DJKB-Prüfung ausgeführt?', ['Jodan / Chudan / Chudan', 'Chudan / Chudan / Chudan', 'Jodan / Jodan / Chudan', 'Gedan / Chudan / Jodan'], '', S.po);
+  L.mc('Auf welcher Höhe werden laut DJKB-Prüfungsordnung Fauststöße generell ausgeführt?', ['Chudan', 'Jodan', 'Gedan', 'Frei wählbar'], 'Ausnahmen sind im Programm angegeben.', S.po);
+  L.mc('Was ist „Ren-zuki“?', ['Schnelle Folge mehrerer Fauststöße', 'Fauststoß im Sprung', 'Stoß mit dem Ellbogen', 'Doppelter Fußtritt'], '', S.pdf);
+  L.mc('Was ist „Morote-zuki“?', ['Doppelfauststoß mit beiden Fäusten', 'Stoß mit der vorderen Hand', 'Hakenstoß', 'Rückwärtsstoß'], '', S.pdf);
+  L.mc('Was ist „Kagi-zuki“?', ['Hakenstoß', 'Aufwärtsstoß', 'Bergfauststoß', 'Gerader Stoß'], '', S.pdf);
+  L.mc('Welcher Begriff der Theorie zum 5. Kyu bezeichnet drei Fauststöße hintereinander?', ['Sanbon-zuki', 'Ren-geri', 'Gohon-kumite', 'Kizami-zuki'], '', S.po);
+
+  L = SK.qb('ki-uke', S.allg);
+  L.mc('Was ist „Gedan-barai“?', ['Abwehr nach unten (fegend)', 'Abwehr nach oben', 'Abwehr von außen nach innen', 'Handkantenabwehr'], '');
+  L.mc('Was ist „Age-uke“?', ['Abwehr nach oben (Jodan)', 'Abwehr nach unten', 'Handkantenabwehr', 'Gekreuzte Abwehr'], '');
+  L.mc('Soto-uke laut JKA-Buch:', ['Innenseite des Unterarms, Bewegung von außen nach innen', 'Außenseite des Unterarms, von innen nach außen', 'Abwehr nach oben', 'Abwehr mit der Handkante'], 'Theoriebegriff zum 5. Kyu.', S.pdf);
+  L.mc('Uchi-uke laut JKA-Buch:', ['Außenseite des Unterarms, Bewegung von innen nach außen', 'Innenseite des Unterarms, von außen nach innen', 'Abwehr nach unten', 'Abwehr mit dem Handballen'], 'Theoriebegriff zum 5. Kyu.', S.pdf);
+  L.mc('Was ist „Shuto-uke“?', ['Abwehr mit der Handkante', 'Abwehr mit der Faust', 'Abwehr mit dem Ellbogen', 'Abwehr mit dem Knie'], '');
+  L.mc('Was ist „Morote-uke“?', ['Unterstützte Abwehr – die zweite Faust liegt am Ellbogen', 'Abwehr mit beiden Händen nach unten', 'Gekreuzte Abwehr über dem Kopf', 'Handballenabwehr'], '', S.pdf);
+  L.mc('Was ist „Juji-uke“ bzw. „Kosa-uke“?', ['Gekreuzte Abwehr', 'Fegende Abwehr', 'Drückende Abwehr', 'Hakenabwehr'], '', S.pdf);
+  L.mc('Was ist „Nagashi-uke“?', ['Fließende, ablenkende Abwehr', 'Harte Abwehr nach unten', 'Gekreuzte Abwehr', 'Abwehr mit dem Knie'], 'Theoriebegriff zum 1. Dan.', S.po);
+  L.mc('Was ist „Kakiwake-uke“?', ['Abwehr, bei der beide Arme auseinanderdrücken', 'Abwehr mit einem Arm nach unten', 'Abwehr mit der Ferse', 'Abwehr nach oben mit offenen Händen'], '', S.pdf);
+  L.mc('Was ist „Osae-uke“?', ['Drückende Abwehr (nach unten)', 'Schöpfende Abwehr', 'Hakenabwehr', 'Ablenkende Abwehr nach oben'], '', S.pdf);
+  L.mc('Wie heißt die zum 8. Kyu geforderte Wendung nach Shuto-uke im Kihon?', ['Beidarmiger Gedan-barai in Zk', 'Age-uke in Kb', 'Soto-uke in Kk', 'Shuto-uke in Zk'], '', S.po);
+
+  L = SK.qb('ki-uchi', S.allg);
+  L.mc('Was ist „Uraken-uchi“?', ['Schlag mit dem Faustrücken', 'Schlag mit der Handkante', 'Schlag mit dem Ellbogen', 'Schlag mit dem Handballen'], '');
+  L.mc('Was ist „Tettsui-uchi“?', ['Hammerfaustschlag', 'Faustrückenschlag', 'Handkantenschlag', 'Ellbogenschlag'], '');
+  L.mc('Was ist „Shuto-uchi“?', ['Handkantenschlag', 'Hammerfaustschlag', 'Fingerstich', 'Handballenstoß'], '');
+  L.mc('Was ist „Empi-uchi“ (Enpi-uchi)?', ['Ellbogenschlag', 'Knieschlag', 'Kopfstoß', 'Fußtritt'], '');
+  L.mc('Welche Technik folgt zum 6. Kyu im Kihon nach Soto-uke beim Umsetzen in Kiba-dachi?', ['Yoko-Empi-Uchi', 'Mae-geri', 'Shuto-uke', 'Gedan-barai'], '', S.po);
+  L.mc('Welche Technik kommt ab dem 5. Kyu nach Yoko-Empi-Uchi hinzu?', ['Tate-Uraken', 'Mawashi-geri', 'Nukite', 'Age-uke'], '', S.po);
+  L.mc('Wodurch unterscheidet sich Uchi von Tsuki laut JKA-Buch?', ['Bei Uchi wirkt die Kraft im rechten Winkel zum Unterarm, bei Tsuki in Richtung des gestreckten Unterarms', 'Uchi ist immer mit offener Hand', 'Uchi ist immer Gedan', 'Es gibt keinen Unterschied'], '', S.pdf);
+
+  L = SK.qb('ki-geri', S.allg);
+  L.mc('Was ist „Mae-geri“?', ['Fußtritt nach vorne', 'Fußtritt zur Seite', 'Fußtritt nach hinten', 'Halbkreisfußtritt'], '');
+  L.mc('Was ist „Yoko-geri“?', ['Seitlicher Fußtritt', 'Fußtritt nach vorne', 'Fußtritt nach hinten', 'Sicheltritt'], '');
+  L.mc('Was ist „Mawashi-geri“?', ['Halbkreisfußtritt', 'Fußtritt nach hinten', 'Stampftritt', 'Seitlicher Stoßtritt'], '');
+  L.mc('Was ist „Ushiro-geri“?', ['Fußtritt nach hinten', 'Fußtritt nach vorne', 'Fußtritt zur Seite', 'Fußfeger'], '');
+  L.mc('Was ist der Unterschied zwischen Keage und Kekomi?', ['Keage = Schnapptritt, Kekomi = Stoßtritt', 'Keage = Stoßtritt, Kekomi = Schnapptritt', 'Keage = Sprungtritt, Kekomi = Bodentritt', 'Kein Unterschied'], '', S.pdf);
+  L.mc('Was ist „Ren-geri“?', ['Kombination mehrerer Fußtritte', 'Fußtritt im Sprung', 'Fußfeger', 'Tritt mit dem Knie'], 'Theoriebegriff zum 3. Kyu.', S.po);
+  L.mc('Was ist „Sonoba-geri“?', ['Fußtritte am Platz (Standübung)', 'Fußtritte im Sprung', 'Fußtritte rückwärts gehend', 'Fußtritte gegen den Sandsack'], 'Theoriebegriff zum 1. Kyu.', S.po);
+  L.mc('Was ist „Kizami-geri“?', ['Fußtritt mit dem vorderen Bein', 'Fußtritt mit dem hinteren Bein', 'Fußtritt nach hinten', 'Doppeltritt im Sprung'], 'Theoriebegriff zum 2. Kyu.', S.po);
+  L.mc('Auf welcher Höhe werden Ushiro-geri und Yoko-geri-kekomi im DJKB-Kihon generell ausgeführt?', ['Chudan', 'Jodan', 'Gedan', 'Frei'], '', S.po);
+  L.mc('Auf welcher Höhe werden laut DJKB alle übrigen Fußtritte (auch Kizami-mae-geri) generell ausgeführt?', ['Jodan', 'Chudan', 'Gedan', 'Frei'], 'Ausnahmen sind im Programm angegeben.', S.po);
+  L.mc('In welche Richtung(en) sind seitliche Fußtritte in der DJKB-Prüfung auszuführen?', ['In beide Richtungen', 'Nur nach rechts', 'Nur nach links', 'Nach Wahl des Prüflings'], '', S.po);
+  L.mc('Was ist „Mikazuki-geri“?', ['Sicheltritt', 'Stampftritt', 'Fußtritt nach hinten', 'Knietritt'], '', S.pdf);
+  L.mc('Was ist „Fumikomi“?', ['Stampftritt / Aufstampfen', 'Sprungtritt', 'Sicheltritt', 'Fegetritt'], '', S.pdf);
+
+  // ---------- Kumite ----------
+  L = SK.qb('ku-formen', S.po);
+  L.mc('Was ist „Gohon-Kumite“?', ['Fünfschritt-Kumite', 'Dreischritt-Kumite', 'Einschritt-Kumite', 'Freikampf'], 'Theoriebegriff zum 8. Kyu.');
+  L.mc('Was ist „Kihon-Ippon-Kumite“?', ['Einschritt-Grundkumite mit angesagtem Angriff', 'Fünfschritt-Kumite', 'Freikampf', 'Kumite gegen mehrere Gegner'], 'Theoriebegriff zum 8. Kyu.');
+  L.mc('Was ist „Jiyu-Ippon-Kumite“?', ['Freies Einschritt-Kumite aus Chudan-Kamae', 'Fünfschritt-Kumite', 'Freikampf ohne Regeln', 'Kumite im Sitzen'], 'Theoriebegriff zum 2. Kyu.');
+  L.mc('Was ist „Okuri-Jiyu-Ippon-Kumite“?', ['Jiyu-Ippon-Kumite mit einem Folgeangriff', 'Kumite mit Waffen', 'Freikampf gegen zwei Gegner', 'Gohon-Kumite rückwärts'], 'Theoriebegriff zum 1. Kyu.');
+  L.mc('Was ist „Happo-Kumite“?', ['Kumite in acht Richtungen (gegen mehrere Angreifer)', 'Kumite mit fünf Angriffen', 'Kumite im Kniestand', 'Kumite mit verbundenen Augen'], 'Theoriebegriff zum 2. Dan.');
+  L.mc('Was ist „Jiyu-Kumite“?', ['Freikampf', 'Einschritt-Kumite', 'Fünfschritt-Kumite', 'Kata-Anwendung'], '');
+  L.order('Ordne die Kumite-Formen nach ihrem ersten Auftreten in der DJKB-Prüfungsordnung (früheste zuerst):', ['Kihon-Ippon-Kumite (9. Kyu)', 'Gohon-Kumite (8. Kyu)', 'Jiyu-Ippon-Kumite (2. Kyu)', 'Jiyu-Kumite (2. Dan)'], '');
+  L.multi('Welche Formen zählt die Prüfungsordnung zu „sämtlichen Formen des Partnertrainings unserer Stilrichtung“?', ['Gohon-Kumite', 'Kihon-Ippon-Kumite', 'Kaeshi-Ippon-Kumite', 'Jiyu-Ippon-Kumite', 'Okuri-Jiyu-Ippon-Kumite', 'Jiyu-Kumite'], ['Sanbon-Kumite mit Waffen', 'Randori im Liegen'], '');
+  L.mc('Wie viele Angriffe führt der Angreifer beim Gohon-Kumite fortlaufend aus?', ['5', '3', '1', '7'], '');
+  L.mc('Was folgt beim Gohon-Kumite nach der fünften Abwehr?', ['Gegenangriff Chudan-Gyaku-zuki mit Kiai', 'Ein Fußfeger', 'Die Verbeugung', 'Ein weiterer Block'], '');
+  L.mc('Aus welcher Stellung beginnt der Angreifer beim Gohon-Kumite (8. Kyu)?', ['Aus Zk (Gedan-Kamae links), erster Angriff rechts', 'Aus Kiba-dachi', 'Aus Shizentai', 'Aus Kokutsu-dachi'], '');
+  L.mc('In welcher Stellung steht der Verteidiger zu Beginn des Gohon-Kumite?', ['Hachiji-dachi (Shizentai)', 'Zenkutsu-dachi', 'Kiba-dachi', 'Kokutsu-dachi'], '');
+
+  L = SK.qb('ku-prinzipien', S.po);
+  L.mc('Warum wird im Kihon der Stufe I (9.–7. Kyu) nur vorwärts geübt?', ['Damit sich Anfänger besser auf die Stellung konzentrieren können', 'Weil rückwärts zu gefährlich ist', 'Weil der Platz fehlt', 'Weil Rückwärtsbewegungen nicht prüfungsrelevant sind'], '');
+  L.mc('Was ist in Stufe I beim Kumite unbedingt zu beachten?', ['Die korrekte Distanz bei Angriff, Abwehr und Konter', 'Möglichst viele Kombinationen', 'Freie Technikwahl', 'Sprungtechniken'], '');
+  L.mc('Wo soll der Abwehrende in Stufe I den Angriff blocken?', ['Dicht vor seinem Körper, kraftvoll', 'Möglichst weit vom Körper entfernt', 'Gar nicht – nur ausweichen', 'Mit beiden Händen über dem Kopf'], '');
+  L.mc('Worauf wird in Stufe II (6.–4. Kyu) besonderer Wert gelegt?', ['Hüftdrehung in der Abwehr und kraftvoller Konter aus derselben Stellung', 'Konter aus einer anderen Stellung', 'Freikampf', 'Kata-Bunkai'], '');
+  L.mc('Mit welcher Einstellung soll der Angreifer im Kihon-Ippon-Kumite angreifen?', ['Als gäbe es nur eine einzige Angriffschance', 'Locker und ohne Kraft', 'Mit vielen Finten', 'Mit möglichst großer Distanz'], '');
+  L.mc('Warum steht der Abwehrende im Kihon-Ippon-Kumite zunächst ruhig in Shizentai?', ['Um die psychische Stabilität zu verbessern', 'Um Kraft zu sparen', 'Weil es schneller ist', 'Damit der Prüfer besser sieht'], '');
+  L.mc('Was ist das Besondere an Stufe III (3. Kyu bis Dan) im Kumite?', ['Der Konter erfolgt aus einer anderen Stellung als die Abwehr – das verstärkt ihn', 'Es wird nur noch geblockt', 'Der Konter erfolgt immer mit Fußtritt', 'Es gibt keine Abwehr mehr'], '');
+  L.mc('Was schult Jiyu-Ippon-Kumite laut Prüfungsordnung besonders?', ['Distanz, Timing, schnelle Entscheidungen und Überwinden eigener Unsicherheit', 'Nur die Kraft', 'Nur die Ausdauer', 'Kata-Ablauf'], '');
+  L.mc('Was darf der Abwehrende im Jiyu-Ippon-Kumite nicht tun?', ['Den Abstand vergrößern, um sich dem Angriff zu entziehen', 'Kontern', 'Ausweichen', 'In Chudan-Kamae stehen'], '');
+  L.mc('Was folgt nach dem Kime-Waza im Jiyu-Ippon-Kumite?', ['Wieder Kamae mit Zanshin', 'Verbeugung', 'Sofort ein zweiter Angriff', 'Wechsel in Seiza'], '');
+  L.mc('Wie kann der Abwehrende laut Prüfungsordnung im Kihon-Ippon zusätzlich trainieren (erhöhte Risikobereitschaft)?', ['Block von innen nach außen, z. B. rechter Block gegen rechten Angriff mit linkem Bein zurück', 'Mit geschlossenen Augen', 'Nur mit Fußtechniken', 'Ohne Konter'], '');
+})();

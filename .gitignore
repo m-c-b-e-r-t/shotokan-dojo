@@ -1,0 +1,7 @@
+# Urheberrechtlich geschütztes Quellmaterial – niemals veröffentlichen
+*.pdf
+tools/out/
+
+# Lokale Python-Umgebung
+.venv/
+__pycache__/

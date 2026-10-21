@@ -1,0 +1,158 @@
+/* Gemeinsamer Namensraum, Hilfsfunktionen und Speicher (localStorage). */
+(function () {
+  'use strict';
+
+  const SK = (window.SK = {
+    units: [],
+    questions: [],
+    kata: {},
+    grades: [],
+    sources: {},
+  });
+
+  SK.PDF_SOURCE = 'Karate-Do Kata Vol. 1 (JKA)';
+
+  SK.util = {
+    shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    },
+    sample(arr, n) {
+      return SK.util.shuffle(arr).slice(0, n);
+    },
+    esc(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    },
+    today() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    },
+    addDays(isoDate, days) {
+      const d = new Date(isoDate + 'T12:00:00');
+      d.setDate(d.getDate() + days);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    },
+    el(tag, attrs, ...children) {
+      const node = document.createElement(tag);
+      if (attrs) {
+        for (const [k, v] of Object.entries(attrs)) {
+          if (v == null || v === false) continue;
+          if (k === 'class') node.className = v;
+          else if (k === 'text') node.textContent = v;
+          else if (k === 'html') node.innerHTML = v;
+          else if (k.startsWith('on')) node.addEventListener(k.slice(2), v);
+          else node.setAttribute(k, v === true ? '' : v);
+        }
+      }
+      for (const c of children.flat()) {
+        if (c == null || c === false) continue;
+        node.append(c instanceof Node ? c : document.createTextNode(String(c)));
+      }
+      return node;
+    },
+  };
+
+  const KEY = 'shotokan-dojo-v1';
+  const blank = () => ({
+    version: 1,
+    xp: 0,
+    streak: 0,
+    bestStreak: 0,
+    lastActive: null,
+    lessons: {},
+    srs: {},
+    exams: {},
+    answered: 0,
+    correct: 0,
+    settings: {},
+  });
+
+  SK.store = {
+    data: blank(),
+    load() {
+      try {
+        const raw = localStorage.getItem(KEY);
+        if (raw) SK.store.data = Object.assign(blank(), JSON.parse(raw));
+      } catch (e) {
+        SK.store.data = blank();
+      }
+    },
+    save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(SK.store.data));
+      } catch (e) {
+        /* Speicher voll oder deaktiviert – App funktioniert weiter ohne Persistenz */
+      }
+    },
+    reset() {
+      SK.store.data = blank();
+      SK.store.save();
+    },
+    exportJson() {
+      return JSON.stringify(SK.store.data, null, 1);
+    },
+    importJson(text) {
+      const obj = JSON.parse(text);
+      if (!obj || typeof obj !== 'object' || obj.version !== 1 || typeof obj.lessons !== 'object' || typeof obj.srs !== 'object') {
+        throw new Error('Ungültige Sicherungsdatei');
+      }
+      SK.store.data = Object.assign(blank(), {
+        xp: Number(obj.xp) || 0,
+        streak: Number(obj.streak) || 0,
+        bestStreak: Number(obj.bestStreak) || 0,
+        lastActive: typeof obj.lastActive === 'string' ? obj.lastActive : null,
+        lessons: obj.lessons,
+        srs: obj.srs,
+        exams: typeof obj.exams === 'object' && obj.exams ? obj.exams : {},
+        answered: Number(obj.answered) || 0,
+        correct: Number(obj.correct) || 0,
+        settings: { unlockAll: !!(obj.settings && obj.settings.unlockAll) },
+      });
+      SK.store.save();
+    },
+    touchStreak() {
+      const d = SK.store.data;
+      const t = SK.util.today();
+      if (d.lastActive === t) return;
+      d.streak = d.lastActive === SK.util.addDays(t, -1) ? d.streak + 1 : 1;
+      d.bestStreak = Math.max(d.bestStreak, d.streak);
+      d.lastActive = t;
+    },
+    currentStreak() {
+      const d = SK.store.data;
+      const t = SK.util.today();
+      if (d.lastActive === t || d.lastActive === SK.util.addDays(t, -1)) return d.streak;
+      return 0;
+    },
+  };
+
+  SK.addQuestions = function (list) {
+    for (const q of list) SK.questions.push(q);
+  };
+
+  /* Fragen-Baukasten: richtige Antwort steht im Quelltext immer zuerst, die Anzeige mischt. */
+  const qCount = {};
+  SK.qb = function (lesson, defaultSrc, extra) {
+    const base = (type, q, options, answer, explain, src) => {
+      qCount[lesson] = (qCount[lesson] || 0) + 1;
+      const item = Object.assign({ id: `${lesson}-${qCount[lesson]}`, lesson, type, q, options, answer, explain: explain || '', src: src || defaultSrc }, extra || {});
+      SK.questions.push(item);
+      return item;
+    };
+    return {
+      mc: (q, options, explain, src) => base('mc', q, options, 0, explain, src),
+      multi: (q, right, wrong, explain, src) =>
+        base('multi', q, right.concat(wrong), right.map((_, i) => i), explain, src),
+      order: (q, items, explain, src) => base('order', q, items, null, explain, src),
+    };
+  };
+})();
