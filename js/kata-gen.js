@@ -42,8 +42,7 @@
       .filter((r) => r[0] >= from && r[0] <= to)
       .map(
         (r) =>
-          `<tr${k.kiai.includes(r[0]) ? ' class="kiai"' : ''}><td>${r[0]}</td><td>${util.esc(r[1])}</td><td>${util.esc(r[2])}${
-            k.kiai.includes(r[0]) ? ' <span class="badge">Kiai</span>' : ''
+          `<tr${k.kiai.includes(r[0]) ? ' class="kiai"' : ''}><td>${r[0]}</td><td class="st-cell">${SK.gfx.stanceFor(r[1], { mini: true })}<span>${util.esc(r[1])}</span></td><td>${util.esc(r[2])}${k.kiai.includes(r[0]) ? ' <span class="badge">Kiai</span>' : ''
           }${r[4] ? `<br><span class="muted small">${util.esc(r[4])}</span>` : ''}</td></tr>`
       )
       .join('');

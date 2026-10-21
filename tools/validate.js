@@ -5,7 +5,7 @@
   const out = [];
   SK.fillGradeLearn();
   const kataUnits = SK.buildKataContent();
-  const units = SK.generalUnits.concat(kataUnits);
+  const units = SK.generalUnits.concat(kataUnits, [SK.buildGlossaryContent()]);
   const lessons = new Map();
   units.forEach((u) => u.lessons.forEach((l) => lessons.set(l.id, u)));
 

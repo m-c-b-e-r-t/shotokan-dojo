@@ -7,7 +7,6 @@
 
   async function answerAll(correctly) {
     for (let guard = 0; guard < 100; guard++) {
-      await wait();
       const card = app.querySelector('.quiz-card');
       if (!card) return;
       const opts = [...app.querySelectorAll('.option')];
@@ -27,7 +26,6 @@
         }
       }
       app.querySelector('.quiz-footer .btn.primary').click();
-      await wait();
       const next = app.querySelector('.quiz-footer .btn.primary');
       if (next && app.querySelector('.feedback')) next.click();
     }
@@ -44,12 +42,29 @@
         const score = app.querySelector('.result .score');
         log.push(`Prüfung ${g.id}: ${n.split('/')[1]} Fragen, Ergebnis ${score ? score.textContent : 'FEHLT'}`);
       }
-      for (const id of ['et-dojo', 'heian-shodan-ueberblick', 'kanku-dai-ablauf', 'pr-theorie']) {
+      for (const id of ['et-dojo', 'heian-shodan-ueberblick', 'gl-stand', 'gl-waffe', 'kanku-dai-ablauf']) {
         location.hash = `#/quiz/${id}`;
         await wait();
-        await answerAll(id !== 'pr-theorie');
+        await answerAll(true);
         const score = app.querySelector('.result .score');
-        log.push(`Lektion ${id}: ${score ? score.textContent : 'FEHLT'}`);
+        log.push(`Lektion ${id}: ${score ? score.textContent : 'FEHLT (gesperrt?)'}`);
+      }
+      for (const scope of ['alle', 'kata', 'begriffe']) {
+        location.hash = `#/zufall/${scope}`;
+        await wait();
+        const before = app.querySelector('.card b').textContent;
+        app.querySelector('.actions .btn.primary').click();
+        await answerAll(true);
+        location.hash = `#/zufall/${scope}/x`;
+        await wait();
+        location.hash = `#/zufall/${scope}`;
+        await wait();
+        log.push(`Zufall ${scope}: vorher ${before}, nachher ${app.querySelector('.card b').textContent} ungestellt`);
+      }
+      for (const h of ['#/', '#/wissen', '#/wissen/da-kampf', '#/wissen/heian-godan-b17', '#/lexikon', '#/begriffe', '#/stats']) {
+        location.hash = h;
+        await wait();
+        log.push(`Seite ${h}: ${app.querySelector('h1') ? app.querySelector('h1').textContent : 'FEHLT'}`);
       }
       location.hash = '#/review';
       await wait();

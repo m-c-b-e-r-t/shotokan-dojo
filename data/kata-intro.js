@@ -54,6 +54,7 @@
         id: 'kb-ziele',
         title: 'Trefferzonen (Anhang)',
         learn: `
+          <div class="gfx-grid">${SK.gfx.figure(SK.gfx.targets(), 'Trefferzonen', 'Auswahl nach dem Anhang des Buchs')}</div>
           <ul>
             <li><b>Kasumi / Komekami</b> – Schläfe</li>
             <li><b>Jinchu / Bika</b> – zwischen Oberlippe und Nasenansatz</li>

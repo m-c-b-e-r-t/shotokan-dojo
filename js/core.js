@@ -74,6 +74,8 @@
     answered: 0,
     correct: 0,
     settings: {},
+    asked: {},
+    read: {},
   });
 
   SK.store = {
@@ -116,6 +118,8 @@
         answered: Number(obj.answered) || 0,
         correct: Number(obj.correct) || 0,
         settings: { unlockAll: !!(obj.settings && obj.settings.unlockAll) },
+        asked: typeof obj.asked === 'object' && obj.asked ? obj.asked : {},
+        read: typeof obj.read === 'object' && obj.read ? obj.read : {},
       });
       SK.store.save();
     },

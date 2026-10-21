@@ -155,6 +155,7 @@
         const ok = isCorrect(q, given);
         results.push({ q, ok, given: Array.isArray(given) ? given.slice() : given });
         SK.srs.record(q.id, ok);
+        store.data.asked[q.id] = 1;
         store.data.answered++;
         if (ok) store.data.correct++;
         store.save();

@@ -2,32 +2,31 @@
    Quellen: DJKB-Prüfungsordnung 2013, DJKB-Verfahrensordnung 2024, allgemeines Shotokan-Wissen. */
 (function () {
   'use strict';
-
-  /* Einfache Fußstellungs-Grafik (Draufsicht, vorne = oben). feet: [x, y, Drehung, Gewicht 0..1] */
-  function stance(title, feet, note) {
-    const f = feet
-      .map(
-        ([x, y, r, w]) =>
-          `<g transform="translate(${x} ${y}) rotate(${r})"><ellipse rx="11" ry="24" fill="${w > 0.5 ? '#b71c1c' : w > 0 ? '#e57373' : '#9e9e9e'}"/><circle cy="-27" r="4" fill="${
-            w > 0.5 ? '#b71c1c' : w > 0 ? '#e57373' : '#9e9e9e'
-          }"/></g>`
-      )
-      .join('');
-    return `<figure class="stance"><svg viewBox="0 0 200 200" role="img" aria-label="${title}">
-      <rect x="1" y="1" width="198" height="198" rx="12" fill="#fafafa" stroke="#ddd"/>
-      <path d="M100 8 l-8 12 h16 z" fill="#555"/><text x="100" y="34" font-size="11" text-anchor="middle" fill="#555">vorne</text>
-      ${f}</svg><figcaption><b>${title}</b>${note ? `<br>${note}` : ''}</figcaption></figure>`;
-  }
+  const G = SK.gfx;
+  const grid = (...figs) => `<div class="gfx-grid">${figs.join('')}</div>`;
   const S = {
-    musubi: stance('Musubi-dachi', [[88, 120, -28, 0.5], [112, 120, 28, 0.5]], 'Fersen zusammen, Fußspitzen V-förmig geöffnet'),
-    heisoku: stance('Heisoku-dachi', [[88, 115, 0, 0.5], [112, 115, 0, 0.5]], 'Füße geschlossen und parallel'),
-    hachiji: stance('Hachiji-dachi', [[68, 115, -15, 0.5], [132, 115, 15, 0.5]], 'Füße etwa schulterbreit, Spitzen leicht nach außen (Shizentai)'),
-    zenkutsu: stance('Hidari Zenkutsu-dachi', [[78, 70, 0, 0.8], [122, 160, 20, 0.3]], 'Vorderes Knie gebeugt, hinteres Bein gestreckt – Gewicht überwiegend vorne'),
-    kokutsu: stance('Migi Kokutsu-dachi', [[100, 70, 0, 0.3], [100, 155, 90, 0.8]], 'Gewicht überwiegend auf dem hinteren Bein, vorderer Fuß berührt den Boden leicht'),
-    kiba: stance('Kiba-dachi', [[50, 115, 0, 0.5], [150, 115, 0, 0.5]], 'Reiterstand: Füße parallel, Knie nach außen, Gewicht gleich verteilt'),
-    kosa: stance('Migi Ashi-mae Kosa-dachi', [[105, 90, 0, 0.8], [88, 140, -30, 0.2]], 'Kreuzstand: linker Fuß hinter der rechten Ferse, Beine gekreuzt'),
-    neko: stance('Neko-ashi-dachi', [[100, 72, 0, 0.1], [108, 150, 35, 0.8]], 'Katzenfußstand: fast das gesamte Gewicht auf dem hinteren Bein'),
+    musubi: G.stanceFigure('musubi'),
+    heisoku: G.stanceFigure('heisoku'),
+    hachiji: G.stanceFigure('hachiji'),
+    zenkutsu: G.stanceFigure('zenkutsu', false, 'Hidari Zenkutsu-dachi'),
+    zenkutsuR: G.stanceFigure('zenkutsu', true, 'Migi Zenkutsu-dachi'),
+    kokutsu: G.stanceFigure('kokutsu', false, 'Migi Kokutsu-dachi'),
+    kokutsuL: G.stanceFigure('kokutsu', true, 'Hidari Kokutsu-dachi'),
+    kiba: G.stanceFigure('kiba'),
+    kosa: G.stanceFigure('kosa', true, 'Migi Ashi-mae Kosa-dachi'),
+    neko: G.stanceFigure('neko'),
+    fudo: G.stanceFigure('fudo'),
+    hangetsu: G.stanceFigure('hangetsu'),
+    sanchin: G.stanceFigure('sanchin'),
+    renoji: G.stanceFigure('renoji'),
+    teiji: G.stanceFigure('teiji'),
+    ashizenkutsu: G.stanceFigure('ashizenkutsu', false, 'Hidari Ashi-zenkutsu'),
+    hizakutsu: G.stanceFigure('hizakutsu', false, 'Hidari Hizakutsu'),
+    ashidachi: G.stanceFigure('ashidachi', false, 'Hidari Ashi-dachi'),
+    orishiki: G.stanceFigure('orishiki', false, 'Migi Ashi Orishiki Hidari Hiza-tate'),
   };
+  const W = (key, caption, note) => G.figure(G.WEAPONS[key](), caption, note);
+  const M = (key, caption, note) => G.figure(G.MOVES[key](), caption, note);
 
   SK.generalUnits = [
     {
@@ -136,7 +135,8 @@
               <li><b>Jodan</b> = obere Stufe (Gesicht), <b>Chudan</b> = mittlere Stufe (Brust/Rumpf), <b>Gedan</b> = untere Stufe (Unterbauch)</li>
               <li>Graduierungen: <b>Kyu</b> = Schülergrad (zählt abwärts bis 1. Kyu), <b>Dan</b> = Meistergrad (Shodan = 1. Dan, Nidan = 2. Dan, Sandan = 3. Dan)</li>
               <li>Kata-Namen: <b>Shodan, Nidan, Sandan, Yondan, Godan</b> = 1. bis 5. Stufe</li>
-            </ul>`,
+            </ul>
+            ${grid(G.figure(G.levels(), 'Die drei Stufen', 'Jodan = Gesicht, Chudan = Brust, Gedan = Unterbauch (Definition im JKA-Kata-Buch)'))}`,
         },
         {
           id: 'te-koerper', title: 'Körperwaffen', minGrade: '8kyu',
@@ -151,7 +151,11 @@
               <li><b>Koshi</b> (Josokutei) – Fußballen (Mae-geri, Mawashi-geri)</li>
               <li><b>Sokuto</b> – Fußkante (Yoko-geri); <b>Kakato</b> – Ferse (Ushiro-geri); <b>Haisoku</b> – Fußrücken</li>
               <li><b>Hiza</b> – Knie; <b>Zenwan</b> – Unterarm</li>
-            </ul>`,
+            </ul>
+            <h4>Hand</h4>
+            ${grid(W('seiken', 'Seiken'), W('uraken', 'Uraken'), W('tettsui', 'Tettsui / Kentsui'), W('shuto', 'Shuto'), W('haito', 'Haito'), W('nukite', 'Nukite'), W('teisho', 'Teisho'), W('haishu', 'Haishu'))}
+            <h4>Fuß, Arm und Bein</h4>
+            ${grid(W('koshi', 'Koshi (Fußballen)'), W('sokuto', 'Sokuto (Fußkante)'), W('kakato', 'Kakato (Ferse)'), W('haisoku', 'Haisoku (Fußrücken)'), W('hiji', 'Hiji / Enpi (Ellbogen)'), W('zenwan', 'Zenwan (Unterarm)'), W('hiza', 'Hiza (Knie)'))}`,
         },
         {
           id: 'te-konzepte', title: 'Wichtige Konzepte', minGrade: '7kyu',
@@ -180,7 +184,7 @@
       lessons: [
         {
           id: 'da-grund', title: 'Grund- & Natürliche Stände', minGrade: '9kyu',
-          learn: `<div class="stance-grid">${S.musubi}${S.heisoku}${S.hachiji}</div>
+          learn: `${grid(S.musubi, S.heisoku, S.hachiji)}
             <ul>
               <li><b>Musubi-dachi</b>: Grußstellung – Fersen zusammen, Fußspitzen geöffnet.</li>
               <li><b>Heisoku-dachi</b>: Füße geschlossen (z. B. Yoi von Tekki, Bassai Dai, Jion, Enpi).</li>
@@ -189,7 +193,8 @@
         },
         {
           id: 'da-kampf', title: 'Zenkutsu, Kokutsu, Kiba', minGrade: '9kyu',
-          learn: `<div class="stance-grid">${S.zenkutsu}${S.kokutsu}${S.kiba}</div>
+          learn: `${grid(S.zenkutsu, S.zenkutsuR, S.kokutsu, S.kokutsuL, S.kiba)}
+            <p class="muted small">Dunkelrot = Fuß mit dem meisten Gewicht. Im JKA-Kata-Buch heißt Zenkutsu-dachi nach dem <b>vorderen</b> Bein, Kokutsu-dachi nach dem <b>hinteren</b> (belasteten) Bein – z. B. „Migi Kokutsu-dachi, Hidari Shuto-uke“: rechtes Bein hinten, linkes vorne.</p>
             <ul>
               <li><b>Zenkutsu-dachi (Zk)</b> – Vorwärtsstellung: vorderes Knie gebeugt (über dem Fuß), hinteres Bein gestreckt, Gewicht überwiegend vorne.</li>
               <li><b>Kokutsu-dachi (Kk)</b> – Rückwärtsstellung: Gewicht überwiegend hinten, hinterer Fuß quer, vorderer Fuß zeigt nach vorne.</li>
@@ -200,7 +205,7 @@
         },
         {
           id: 'da-weitere', title: 'Weitere Stände', minGrade: '5kyu',
-          learn: `<div class="stance-grid">${S.kosa}${S.neko}</div>
+          learn: `${grid(S.kosa, S.neko, S.fudo, S.hangetsu, S.sanchin, S.renoji, S.teiji)}
             <ul>
               <li><b>Kosa-dachi</b> – Kreuzstand (Begriff der Theorie zum 1. Dan).</li>
               <li><b>Neko-ashi-dachi</b> – Katzenfußstand, fast das ganze Gewicht hinten.</li>
@@ -208,7 +213,9 @@
               <li><b>Hangetsu-dachi</b> – Halbmondstand (aus der Kata Hangetsu).</li>
               <li><b>Renoji-dachi</b> – L-förmiger Stand; <b>Teiji-dachi</b> – T-förmiger Stand.</li>
               <li><b>Sanchin-dachi</b> – Sanduhrstand, Knie nach innen gespannt.</li>
-            </ul>`,
+            </ul>
+            <h4>Stände aus dem JKA-Kata-Buch</h4>
+            ${grid(S.ashizenkutsu, S.hizakutsu, S.ashidachi, S.orishiki)}`,
         },
       ],
     },
@@ -227,7 +234,8 @@
               <li><b>Ren-zuki</b> – schnelle Folge von Stößen; <b>Morote-zuki</b> – Doppelfauststoß.</li>
               <li><b>Kagi-zuki</b> – Hakenstoß; <b>Ura-zuki</b> – kurzer Stoß mit Handrücken nach unten; <b>Age-zuki</b> – Aufwärtsstoß; <b>Yama-zuki</b> – „Bergfauststoß“.</li>
               <li>Laut DJKB-Prüfungsordnung werden alle Fauststöße generell <b>Chudan</b> ausgeführt, sofern nichts anderes angegeben ist.</li>
-            </ul>`,
+            </ul>
+            ${grid(M('oi-zuki', 'Oi-zuki', 'Faust und vorderer Fuß auf derselben Seite'), M('gyaku-zuki', 'Gyaku-zuki', 'Faust und vorderer Fuß auf entgegengesetzten Seiten'))}`,
         },
         {
           id: 'ki-uke', title: 'Uke – Abwehrtechniken', minGrade: '9kyu',
@@ -242,7 +250,8 @@
               <li><b>Juji-uke / Kosa-uke</b> – gekreuzte Abwehr; <b>Kakiwake-uke</b> – auseinanderdrückende Abwehr.</li>
               <li><b>Nagashi-uke</b> – fließende, ablenkende Abwehr (Theorie 1. Dan); <b>Osae-uke</b> – drückende Abwehr.</li>
               <li><b>Kake-uke</b> – Hakenabwehr; <b>Teisho-uke</b> – Handballenabwehr; <b>Sukui-uke</b> – schöpfende Abwehr.</li>
-            </ul>`,
+            </ul>
+            ${grid(M('age-uke', 'Age-uke', 'nach oben'), M('gedan-barai', 'Gedan-barai', 'nach unten, fegend'), M('soto-uke', 'Soto-uke', 'von außen nach innen'), M('uchi-uke', 'Uchi-uke', 'von innen nach außen'))}`,
         },
         {
           id: 'ki-uchi', title: 'Uchi – Schläge', minGrade: '7kyu',
@@ -254,7 +263,8 @@
               <li><b>Empi-uchi / Enpi-uchi</b> – Ellbogenschlag (Mae-, Yoko-, Ushiro-, Mawashi-, Tate-, Otoshi-enpi).</li>
               <li><b>Haito-uchi</b> – Schlag mit der inneren Handkante.</li>
               <li>In der Prüfungsordnung ab dem 6. Kyu: Soto-uke / umsetzen in Kb mit <b>Yoko-Empi-Uchi</b>; ab dem 5. Kyu zusätzlich <b>Tate-Uraken</b>.</li>
-            </ul>`,
+            </ul>
+            ${grid(W('uraken', 'Uraken-uchi'), W('tettsui', 'Tettsui-uchi'), W('shuto', 'Shuto-uchi'), W('hiji', 'Enpi-uchi'))}`,
         },
         {
           id: 'ki-geri', title: 'Geri – Fußtritte', minGrade: '8kyu',
@@ -269,7 +279,8 @@
               <li><b>Sonoba-geri</b> – Fußtritte am Platz (Standübung, Theorie 1. Kyu).</li>
               <li><b>Kizami-geri</b> – Tritt mit dem vorderen Bein (Theorie 2. Kyu).</li>
               <li>DJKB: <b>Ushiro-geri und Yoko-geri-kekomi</b> generell Chudan; alle übrigen Fußtritte (auch Kizami-mae-geri) generell <b>Jodan</b>. Seitliche Fußtritte in beide Richtungen.</li>
-            </ul>`,
+            </ul>
+            ${grid(M('mae-geri', 'Mae-geri', 'nach vorne'), M('yoko-geri', 'Yoko-geri', 'zur Seite'), M('mawashi-geri', 'Mawashi-geri', 'im Halbkreis'), M('ushiro-geri', 'Ushiro-geri', 'nach hinten'), M('mikazuki-geri', 'Mikazuki-geri', 'Sicheltritt'))}`,
         },
       ],
     },
