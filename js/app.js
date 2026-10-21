@@ -92,7 +92,7 @@
         { class: 'tiles' },
         tile('#/wissen', 'Wissen', `Alle Inhalte zum Durcharbeiten – ${read}/${allLessons.length} gelesen`),
         tile('#/quiz', 'Quiz', 'Lernpfad mit Freischalten, Zufallsmix aus allen Fragen', 'primary'),
-        tile('#/begriffe', 'Begriffe-Trainer', 'Was ist das für ein Stand / eine Technik? Stumpf abfragen – alles abgedeckt'),
+        tile('#/begriffe', 'Begriffe-Trainer', 'Stände, Techniken & Begriffe – kurz abgefragt'),
         tile('#/zufall', 'Zufallsmix', `${SK.questions.length - asked} Fragen noch nie gestellt`),
         tile('#/review', 'Wiederholen', due ? `${due} Fragen fällig` : 'Heute nichts fällig'),
         tile('#/exam', 'Prüfung', 'Theorieprüfung 9. Kyu bis 3. Dan simulieren')
@@ -247,7 +247,7 @@
         { class: 'tiles' },
         el('a', { class: 'tile primary', href: '#/zufall' }, el('h3', { text: 'Zufallsmix' }), el('p', { text: `Zufällig aus dem gesamten Pool – ${SK.questions.length - asked} noch nie gestellt` })),
         el('a', { class: 'tile', href: '#/review' }, el('h3', { text: 'Wiederholen' }), el('p', { text: due ? `${due} Fragen fällig` : 'Heute nichts fällig' })),
-        el('a', { class: 'tile', href: '#/begriffe' }, el('h3', { text: 'Begriffe-Trainer' }), el('p', { text: 'Stände, Techniken, Körperwaffen' }))
+        el('a', { class: 'tile', href: '#/begriffe' }, el('h3', { text: 'Begriffe-Trainer' }), el('p', { text: 'Stände, Techniken & Begriffe – kurz abgefragt' }))
       ),
       el('p', { class: 'muted small', text: 'Lernpfad: Jede Lektion mit mind. 80 % bestehen, um die nächste freizuschalten.' })
     );
@@ -386,7 +386,7 @@
     const total = drillUnit.lessons.reduce((s, l) => s + (qByLesson[l.id] || []).length, 0);
     app.append(
       el('h1', { text: 'Begriffe-Trainer' }),
-      el('p', { class: 'muted', text: `Stumpf abfragen: Was ist das für ein Stand, eine Technik, ein Körperteil? Jeder Begriff wird in beide Richtungen und – wo vorhanden – mit Grafik abgefragt (${total} Fragen).` }),
+      el('p', { class: 'muted', text: `Stände, Techniken & Begriffe – kurz abgefragt. Jeder Begriff kommt in beide Richtungen und, wo es eine Grafik gibt, auch als Bildfrage (${total} Fragen).` }),
       el('div', { class: 'actions' }, el('a', { class: 'btn primary', href: '#/zufall/begriffe', text: 'Alle Begriffe gemischt' }), el('a', { class: 'btn', href: '#/lexikon', text: 'Lexikon ansehen' })),
       el(
         'div',

@@ -152,7 +152,7 @@
   const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
   SK.buildGlossaryContent = function () {
-    const unit = { id: 'begriffe-trainer', title: 'Begriffe-Trainer', kind: 'drill', desc: 'Was ist das für ein Stand / eine Technik? – alles abgedeckt', lessons: [] };
+    const unit = { id: 'begriffe-trainer', title: 'Begriffe-Trainer', kind: 'drill', desc: 'Stände, Techniken & Begriffe – kurz abgefragt', lessons: [] };
     SK.glossaryCats.forEach((c) => {
       const items = SK.glossary.filter((e) => e.cat === c.id);
       const lid = `gl-${c.id}`;
