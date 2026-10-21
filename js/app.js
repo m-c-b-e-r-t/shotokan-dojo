@@ -229,17 +229,19 @@
       count.textContent = shown === 1 ? '1 Eintrag' : `${shown} Einträge`;
     }
     search.addEventListener('input', filter);
-    // Lupe/Enter auf der Handy-Tastatur: Tastatur schließen, damit die Treffer sichtbar sind.
-    search.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter') return;
+    // Handy-Tastaturen melden die Lupe zuverlässig nur als Formular-Submit, nicht als keydown.
+    const form = el('form', { role: 'search', action: '#' }, search);
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
+      filter();
       search.blur();
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
       count.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
     app.append(
       el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Wissen' }), ' › ', el('span', { text: 'Lexikon' })),
       el('h1', { text: 'Lexikon' }),
-      search,
+      form,
       chips,
       count,
       list
