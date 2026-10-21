@@ -190,7 +190,7 @@
     setNav('wissen');
     setTitle('Lexikon');
     app.innerHTML = '';
-    const search = el('input', { type: 'search', class: 'search', placeholder: 'Suchen, z. B. „Kokutsu“ oder „Ferse“', 'aria-label': 'Lexikon durchsuchen' });
+    const search = el('input', { type: 'search', class: 'search', enterkeyhint: 'search', placeholder: 'Suchen, z. B. „Kokutsu“ oder „Ferse“', 'aria-label': 'Lexikon durchsuchen' });
     let cat = '';
     const chips = el(
       'div',
@@ -229,6 +229,13 @@
       count.textContent = shown === 1 ? '1 Eintrag' : `${shown} Einträge`;
     }
     search.addEventListener('input', filter);
+    // Lupe/Enter auf der Handy-Tastatur: Tastatur schließen, damit die Treffer sichtbar sind.
+    search.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      search.blur();
+      count.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
     app.append(
       el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Wissen' }), ' › ', el('span', { text: 'Lexikon' })),
       el('h1', { text: 'Lexikon' }),
