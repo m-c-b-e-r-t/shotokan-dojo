@@ -531,8 +531,16 @@ figure.gfx svg {
   height: 36px;
 }
 
-.kctx-line.hint {
-  color: var(--muted);
+.hint-btn {
+  margin-top: 0.4rem;
+  padding: 0.25rem 0.7rem;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--red);
+  background: none;
+  border: 1px dashed var(--red);
+  border-radius: 999px;
+  cursor: pointer;
 }
 
 /* ---------- Kacheln, Suche, Lexikon ---------- */

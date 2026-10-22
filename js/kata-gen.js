@@ -185,14 +185,26 @@
     const prev = k.seq[c.from - 2];
     const row = k.seq[c.from - 1];
     const line = (label, r) => el('div', { class: 'kctx-line', html: `${SK.gfx.stanceFor(r[1], { mini: true })}<span><b>${util.esc(label)}</b> ${util.esc(r[1])} – ${util.esc(r[2])}</span>` });
+    const hints = [
+      prev ? line(`Davor (${prev[0]}):`, prev) : el('div', { class: 'kctx-line', text: 'Erste Bewegung nach Yoi' }),
+      c.show === 'tech' ? el('div', { class: 'kctx-line', html: `<span><b>Technik dieser Bewegung:</b> ${util.esc(row[2])}</span>` }) : null,
+      c.show === 'stand' ? el('div', { class: 'kctx-line', html: `${SK.gfx.stanceFor(row[1], { mini: true })}<span><b>Stand dieser Bewegung:</b> ${util.esc(row[1])}</span>` }) : null,
+    ].filter(Boolean);
+    const shown = el('div', { class: 'kctx-hints' });
+    const btn = el('button', { type: 'button', class: 'hint-btn', text: 'Hinweis anzeigen' });
+    btn.addEventListener('click', () => {
+      shown.append(hints.shift());
+      btn.textContent = 'Weiteren Hinweis anzeigen';
+      btn.blur();
+      if (!hints.length) btn.remove();
+    });
     return el(
       'div',
       { class: 'kata-ctx' },
       el('div', { class: 'kbar-wrap' }, el('span', { class: 'kbar-num', text: '1' }), bar, el('span', { class: 'kbar-num', text: String(k.moves) })),
       el('div', { class: 'kbar-cap', text: `${pos} von ${k.moves} · orange = Kiai` }),
-      prev ? line(`Davor (${prev[0]}):`, prev) : el('div', { class: 'kctx-line', text: 'Erste Bewegung nach Yoi' }),
-      c.show === 'tech' ? el('div', { class: 'kctx-line hint', html: `<span><b>Technik dieser Bewegung:</b> ${util.esc(row[2])}</span>` }) : null,
-      c.show === 'stand' ? el('div', { class: 'kctx-line hint', html: `${SK.gfx.stanceFor(row[1], { mini: true })}<span><b>Stand dieser Bewegung:</b> ${util.esc(row[1])}</span>` }) : null
+      shown,
+      btn
     );
   };
 

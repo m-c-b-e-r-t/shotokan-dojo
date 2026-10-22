@@ -20,7 +20,7 @@
   };
   SK.bookSrc = (n) => `${SK.BOOK_SOURCE}, ${SK.bookPages(n)}`;
   // Bei jeder veröffentlichten Änderung hochzählen
-  SK.VERSION = '1.8.0';
+  SK.VERSION = '1.8.1';
   SK.VERSION_DATE = '22.10.2026';
 
   SK.util = {
