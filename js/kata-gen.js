@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   const { util } = SK;
-  const P = (n) => `${SK.PDF_SOURCE}, PDF-Seite ${n}`;
+  const P = (n) => SK.bookSrc(n);
   const CHUNK = 8;
 
   const GLOBAL_STANCES = [
@@ -48,7 +48,7 @@
       .join('');
     return `<table class="moves"><thead><tr><th>#</th><th>Stand</th><th>Technik</th></tr></thead><tbody>${rows}</tbody></table>
       <p class="muted small">Bei mehrteiligen Bewegungen ist die Endstellung angegeben (im Buch jeweils zuletzt aufgeführt); Zwischenschritte stehen grau darunter.</p>
-      <p class="src">Quelle: ${util.esc(SK.PDF_SOURCE)}, ab PDF-Seite ${k.seq.find((r) => r[0] === from)[3]}</p>`;
+      <p class="src">Quelle: ${util.esc(SK.BOOK_SOURCE)}, ab ${SK.bookPages(k.seq.find((r) => r[0] === from)[3])}</p>`;
   }
 
   function buildKata(k) {

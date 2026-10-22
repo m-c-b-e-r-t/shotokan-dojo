@@ -1,7 +1,7 @@
 /* Allgemeines Kata-Wissen aus Karate-Do Kata Vol. 1 (Vorwort, Content and Guidance, Anhang). */
 (function () {
   'use strict';
-  const P = (n) => `${SK.PDF_SOURCE}, PDF-Seite ${n}`;
+  const P = (n) => SK.bookSrc(n);
 
   SK.kataOrder = ['heian-shodan', 'heian-nidan', 'heian-sandan', 'heian-yondan', 'heian-godan', 'tekki-shodan', 'bassai-dai', 'kanku-dai', 'jion', 'enpi'];
 

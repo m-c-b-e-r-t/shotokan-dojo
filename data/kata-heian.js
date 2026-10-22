@@ -1,8 +1,8 @@
 /* Kata-Daten Heian Shodan bis Godan. Einzige Quelle: Karate-Do Kata Vol. 1 (JKA).
-   seq: [Nr, Stand, Technik, PDF-Seite]; Fakten-Fragen sind sinngemäß übersetzt. */
+   seq: [Nr, Stand, Technik, Seite der Scan-Datei (Buchseiten über SK.bookPages)]; Fakten-Fragen sind sinngemäß übersetzt. */
 (function () {
   'use strict';
-  const P = (n) => `${SK.PDF_SOURCE}, PDF-Seite ${n}`;
+  const P = (n) => SK.bookSrc(n);
 
   SK.kata['heian-shodan'] = {
     id: 'heian-shodan', name: 'Heian Shodan', moves: 21, kiai: [9, 17], firstPage: 6,

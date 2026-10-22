@@ -1,7 +1,7 @@
 /* Kata-Daten Bassai Dai, Kanku Dai, Jion, Enpi. Einzige Quelle: Karate-Do Kata Vol. 1 (JKA). */
 (function () {
   'use strict';
-  const P = (n) => `${SK.PDF_SOURCE}, PDF-Seite ${n}`;
+  const P = (n) => SK.bookSrc(n);
 
   SK.kata['bassai-dai'] = {
     id: 'bassai-dai', name: 'Bassai Dai', moves: 42, kiai: [19, 42], firstPage: 79,

@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   const G = SK.gfx;
-  const PDF = (n) => `${SK.PDF_SOURCE}, PDF-Seite ${n}`;
+  const PDF = (n) => SK.bookSrc(n);
   const ALLG = SK.sources.allg;
   const PO = SK.sources.po;
 

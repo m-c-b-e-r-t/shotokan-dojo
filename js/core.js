@@ -10,10 +10,18 @@
     sources: {},
   });
 
-  SK.PDF_SOURCE = 'Karate-Do Kata Vol. 1 (JKA)';
+  SK.BOOK_SOURCE = 'Karate-Do Kata Vol. 1 (JKA)';
+  // Interne Seitenzahlen = Seiten der Scan-Datei; ab Seite 6 enthält jede eine gedruckte Doppelseite.
+  SK.bookPages = (n) => {
+    if (n >= 6) return `S. ${2 * (n - 5)}–${2 * (n - 5) + 1}`;
+    if (n === 5) return 'S. 1 (Inhaltsverzeichnis)';
+    if (n === 4) return 'S. ii–iii (Content and Guidance)';
+    return 'Vorwort';
+  };
+  SK.bookSrc = (n) => `${SK.BOOK_SOURCE}, ${SK.bookPages(n)}`;
   // Bei jeder veröffentlichten Änderung hochzählen
-  SK.VERSION = '1.6.0';
-  SK.VERSION_DATE = '21.10.2026';
+  SK.VERSION = '1.7.0';
+  SK.VERSION_DATE = '22.10.2026';
 
   SK.util = {
     shuffle(arr) {

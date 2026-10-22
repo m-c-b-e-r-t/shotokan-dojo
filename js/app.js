@@ -707,7 +707,7 @@
         { class: 'card' },
         el('h3', { text: 'Quellen' }),
         el('ul', {}, Object.values(SK.sources).map((s) => el('li', { text: s }))),
-        el('p', { class: 'muted small', text: 'Kata-Fragen sind sinngemäße deutsche Zusammenfassungen aus „Karate-Do Kata Vol. 1“ (JKA Shihan-kai, 2003) mit Seitenangabe der PDF-Ausgabe. Prüfungsangaben ohne Gewähr – maßgeblich ist die jeweils gültige DJKB-Prüfungsordnung.' })
+        el('p', { class: 'muted small', text: 'Kata-Fragen sind sinngemäße deutsche Zusammenfassungen aus „Karate-Do Kata Vol. 1“ (JKA Shihan-kai, 2003) mit Angabe der gedruckten Buchseiten. Prüfungsangaben ohne Gewähr – maßgeblich ist die jeweils gültige DJKB-Prüfungsordnung.' })
       ),
       versionLine()
     );

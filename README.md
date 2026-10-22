@@ -2,7 +2,7 @@
 
 Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikette, Geschichte, Begriffe, Stände, Kihon, Kumite, DJKB-Prüfungen (9. Kyu bis 3. Dan) und detailliertes Kata-Wissen.
 
-- Kata-Fragen stammen ausschließlich aus „Karate-Do Kata Vol. 1“ (JKA) – mit PDF-Seitenangabe.
+- Kata-Fragen stammen ausschließlich aus „Karate-Do Kata Vol. 1“ (JKA) – mit Angabe der gedruckten Buchseiten.
 - Getrennte Bereiche: **Wissen** (alle Inhalte + Lexikon mit Grafiken), **Quiz** (Lernpfad, Zufallsmix aus dem Gesamtpool), **Begriffe-Trainer** (Stände, Techniken, Körperwaffen stumpf abfragen), **Prüfung**.
 - Lernpfad mit Freischalten, XP, Tages-Serie, Wiederholung nach Karteikasten-Prinzip, Prüfungssimulation.
 - Fortschritt nur lokal im Browser (localStorage), Export/Import unter „Fortschritt“.

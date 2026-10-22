@@ -31,7 +31,7 @@
     if (q.type === 'mc' && q.options.length < 3) errors.push(`${q.id}: nur ${q.options.length} Optionen`);
     if (q.type === 'multi' && (!q.answer.length || q.answer.some((i) => i >= q.options.length))) errors.push(`${q.id}: multi answer ungültig`);
     if (q.type === 'order' && q.options.length < 3) errors.push(`${q.id}: order zu kurz`);
-    if (u.kind === 'kata' && !/PDF-Seite \d+/.test(q.src)) errors.push(`${q.id}: Kata-Frage ohne PDF-Seitenangabe (${q.src})`);
+    if (u.kind === 'kata' && !/, (S\. [\divx]|Vorwort)/.test(q.src)) errors.push(`${q.id}: Kata-Frage ohne Buchseitenangabe (${q.src})`);
     if (q.g && SK.gradeIndex(q.g) < 0) errors.push(`${q.id}: unbekannter Grad ${q.g}`);
   }
 
