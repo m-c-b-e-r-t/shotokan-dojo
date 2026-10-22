@@ -472,6 +472,69 @@ figure.gfx svg {
   border-radius: 6px;
 }
 
+/* ---------- Orientierung bei Kata-Fragen ---------- */
+.kata-ctx {
+  margin: 0.4rem 0 0.8rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 0.88rem;
+}
+
+.kbar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.kbar {
+  flex: 1;
+  display: flex;
+  gap: 1px;
+  height: 10px;
+}
+
+.kbar-seg {
+  flex: 1;
+  background: var(--line);
+  border-radius: 2px;
+}
+
+.kbar-seg.kiai {
+  background: #ffb74d;
+}
+
+.kbar-seg.on {
+  background: var(--red);
+  transform: scaleY(1.6);
+}
+
+.kbar-num,
+.kbar-cap {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.kbar-cap {
+  margin: 0.25rem 0 0.4rem;
+}
+
+.kctx-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.kctx-line .mini-stance {
+  width: 34px;
+  height: 36px;
+}
+
+.kctx-line.hint {
+  color: var(--muted);
+}
+
 /* ---------- Kacheln, Suche, Lexikon ---------- */
 .tiles {
   display: grid;

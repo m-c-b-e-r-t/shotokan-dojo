@@ -150,8 +150,51 @@
       if (techCount[row[2]] !== 1) return;
       L.mc(`${k.name}: In welcher Bewegung wird „${row[2]}“ ausgeführt?`, numberOptions(row[0], k.moves, 3), `Stand: ${row[1]}`, P(row[3]));
     });
+    addContext(k, new Set(unit.lessons.map((l) => l.id)));
     return unit;
   }
+
+  // Fragen mit Bewegungsnummer bekommen Orientierung: Position in der Kata, vorherige Bewegung, ggf. die andere Hälfte der Bewegung.
+  function addContext(k, lessonIds) {
+    SK.questions.forEach((q) => {
+      if (!lessonIds.has(q.lesson) || q.ctx) return;
+      const range = /Bewegungen (\d+)–(\d+)/.exec(q.q);
+      const one = /Bewegung (\d+)/.exec(q.q);
+      if (!range && !one) return;
+      const from = Number(range ? range[1] : one[1]);
+      const to = Number(range ? range[2] : one[1]);
+      if (from < 1 || to > k.moves) return;
+      let show = null;
+      if (/In welchem Stand endet die Bewegung\?$/.test(q.q)) show = 'tech';
+      else if (/, Bewegung \d+: Welche Technik\?$/.test(q.q)) show = 'stand';
+      q.ctx = { kata: k.id, from, to, show };
+    });
+  }
+
+  SK.kataContext = function (q) {
+    const c = q.ctx;
+    const k = c && SK.kata[c.kata];
+    if (!k) return null;
+    const { el } = util;
+    const bar = el('div', { class: 'kbar', 'aria-hidden': 'true' });
+    for (let i = 1; i <= k.moves; i++) {
+      const seg = el('span', { class: `kbar-seg${i >= c.from && i <= c.to ? ' on' : ''}${k.kiai.includes(i) ? ' kiai' : ''}` });
+      bar.append(seg);
+    }
+    const pos = c.from === c.to ? `Bewegung ${c.from}` : `Bewegungen ${c.from}–${c.to}`;
+    const prev = k.seq[c.from - 2];
+    const row = k.seq[c.from - 1];
+    const line = (label, r) => el('div', { class: 'kctx-line', html: `${SK.gfx.stanceFor(r[1], { mini: true })}<span><b>${util.esc(label)}</b> ${util.esc(r[1])} – ${util.esc(r[2])}</span>` });
+    return el(
+      'div',
+      { class: 'kata-ctx' },
+      el('div', { class: 'kbar-wrap' }, el('span', { class: 'kbar-num', text: '1' }), bar, el('span', { class: 'kbar-num', text: String(k.moves) })),
+      el('div', { class: 'kbar-cap', text: `${pos} von ${k.moves} · orange = Kiai` }),
+      prev ? line(`Davor (${prev[0]}):`, prev) : el('div', { class: 'kctx-line', text: 'Erste Bewegung nach Yoi' }),
+      c.show === 'tech' ? el('div', { class: 'kctx-line hint', html: `<span><b>Technik dieser Bewegung:</b> ${util.esc(row[2])}</span>` }) : null,
+      c.show === 'stand' ? el('div', { class: 'kctx-line hint', html: `${SK.gfx.stanceFor(row[1], { mini: true })}<span><b>Stand dieser Bewegung:</b> ${util.esc(row[1])}</span>` }) : null
+    );
+  };
 
   function buildCross() {
     const L = SK.qb('kb-vergleich', P(5));

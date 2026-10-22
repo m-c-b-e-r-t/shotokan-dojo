@@ -73,6 +73,7 @@
         'section',
         { class: 'quiz-card' },
         opts.title ? el('div', { class: 'quiz-title', text: opts.title }) : null,
+        q.ctx && SK.kataContext ? SK.kataContext(q) : null,
         el('h2', { class: 'quiz-q', text: q.q }),
         q.img ? el('img', { class: 'quiz-img', src: q.img, alt: '' }) : null,
         typeHint ? el('p', { class: 'type-hint', text: typeHint }) : null
