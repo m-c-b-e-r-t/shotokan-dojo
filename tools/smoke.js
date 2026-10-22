@@ -42,13 +42,26 @@
         const score = app.querySelector('.result .score');
         log.push(`Prüfung ${g.id}: ${n.split('/')[1]} Fragen, Ergebnis ${score ? score.textContent : 'FEHLT'}`);
       }
-      for (const id of ['et-dojo', 'heian-shodan-ueberblick', 'gl-stand', 'gl-waffe', 'kanku-dai-ablauf']) {
+      for (const id of ['et-dojo', 'heian-shodan-ueberblick', 'gl-stand', 'gl-waffe']) {
         location.hash = `#/quiz/${id}`;
         await wait();
         await answerAll(true);
         const score = app.querySelector('.result .score');
         log.push(`Lektion ${id}: ${score ? score.textContent : 'FEHLT (gesperrt?)'}`);
       }
+      // Letzte Kata-Lektion muss gesperrt sein und mit „alles freischalten“ laufen.
+      location.hash = '#/quiz/kanku-dai-ablauf';
+      await wait();
+      log.push(`Sperre kanku-dai-ablauf: ${app.querySelector('.quiz-card') ? 'FEHLER – nicht gesperrt' : 'gesperrt (erwartet)'}`);
+      SK.store.data.settings.unlockAll = true;
+      location.hash = '#/quiz/x';
+      await wait();
+      location.hash = '#/quiz/kanku-dai-ablauf';
+      await wait();
+      await answerAll(true);
+      const unlockedScore = app.querySelector('.result .score');
+      log.push(`Lektion kanku-dai-ablauf (freigeschaltet): ${unlockedScore ? unlockedScore.textContent : 'FEHLT'}`);
+      SK.store.data.settings.unlockAll = false;
       for (const scope of ['alle', 'kata', 'begriffe']) {
         location.hash = `#/zufall/${scope}`;
         await wait();
