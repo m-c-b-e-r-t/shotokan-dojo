@@ -121,7 +121,7 @@
     return el(
       'p',
       { class: 'version' },
-      `Version ${SK.VERSION} · Stand ${SK.VERSION_DATE} · `,
+      `Version ${SK.VERSION} · Stand ${SK.VERSION_DATE}, ${SK.VERSION_TIME} Uhr · `,
       el('a', { href: '#/datenschutz', text: 'Datenschutz' })
     );
   }
