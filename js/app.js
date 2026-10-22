@@ -1,4 +1,4 @@
-/* Router und Ansichten: Wissen, Lexikon, Quiz-Lernpfad, Zufallsmix, Begriffe-Trainer, Wiederholung, Prüfung, Fortschritt. */
+/* Router und Ansichten: Wissen, Lexikon, Quiz-Lernpfad, Zufallsmix, Begriffe-Trainer, Wiederholung, Prüfung, Fortschritt, Datenschutz. */
 (function () {
   'use strict';
   const { util, store } = SK;
@@ -34,13 +34,28 @@
   function unitProgress(u) {
     return { done: u.lessons.filter((l) => passed(l.id)).length, total: u.lessons.length };
   }
+  // Höchstens eine Frage je Gruppe (z. B. derselbe Begriff); weitere nur, wenn sonst zu wenige da sind.
+  function distinct(list, n) {
+    const seen = new Set();
+    const first = [];
+    const rest = [];
+    list.forEach((q) => {
+      const g = q.grp || q.id;
+      (seen.has(g) ? rest : first).push(q);
+      seen.add(g);
+    });
+    return first.concat(rest).slice(0, n);
+  }
+  // Neue und fällige Fragen zuerst, bereits sicher beantwortete zuletzt.
   function pickRound(list, n) {
+    const t = util.today();
     const scored = list.map((q) => {
-      const b = SK.srs.box(q.id);
-      return { q, w: (b === 0 ? 3 : 6 - b) + Math.random() * 2 };
+      const s = store.data.srs[q.id];
+      const w = !s ? 6 : s.due <= t ? 7 - s.b : 5 - s.b;
+      return { q, w: w + Math.random() * 2 };
     });
     scored.sort((a, b) => b.w - a.w);
-    return util.shuffle(scored.slice(0, n).map((s) => s.q));
+    return util.shuffle(distinct(scored.map((s) => s.q), n));
   }
   function setTitle(t) {
     document.title = t ? `${t} – Shotokan Dojo` : 'Shotokan Dojo – Lernen & Quiz';
@@ -103,7 +118,12 @@
   }
 
   function versionLine() {
-    return el('p', { class: 'version', text: `Version ${SK.VERSION} · Stand ${SK.VERSION_DATE}` });
+    return el(
+      'p',
+      { class: 'version' },
+      `Version ${SK.VERSION} · Stand ${SK.VERSION_DATE} · `,
+      el('a', { href: '#/datenschutz', text: 'Datenschutz' })
+    );
   }
 
   // ---------- Wissen ----------
@@ -358,7 +378,7 @@
     select.value = scope.id;
     select.addEventListener('change', () => (location.hash = `#/zufall/${select.value}`));
     const start = (n) => {
-      const qs = util.sample(fresh, n);
+      const qs = distinct(util.shuffle(fresh), n);
       SK.runQuiz(app, qs, {
         mode: 'review',
         title: `Zufallsmix · ${scope.title}`,
@@ -500,7 +520,7 @@
     const actions = el('div', { class: 'actions' });
     if (due.length) actions.append(el('button', { class: 'btn primary', text: `${Math.min(15, due.length)} fällige Fragen üben`, onclick: () => start(due.slice(0, 15), 'Wiederholung') }));
     else actions.append(el('p', { text: 'Heute ist nichts fällig – gut gemacht!' }));
-    if (seen.length >= 5) actions.append(el('button', { class: 'btn', text: 'Gemischtes Training (10 gesehene Fragen)', onclick: () => start(util.sample(seen, 10), 'Gemischtes Training') }));
+    if (seen.length >= 5) actions.append(el('button', { class: 'btn', text: 'Gemischtes Training (10 gesehene Fragen)', onclick: () => start(util.shuffle(distinct(util.shuffle(seen), 10)), 'Gemischtes Training') }));
     app.append(actions);
     finishView();
   }
@@ -714,6 +734,37 @@
     finishView();
   }
 
+  // ---------- Datenschutz ----------
+  function viewDatenschutz() {
+    setNav('');
+    setTitle('Datenschutz');
+    app.innerHTML = '';
+    const link = (href, text) => el('a', { href, text, target: '_blank', rel: 'noopener noreferrer' });
+    app.append(
+      el('h1', { text: 'Datenschutz' }),
+      el(
+        'section',
+        { class: 'card' },
+        el('h3', { text: 'Privates Projekt' }),
+        el('p', { text: 'Diese Seite ist ein privates, nicht kommerzielles Lernprojekt. Es werden keine Cookies, keine Besucherstatistik und keine Inhalte von fremden Servern verwendet.' })
+      ),
+      el(
+        'section',
+        { class: 'card' },
+        el('h3', { text: 'Hosting' }),
+        el('p', {}, 'Die Seite wird über GitHub Pages (GitHub Inc., USA) bereitgestellt. Beim Aufruf verarbeitet GitHub technisch notwendige Daten wie die IP-Adresse, um die Seite auszuliefern und abzusichern. Details: ', link('https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement', 'Datenschutzerklärung von GitHub'), '.')
+      ),
+      el(
+        'section',
+        { class: 'card' },
+        el('h3', { text: 'Lernfortschritt' }),
+        el('p', { text: 'Dein Fortschritt wird ausschließlich lokal in deinem Browser (localStorage) gespeichert und nicht übertragen. Du kannst ihn jederzeit unter „Profil“ → „Alles zurücksetzen“ löschen.' })
+      ),
+      versionLine()
+    );
+    finishView();
+  }
+
   function viewNotFound() {
     app.innerHTML = '';
     app.append(el('h1', { text: 'Seite nicht gefunden' }), el('a', { class: 'btn', href: '#/', text: 'Zur Startseite' }));
@@ -734,6 +785,7 @@
     if (view === 'review') return viewReview();
     if (view === 'exam') return arg ? viewExamGrade(arg) : viewExamList();
     if (view === 'stats') return viewStats();
+    if (view === 'datenschutz') return viewDatenschutz();
     return viewNotFound();
   }
   window.addEventListener('hashchange', route);

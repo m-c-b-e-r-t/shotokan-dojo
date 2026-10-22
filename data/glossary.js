@@ -163,11 +163,13 @@
         const others = items.filter((o) => o !== e);
         const pick = (field) => SK.util.shuffle(others.map((o) => o[field]).filter((v, i, a) => v !== e[field] && a.indexOf(v) === i)).slice(0, 3);
         const id = `gl-${slug(e.t)}`;
-        const base = { lesson: lid, type: 'mc', answer: 0, src: e.src };
+        const base = { lesson: lid, grp: id, type: 'mc', answer: 0, src: e.src };
         const svg = svgs.get(e);
+        const own = svg && !others.some((o) => svgs.get(o) === svg);
         SK.questions.push(Object.assign({ id: `${id}-a`, q: `Was ist „${e.t}“?`, options: [e.de].concat(pick('de')), explain: '' }, base));
-        SK.questions.push(Object.assign({ id: `${id}-b`, q: `Wie heißt: ${e.de}?`, options: [e.t].concat(pick('t')), explain: '' }, base, svg ? { img: G.dataUri(svg) } : {}));
-        if (svg && !others.some((o) => svgs.get(o) === svg)) {
+        // Bild nur hier, wenn es keine eigene Bildfrage gibt – sonst wären -b und -c fast gleich.
+        SK.questions.push(Object.assign({ id: `${id}-b`, q: `Wie heißt: ${e.de}?`, options: [e.t].concat(pick('t')), explain: '' }, base, svg && !own ? { img: G.dataUri(svg) } : {}));
+        if (own) {
           SK.questions.push(Object.assign({ id: `${id}-c`, q: c.ask, img: G.dataUri(svg), options: [e.t].concat(pick('t')), explain: e.de }, base));
         }
       });
