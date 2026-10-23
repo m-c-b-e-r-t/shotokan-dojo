@@ -792,6 +792,26 @@
     return viewNotFound();
   }
   window.addEventListener('hashchange', route);
+  // Grafik-Knöpfe in Lektionen und Lexikon: Fußbild ↔ Seitenansicht, Standbild ↔ Animation
+  document.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('.gfx-box .gfx-btn');
+    if (!btn) return;
+    const box = btn.closest('.gfx-box');
+    const views = box.querySelectorAll(':scope > .gfx-view');
+    const on = btn.getAttribute('aria-pressed') !== 'true';
+    btn.setAttribute('aria-pressed', String(on));
+    if (btn.dataset.act === 'side') {
+      views[0].hidden = on;
+      views[1].hidden = !on;
+      btn.textContent = on ? 'Fußbild' : 'Seitenansicht';
+    } else {
+      const anim = box.querySelector(':scope > .gfx-anim');
+      anim.innerHTML = on ? SK.gfx.animSvg(box.dataset.gfx) : '';
+      anim.hidden = !on;
+      views[0].hidden = on;
+      btn.textContent = on ? '■ Standbild' : '▶ Bewegung';
+    }
+  });
   route();
 
   SK.debug = { units, lessonIndex, qByLesson, examQuestions };

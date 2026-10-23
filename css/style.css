@@ -663,6 +663,38 @@ figure.gfx svg {
   margin: 0.3rem 0;
 }
 
+/* Grafik-Knöpfe: Seitenansicht / Animation */
+.gfx-tools {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.35rem 0 0.2rem;
+}
+
+.gfx-btn {
+  min-height: 34px;
+  padding: 0.3rem 0.8rem;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gfx-btn[aria-pressed="true"] {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.gfx-btn.quiz-anim {
+  display: block;
+  margin: -0.4rem auto 0.8rem;
+}
+
 details.unit>summary {
   list-style: none;
 }

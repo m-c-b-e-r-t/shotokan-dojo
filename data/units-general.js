@@ -26,7 +26,8 @@
     orishiki: G.stanceFigure('orishiki', false, 'Migi Ashi Orishiki Hidari Hiza-tate'),
   };
   const W = (key, caption, note) => G.figure(G.WEAPONS[key](), caption, note);
-  const M = (key, caption, note) => G.figure(G.MOVES[key](), caption, note);
+  const M = (key, caption, note) => G.figure(G.MOVES[key](), caption, note, `mv:${key}`);
+  const T = (key, caption, note) => G.figure(G.TECH[key](), caption, note, `tc:${key}`);
 
   SK.generalUnits = [
     {
@@ -45,7 +46,8 @@
               <li><b>Yoi</b> – Bereit. <b>Hajime</b> – Beginnen. <b>Yame</b> – Aufhören. <b>Naore</b> – Zurück in die Ausgangsstellung. <b>Mawatte</b> – Wenden.</li>
               <li><b>Sensei</b> – Lehrer; <b>Senpai</b> – Fortgeschrittener; <b>Kohai</b> – Jüngerer/Anfänger.</li>
               <li>Laut DJKB-Prüfungsordnung muss man zum 9. Kyu die Etikette des An- und Abgrüßens beherrschen.</li>
-            </ul>`,
+            </ul>
+            ${grid(T('rei', 'Rei'), T('seiza', 'Seiza'), T('mokuso', 'Mokuso'), T('kiritsu', 'Kiritsu'), T('yoi', 'Yoi'), T('mawatte', 'Mawatte'))}`,
         },
         {
           id: 'et-dojokun', title: 'Dojo-Kun', minGrade: '9kyu',
@@ -175,7 +177,13 @@
               <li><b>Tai-sabaki</b> – Körperausweichen; <b>Ashi-barai</b> – Fußfeger.</li>
               <li><b>Shiai</b> – Wettkampf.</li>
               <li><b>Bunkai</b> – Anwendung/Analyse der Kata-Techniken.</li>
-            </ul>`,
+            </ul>
+            <h4>Haltung und Kraft</h4>
+            ${grid(T('kiai', 'Kiai'), T('kime', 'Kime'), T('hikite', 'Hikite'), T('hanmi', 'Hanmi'), T('gyaku-hanmi', 'Gyaku-hanmi'), T('shizentai', 'Shizentai'))}
+            <h4>Partner und Distanz</h4>
+            ${grid(T('maai', 'Maai'), T('kogeki', 'Kogeki'), T('deai', 'Deai'), T('zanshin', 'Zanshin'), T('sun-dome', 'Sun-dome'), T('bunkai', 'Bunkai'))}
+            <h4>Schritte und Ausweichen</h4>
+            ${grid(T('suri-ashi', 'Suri-ashi'), T('yori-ashi', 'Yori-ashi'), T('tai-sabaki', 'Tai-sabaki'), T('ashi-barai', 'Ashi-barai'))}`,
         },
       ],
     },
@@ -194,7 +202,7 @@
         {
           id: 'da-kampf', title: 'Zenkutsu, Kokutsu, Kiba', minGrade: '9kyu',
           learn: `${grid(S.zenkutsu, S.zenkutsuR, S.kokutsu, S.kokutsuL, S.kiba)}
-            <p class="muted small">Dunkelrot = Fuß mit dem meisten Gewicht. Im JKA-Kata-Buch heißt Zenkutsu-dachi nach dem <b>vorderen</b> Bein, Kokutsu-dachi nach dem <b>hinteren</b> (belasteten) Bein – z. B. „Migi Kokutsu-dachi, Hidari Shuto-uke“: rechtes Bein hinten, linkes vorne.</p>
+            <p class="muted small">Die Prozentzahlen zeigen, wie das Gewicht verteilt ist; „Seitenansicht“ zeigt Kniebeugung und Haltung. Im JKA-Kata-Buch heißt Zenkutsu-dachi nach dem <b>vorderen</b> Bein, Kokutsu-dachi nach dem <b>hinteren</b> (belasteten) Bein – z. B. „Migi Kokutsu-dachi, Hidari Shuto-uke“: rechtes Bein hinten, linkes vorne.</p>
             <ul>
               <li><b>Zenkutsu-dachi (Zk)</b> – Vorwärtsstellung: vorderes Knie gebeugt (über dem Fuß), hinteres Bein gestreckt, Gewicht überwiegend vorne.</li>
               <li><b>Kokutsu-dachi (Kk)</b> – Rückwärtsstellung: Gewicht überwiegend hinten, hinterer Fuß quer, vorderer Fuß zeigt nach vorne.</li>
@@ -235,7 +243,9 @@
               <li><b>Kagi-zuki</b> – Hakenstoß; <b>Ura-zuki</b> – kurzer Stoß mit Handrücken nach unten; <b>Age-zuki</b> – Aufwärtsstoß; <b>Yama-zuki</b> – „Bergfauststoß“.</li>
               <li>Laut DJKB-Prüfungsordnung werden alle Fauststöße generell <b>Chudan</b> ausgeführt, sofern nichts anderes angegeben ist.</li>
             </ul>
-            ${grid(M('oi-zuki', 'Oi-zuki', 'Faust und vorderer Fuß auf derselben Seite'), M('gyaku-zuki', 'Gyaku-zuki', 'Faust und vorderer Fuß auf entgegengesetzten Seiten'))}`,
+            ${grid(M('oi-zuki', 'Oi-zuki', 'Faust und vorderer Fuß auf derselben Seite'), M('gyaku-zuki', 'Gyaku-zuki', 'Faust und vorderer Fuß auf entgegengesetzten Seiten'))}
+            <h4>Weitere Fauststoße</h4>
+            ${grid(T('choku-zuki', 'Choku-zuki'), T('kizami-zuki', 'Kizami-zuki'), T('sanbon-zuki', 'Sanbon-zuki'), T('ren-zuki', 'Ren-zuki'), T('morote-zuki', 'Morote-zuki'), T('kagi-zuki', 'Kagi-zuki'), T('ura-zuki', 'Ura-zuki'), T('age-zuki', 'Age-zuki'), T('yama-zuki', 'Yama-zuki'))}`,
         },
         {
           id: 'ki-uke', title: 'Uke – Abwehrtechniken', minGrade: '9kyu',
@@ -251,7 +261,9 @@
               <li><b>Nagashi-uke</b> – fließende, ablenkende Abwehr (Theorie 1. Dan); <b>Osae-uke</b> – drückende Abwehr.</li>
               <li><b>Kake-uke</b> – Hakenabwehr; <b>Teisho-uke</b> – Handballenabwehr; <b>Sukui-uke</b> – schöpfende Abwehr.</li>
             </ul>
-            ${grid(M('age-uke', 'Age-uke', 'nach oben'), M('gedan-barai', 'Gedan-barai', 'nach unten, fegend'), M('soto-uke', 'Soto-uke', 'von außen nach innen'), M('uchi-uke', 'Uchi-uke', 'von innen nach außen'))}`,
+            ${grid(M('age-uke', 'Age-uke', 'nach oben'), M('gedan-barai', 'Gedan-barai', 'nach unten, fegend'), M('soto-uke', 'Soto-uke', 'von außen nach innen'), M('uchi-uke', 'Uchi-uke', 'von innen nach außen'))}
+            <h4>Weitere Abwehrtechniken</h4>
+            ${grid(T('shuto-uke', 'Shuto-uke'), T('morote-uke', 'Morote-uke'), T('juji-uke', 'Juji-uke'), T('kakiwake-uke', 'Kakiwake-uke'), T('nagashi-uke', 'Nagashi-uke'), T('osae-uke', 'Osae-uke'), T('kake-uke', 'Kake-uke'), T('teisho-uke', 'Teisho-uke'), T('sukui-uke', 'Sukui-uke'))}`,
         },
         {
           id: 'ki-uchi', title: 'Uchi – Schläge', minGrade: '7kyu',
@@ -264,7 +276,9 @@
               <li><b>Haito-uchi</b> – Schlag mit der inneren Handkante.</li>
               <li>In der Prüfungsordnung ab dem 6. Kyu: Soto-uke / umsetzen in Kb mit <b>Yoko-Empi-Uchi</b>; ab dem 5. Kyu zusätzlich <b>Tate-Uraken</b>.</li>
             </ul>
-            ${grid(W('uraken', 'Uraken-uchi'), W('tettsui', 'Tettsui-uchi'), W('shuto', 'Shuto-uchi'), W('hiji', 'Enpi-uchi'))}`,
+            ${grid(W('uraken', 'Uraken-uchi'), W('tettsui', 'Tettsui-uchi'), W('shuto', 'Shuto-uchi'), W('hiji', 'Enpi-uchi'))}
+            <h4>Die Schläge in Bewegung</h4>
+            ${grid(T('uraken-uchi', 'Uraken-uchi'), T('tettsui-uchi', 'Tettsui-uchi'), T('shuto-uchi', 'Shuto-uchi'), T('haito-uchi', 'Haito-uchi'), T('enpi-uchi', 'Enpi-uchi'), T('furi-enpi', 'Furi-enpi'))}`,
         },
         {
           id: 'ki-geri', title: 'Geri – Fußtritte', minGrade: '8kyu',
@@ -280,7 +294,9 @@
               <li><b>Kizami-geri</b> – Tritt mit dem vorderen Bein (Theorie 2. Kyu).</li>
               <li>DJKB: <b>Ushiro-geri und Yoko-geri-kekomi</b> generell Chudan; alle übrigen Fußtritte (auch Kizami-mae-geri) generell <b>Jodan</b>. Seitliche Fußtritte in beide Richtungen.</li>
             </ul>
-            ${grid(M('mae-geri', 'Mae-geri', 'nach vorne'), M('yoko-geri', 'Yoko-geri', 'zur Seite'), M('mawashi-geri', 'Mawashi-geri', 'im Halbkreis'), M('ushiro-geri', 'Ushiro-geri', 'nach hinten'), M('mikazuki-geri', 'Mikazuki-geri', 'Sicheltritt'))}`,
+            ${grid(M('mae-geri', 'Mae-geri', 'nach vorne'), M('yoko-geri', 'Yoko-geri', 'zur Seite'), M('mawashi-geri', 'Mawashi-geri', 'im Halbkreis'), M('ushiro-geri', 'Ushiro-geri', 'nach hinten'), M('mikazuki-geri', 'Mikazuki-geri', 'Sicheltritt'))}
+            <h4>Weitere Fußtechniken</h4>
+            ${grid(T('yoko-geri-keage', 'Yoko-geri-keage'), T('fumikomi', 'Fumikomi'), T('ren-geri', 'Ren-geri'), T('sonoba-geri', 'Sonoba-geri'), T('kizami-geri', 'Kizami-geri'), T('hiza-geri', 'Hiza-geri'))}`,
         },
       ],
     },
@@ -298,7 +314,8 @@
               <li><b>Kaeshi-Ippon-Kumite</b> – Einschritt-Kumite mit Gegenangriff des Verteidigers und erneuter Abwehr.</li>
               <li><b>Jiyu-Kumite</b> – freier Kampf (DJKB: ab 2. Dan, alternativ Jiyu-Ippon je nach Alter).</li>
               <li><b>Happo-Kumite</b> – Kumite in acht Richtungen (Theorie 2. Dan).</li>
-            </ul>`,
+            </ul>
+            ${grid(T('gohon-kumite', 'Gohon-Kumite'), T('kihon-ippon-kumite', 'Kihon-Ippon-Kumite'), T('maai', 'Maai', 'richtige Distanz zum Partner'))}`,
         },
         {
           id: 'ku-prinzipien', title: 'Prinzipien im Kumite', minGrade: '6kyu',
@@ -310,7 +327,8 @@
               <li>Kihon-Ippon: Der Angreifer greift so an, als gäbe es nur eine Chance; der Verteidiger steht zunächst ruhig in <b>Shizentai</b> – das schult die psychische Stabilität.</li>
               <li><b>Stufe III (3. Kyu – Dan)</b>: Konter aus einer <i>anderen</i> Stellung als die Abwehr – der Stellungswechsel verstärkt den Konter (Gewichtsverlagerung und Hüftdrehung).</li>
               <li>Jiyu-Ippon-Kumite schult Distanz, Timing, schnelle Entscheidungen und das Überwinden eigener Unsicherheiten. Der Abwehrende darf den Abstand nicht vergrößern, sondern blockt bzw. weicht auf kurzer Distanz aus und kontert kraftvoll.</li>
-            </ul>`,
+            </ul>
+            ${grid(T('shizentai', 'Shizentai', 'Ausgangshaltung des Verteidigers im Kihon-Ippon'), T('chudan-kamae', 'Chudan-kamae', 'Ausgangshaltung im Jiyu-Ippon'), T('tai-sabaki', 'Tai-sabaki', 'Ausweichen auf kurzer Distanz'))}`,
         },
       ],
     },

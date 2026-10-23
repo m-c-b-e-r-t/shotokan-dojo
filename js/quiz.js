@@ -21,6 +21,19 @@
     return q.options.map((o, i) => `${i + 1}. ${o}`).join('  →  ');
   }
 
+  // Wechselt das Quizbild zwischen Standbild und Animation
+  function animButton(q) {
+    const btn = el('button', { type: 'button', class: 'gfx-btn quiz-anim', 'aria-pressed': 'false', text: '▶ Bewegung' });
+    btn.addEventListener('click', () => {
+      const img = btn.previousElementSibling;
+      const on = btn.getAttribute('aria-pressed') !== 'true';
+      img.src = on ? SK.gfx.dataUri(SK.gfx.animSvg(q.gfx)) : q.img;
+      btn.setAttribute('aria-pressed', String(on));
+      btn.textContent = on ? '■ Standbild' : '▶ Bewegung';
+    });
+    return btn;
+  }
+
   /**
    * Startet eine Quiz-Runde im Container.
    * opts: { mode: 'lesson'|'review'|'exam', title, onFinish(results), onExit() }
@@ -76,6 +89,7 @@
         q.ctx && SK.kataContext ? SK.kataContext(q) : null,
         el('h2', { class: 'quiz-q', text: q.q }),
         q.img ? el('img', { class: 'quiz-img', src: q.img, alt: '' }) : null,
+        q.img && q.gfx && SK.gfx.hasAnim(q.gfx) ? animButton(q) : null,
         typeHint ? el('p', { class: 'type-hint', text: typeHint }) : null
       );
 

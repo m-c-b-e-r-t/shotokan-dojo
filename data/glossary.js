@@ -17,10 +17,11 @@
     { id: 'begriff', title: 'Kommandos & Begriffe', ask: 'Welcher Begriff passt zur Grafik?' },
   ];
 
-  const st = (key, mirrored) => () => G.stanceSvg(key, mirrored);
-  const mv = (key) => () => G.MOVES[key]();
-  const wp = (key) => () => G.WEAPONS[key]();
-  const tc = (key) => () => G.TECH[key]();
+  const keyed = (key, fn) => Object.assign(fn, { key });
+  const st = (key, mirrored) => keyed(`st:${key}${mirrored ? ':m' : ''}`, () => G.stanceSvg(key, mirrored));
+  const mv = (key) => keyed(`mv:${key}`, () => G.MOVES[key]());
+  const wp = (key) => keyed(`wp:${key}`, () => G.WEAPONS[key]());
+  const tc = (key) => keyed(`tc:${key}`, () => G.TECH[key]());
 
   // [Begriff, Bedeutung, Kategorie, Grafik?, Quelle?]
   const E = [
@@ -133,18 +134,18 @@
     ['Mokuso', 'Augen schließen, meditieren', 'begriff', tc('mokuso'), PO],
     ['Kiritsu', 'Aufstehen', 'begriff', tc('kiritsu'), PO],
     ['Kiai', 'Kampfschrei', 'begriff', tc('kiai'), PO],
-    ['Kime', 'Konzentration aller Kraft im Treffmoment', 'begriff', null, PO],
-    ['Zanshin', 'Wache Aufmerksamkeit nach der Technik', 'begriff', null, PO],
+    ['Kime', 'Konzentration aller Kraft im Treffmoment', 'begriff', tc('kime'), PO],
+    ['Zanshin', 'Wache Aufmerksamkeit nach der Technik', 'begriff', tc('zanshin'), PO],
     ['Maai', 'Kampfdistanz', 'begriff', tc('maai'), PO],
-    ['Deai', 'Kontern im Moment des gegnerischen Angriffs', 'begriff', null, PO],
-    ['Kogeki', 'Angriff', 'begriff', null, PO],
+    ['Deai', 'Kontern im Moment des gegnerischen Angriffs', 'begriff', tc('deai'), PO],
+    ['Kogeki', 'Angriff', 'begriff', tc('kogeki'), PO],
     ['Suri-ashi', 'Gleitschritt', 'begriff', tc('suri-ashi'), PO],
     ['Yori-ashi', 'Beide Füße gleiten gemeinsam, der Stand bleibt erhalten', 'begriff', tc('yori-ashi'), PDF(38)],
     ['Tai-sabaki', 'Körperausweichbewegung', 'begriff', tc('tai-sabaki'), PO],
     ['Sun-dome', 'Technik kurz vor dem Ziel abstoppen', 'begriff', tc('sun-dome'), PO],
     ['Ashi-barai', 'Fußfeger', 'begriff', tc('ashi-barai'), PO],
     ['Enbusen', 'Bewegungslinie einer Kata', 'begriff', tc('enbusen'), PDF(4)],
-    ['Bunkai', 'Anwendung / Analyse der Kata-Techniken', 'begriff'],
+    ['Bunkai', 'Anwendung / Analyse der Kata-Techniken', 'begriff', tc('bunkai')],
   ];
 
   SK.glossary = E.map(([t, de, cat, img, src]) => ({ t, de, cat, img: img || null, src: src || ALLG }));
@@ -157,7 +158,8 @@
       const items = SK.glossary.filter((e) => e.cat === c.id);
       const lid = `gl-${c.id}`;
       unit.lessons.push({ id: lid, title: c.title, learn: SK.glossaryHtml(items) });
-      const svgs = new Map(items.map((e) => [e, e.img ? e.img() : null]));
+      // Quizbilder ohne Beschriftung (würde die Antwort verraten); Animation per Knopf (q.gfx)
+      const svgs = new Map(items.map((e) => [e, e.img ? G.plainSvg(e.img) : null]));
       items.forEach((e) => {
         const others = items.filter((o) => o !== e);
         const pick = (field) => SK.util.shuffle(others.map((o) => o[field]).filter((v, i, a) => v !== e[field] && a.indexOf(v) === i)).slice(0, 3);
@@ -165,11 +167,12 @@
         const base = { lesson: lid, grp: id, type: 'mc', answer: 0, src: e.src };
         const svg = svgs.get(e);
         const own = svg && !others.some((o) => svgs.get(o) === svg);
+        const anim = e.img && /^(mv|tc):/.test(e.img.key) ? { gfx: e.img.key } : {};
         SK.questions.push(Object.assign({ id: `${id}-a`, q: `Was ist „${e.t}“?`, options: [e.de].concat(pick('de')), explain: '' }, base));
         // Bild nur hier, wenn es keine eigene Bildfrage gibt – sonst wären -b und -c fast gleich.
-        SK.questions.push(Object.assign({ id: `${id}-b`, q: `Wie heißt: ${e.de}?`, options: [e.t].concat(pick('t')), explain: '' }, base, svg && !own ? { img: G.dataUri(svg) } : {}));
+        SK.questions.push(Object.assign({ id: `${id}-b`, q: `Wie heißt: ${e.de}?`, options: [e.t].concat(pick('t')), explain: '' }, base, svg && !own ? Object.assign({ img: G.dataUri(svg) }, anim) : {}));
         if (own) {
-          SK.questions.push(Object.assign({ id: `${id}-c`, q: c.ask, img: G.dataUri(svg), options: [e.t].concat(pick('t')), explain: e.de }, base));
+          SK.questions.push(Object.assign({ id: `${id}-c`, q: c.ask, img: G.dataUri(svg), options: [e.t].concat(pick('t')), explain: e.de }, base, anim));
         }
       });
     });
@@ -180,7 +183,7 @@
     return `<div class="lex-grid">${items
       .map(
         (e) => `<article class="lex-card" data-cat="${e.cat}" data-text="${SK.util.esc(`${e.t} ${e.de}`.toLowerCase())}">
-          ${e.img ? `<div class="lex-img">${e.img()}</div>` : ''}
+          ${e.img ? `<div class="lex-img">${G.box(e.img.key, e.img())}</div>` : ''}
           <h4>${SK.util.esc(e.t)}</h4><p>${SK.util.esc(e.de)}</p></article>`
       )
       .join('')}</div>`;

@@ -34,7 +34,8 @@
               <b>Kraftstufen</b>, <b>Zusammenziehen und Ausdehnen des Körpers</b> und <b>Wechsel der Geschwindigkeit</b>.</li>
             <li>Eine Kata endet immer an ihrem <b>Ausgangspunkt</b>; alle Körperteile kommen im selben Moment zur Ruhe.</li>
             <li>Nach jeder Bewegung zeigt das Buch Fußstellung und Enbusen, am Ende jeder Kata eine Zusammenfassung.</li>
-          </ul>`,
+          </ul>
+          <div class="gfx-grid">${SK.gfx.figure(SK.gfx.TECH.enbusen(), 'Enbusen', 'Bewegungslinie einer Kata')}</div>`,
       },
       {
         id: 'kb-begriffe',
@@ -48,7 +49,18 @@
             <li><b>Uchi-uke</b>: Außenseite des Unterarms, Bewegung von innen nach außen. <b>Soto-uke</b>: Innenseite des Unterarms, Bewegung von außen nach innen.</li>
             <li><b>Ashi-zenkutsu</b> ist kleiner (Breite und Länge) als Zenkutsu-dachi – z. B. Heian Nidan 16 und 19. Bei <b>Hiza-kutsu</b> ist die Technikrichtung anders als die Richtung des Zenkutsu-dachi – z. B. Heian Yondan 11.</li>
             <li><b>Jodan</b> = Gesichtshöhe, <b>Chudan</b> = Brusthöhe, <b>Gedan</b> = unterer Bauchbereich.</li>
-          </ul>`,
+          </ul>
+          <div class="gfx-grid">${[
+            SK.gfx.figure(SK.gfx.TECH['tsuki-uchi'](), 'Tsuki und Uchi'),
+            SK.gfx.figure(SK.gfx.TECH['keage-kekomi'](), 'Kekomi und Keage'),
+            SK.gfx.figure(SK.gfx.MOVES['oi-zuki'](), 'Oi-zuki', '', 'mv:oi-zuki'),
+            SK.gfx.figure(SK.gfx.MOVES['gyaku-zuki'](), 'Gyaku-zuki', '', 'mv:gyaku-zuki'),
+            SK.gfx.figure(SK.gfx.MOVES['uchi-uke'](), 'Uchi-uke', '', 'mv:uchi-uke'),
+            SK.gfx.figure(SK.gfx.MOVES['soto-uke'](), 'Soto-uke', '', 'mv:soto-uke'),
+            SK.gfx.stanceFigure('ashizenkutsu'),
+            SK.gfx.stanceFigure('hizakutsu'),
+            SK.gfx.figure(SK.gfx.levels(), 'Jodan, Chudan, Gedan'),
+          ].join('')}</div>`,
       },
       {
         id: 'kb-ziele',
