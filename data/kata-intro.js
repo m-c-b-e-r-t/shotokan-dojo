@@ -91,16 +91,12 @@
     L.mc('Was zeigt das Buch nach jeder Bewegung zusätzlich zum Text?', ['Eine Illustration der Fußbewegung und des Enbusen', 'Ein Foto des Gegners', 'Eine Punktewertung', 'Den Atemrhythmus'], '', P(4));
 
     L = SK.qb('kb-begriffe', P(4));
-    L.mc('Worin unterscheiden sich TSUKI und UCHI laut Buch?', ['Bei Tsuki wirkt die Kraft in Richtung des gestreckten Unterarms, bei Uchi im rechten Winkel dazu', 'Tsuki ist immer Jodan, Uchi immer Gedan', 'Tsuki wird mit offener Hand ausgeführt', 'Es gibt keinen Unterschied'], '', P(4));
     L.mc('Wie wird im Buch jede Ellbogentechnik bezeichnet?', ['Enpi', 'Hiza', 'Haito', 'Teisho'], '', P(4));
     L.multi('Welche Ellbogentechniken zählt das Buch zur Kategorie TSUKI?', ['Yoko-enpi', 'Ushiro-enpi', 'Otoshi-enpi'], ['Tate-enpi', 'Mae-enpi', 'Mawashi-enpi'], '', P(4));
     L.multi('Welche Ellbogentechniken zählt das Buch zur Kategorie UCHI?', ['Tate-enpi', 'Mae-enpi', 'Mawashi-enpi', 'Furi-enpi'], ['Yoko-enpi', 'Otoshi-enpi'], '', P(4));
-    L.mc('Worin unterscheiden sich KEAGE und KEKOMI?', ['Kekomi: Kraft in Richtung des gestreckten Unterschenkels (Stoßtritt); Keage: im rechten Winkel dazu (Schnapptritt)', 'Keage ist immer Jodan, Kekomi immer Gedan', 'Keage nur mit der Ferse', 'Kekomi nur im Sprung'], '', P(4));
     L.mc('Wie wird OI-ZUKI auch genannt?', ['Jun-zuki', 'Gyaku-zuki', 'Kizami-zuki', 'Ura-zuki'], '', P(4));
     L.mc('Was gilt bei OI-ZUKI?', ['Stoßende Faust und vorderer Fuß sind auf derselben Seite', 'Stoßende Faust und vorderer Fuß sind auf entgegengesetzten Seiten', 'Es wird aus dem Stand ohne Schritt gestoßen', 'Es wird mit beiden Fäusten gestoßen'], '', P(4));
     L.mc('Was gilt bei GYAKU-ZUKI?', ['Stoßende Faust und vorderer Fuß sind auf entgegengesetzten Seiten; Hüfte und Oberkörper drehen zum Ziel', 'Faust und vorderer Fuß auf derselben Seite', 'Es ist ein Stoß nach hinten', 'Es ist ein Stoß mit dem Ellbogen'], '', P(4));
-    L.mc('UCHI-UKE laut Buch:', ['Außenseite des Unterarms, Bewegung von innen nach außen', 'Innenseite des Unterarms, Bewegung von außen nach innen', 'Abwehr mit der Handkante', 'Abwehr nach oben über den Kopf'], '', P(4));
-    L.mc('SOTO-UKE laut Buch:', ['Innenseite des Unterarms, Bewegung von außen nach innen', 'Außenseite des Unterarms, Bewegung von innen nach außen', 'Abwehr nach unten', 'Abwehr mit dem Handballen'], '', P(4));
     L.mc('Wie unterscheidet sich ASHI-ZENKUTSU von ZENKUTSU-DACHI?', ['Er ist in Breite und Länge im Allgemeinen kleiner', 'Er ist doppelt so lang', 'Das Gewicht liegt hinten', 'Die Füße stehen gekreuzt'], 'Beispiel: Heian Nidan, Bewegungen 16 und 19.', P(4));
     L.mc('Was ist das Besondere an HIZA-KUTSU (z. B. Heian Yondan 11)?', ['Die Richtung der Technik ist anders als die Richtung des Zenkutsu-dachi', 'Man kniet auf dem Boden', 'Es ist ein Sprung', 'Es ist ein Stand auf einem Bein'], '', P(4));
     L.mc('Wie definiert das Buch CHUDAN?', ['Brusthöhe', 'Gesichtshöhe', 'Unterer Bauchbereich', 'Kniehöhe'], '', P(4));

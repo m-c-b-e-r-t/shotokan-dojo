@@ -57,7 +57,7 @@
   L = Q('pr-kata', S.po, '3dan');
   L.multi('Welche Kata dürfen zum 3. Dan NICHT als Tokui-Kata gezeigt werden?', ['Unsu', 'Gojushiho Sho', 'Gojushiho Dai'], ['Sochin', 'Nijushiho'], 'Außerdem keine bereits bei einer früheren Dan-Prüfung gezeigte Kata.');
   L.mc('Was bedeutet „Tokui-Kata“?', ['Lieblings-/Spezialkata, frei gewählt', 'Pflichtkata', 'Vom Prüfer gewählte Kata', 'Kata für Kinder'], 'Theoriebegriff zum 1. Kyu.');
-  L.mc('Was bedeutet „Sentei-Kata“?', ['Ausgewählte Kata – Bassai Dai, Kanku Dai, Jion, Enpi, Hangetsu', 'Die fünf Heian-Kata', 'Freie Kata ab 3. Dan', 'Kata für Kinder'], 'Theoriebegriff zum 1. Kyu.');
+  L.mc('Was bedeutet „Sentei-Kata“?', ['Ausgewählte Kata – die festgelegte Auswahl, aus der ab dem 2. Kyu gewählt wird', 'Die fünf Heian-Kata', 'Freie Kata ab 3. Dan', 'Kata für Kinder'], 'Theoriebegriff zum 1. Kyu.');
   L.mc('Was bedeutet „Shitei-Kata“?', ['Vorgeschriebene Pflicht-Kata', 'Frei gewählte Kata', 'Kata mit Partner', 'Wettkampf-Kata ab 3. Dan'], 'Theoriebegriff zum 1. Kyu.');
   Q('pr-kata', S.po, '9kyu').mc('Welche Kata muss der Prüfling zum 9. Kyu (Theorie) vom Ablauf beherrschen?', ['Taikyoku Shodan', 'Heian Shodan', 'Tekki Shodan', 'Keine'], '');
   Q('pr-kata', S.po, '8kyu').multi('Welche Schwerpunkte nennt die Prüfungsordnung für Heian Shodan zum 8. Kyu?', ['Korrekte Zenkutsu- und Kokutsu-dachi-Stellung', 'Renoji-dachi-Stellung', 'Tettsui-uchi'], ['Yoko-geri-keage', 'Nukite'], '');

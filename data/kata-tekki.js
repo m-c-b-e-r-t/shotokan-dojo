@@ -55,7 +55,6 @@
         <li>Tekki hieß früher <b>Naihanchi</b>. Charakteristisch ist der Stand: Oberschenkelinnenseiten anspannen, als säße man auf einem Pferd.</li>
       </ul>`,
     facts(L) {
-      L.mc('Tekki Shodan: Wie ist die Yoi-Position?', ['Heisoku-dachi, linke Handfläche auf dem Rücken der rechten Hand vor dem Unterbauch', 'Hachiji-dachi, Fäuste vor den Oberschenkeln', 'Kiba-dachi, Fäuste an den Hüften', 'Musubi-dachi, Hände seitlich'], '', P(66));
       L.mc('Tekki Shodan, Bewegung 1: Wie wird der linke Fuß gekreuzt?', ['Sanft über den rechten Fuß, alle Zehen auf einer Linie', 'Hinter dem rechten Fuß mit Sprung', 'Mit Stampfen', 'Weit nach vorne'], '', P(66));
       L.mc('Tekki Shodan, Bewegung 2: Welche Alternative nennt der Point?', ['Schlag mit dem Handrücken (Haishu) auf den Solarplexus', 'Fauststoß Jodan', 'Fußfeger', 'Kopfstoß'], '', P(67));
       L.mc('Was ist HAISHU laut Buch?', ['Der Rücken der offenen Hand mit vier gestreckten Fingern und gebeugtem Daumen', 'Der Handballen', 'Die Handkante', 'Die Faustrückseite'], '', P(67));

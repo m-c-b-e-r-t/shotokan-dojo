@@ -117,7 +117,6 @@
       L.mc('Heian Nidan, Bewegung 11: Welches Gefühl soll der linke Unterarm beim Osae-uke haben?', ['Mit der Handfläche das Handgelenk eines Chudan-Zuki nach unten drücken', 'Einen Tritt nach außen fegen', 'Den Kopf des Gegners greifen', 'Einen Jodan-Angriff nach oben ablenken'], '', P(21));
       L.mc('Wie lang ist der Stand Ashi-zenkutsu (Gyaku-hanmi) in Heian Nidan, Bewegung 16, ungefähr?', ['Etwa halb so lang wie Zenkutsu-dachi', 'Doppelt so lang wie Zenkutsu-dachi', 'Genauso lang wie Zenkutsu-dachi', 'Füße geschlossen'], '', P(24));
       L.mc('Heian Nidan, Mae-geri-keage: Mit welchem Teil des Fußes wird getreten?', ['Mit dem Fußballen (Koshi)', 'Mit der Ferse', 'Mit der Fußkante (Sokuto)', 'Mit dem Fußrücken'], '', P(24));
-      L.multi('Welche Bewegungspaare sollen in Heian Nidan schnell bzw. fließend zusammen ausgeführt werden?', ['2 und 3', '5 und 6', '17 und 18', '20 und 21'], ['8 und 9', '12 und 13'], '', P(18));
     },
   };
 

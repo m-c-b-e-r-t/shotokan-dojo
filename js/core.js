@@ -20,9 +20,9 @@
   };
   SK.bookSrc = (n) => `${SK.BOOK_SOURCE}, ${SK.bookPages(n)}`;
   // Bei jeder veröffentlichten Änderung hochzählen
-  SK.VERSION = '1.9.2';
-  SK.VERSION_DATE = '22.10.2026';
-  SK.VERSION_TIME = '19:05';
+  SK.VERSION = '1.9.3';
+  SK.VERSION_DATE = '23.10.2026';
+  SK.VERSION_TIME = '11:46';
 
   SK.util = {
     shuffle(arr) {

@@ -338,7 +338,10 @@
     setNav(entry.unit.kind === 'drill' ? 'begriffe' : 'quiz');
     setTitle(`Quiz: ${entry.lesson.title}`);
     const back = entry.unit.kind === 'drill' ? '#/begriffe' : '#/quiz';
-    const qs = pickRound(qByLesson[id] || [], entry.unit.kind === 'drill' ? 15 : ROUND);
+    const pool = qByLesson[id] || [];
+    // Begriffe-Trainer: höchstens so viele Fragen wie Begriffe, damit kein Begriff doppelt kommt.
+    const n = entry.unit.kind === 'drill' ? Math.min(15, new Set(pool.map((q) => q.grp || q.id)).size) : ROUND;
+    const qs = pickRound(pool, n);
     SK.runQuiz(app, qs, {
       mode: 'lesson',
       title: `${entry.unit.title} · ${entry.lesson.title}`,

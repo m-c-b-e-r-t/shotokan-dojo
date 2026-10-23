@@ -149,7 +149,6 @@
   L.mc('Welcher Stand: Fersen zusammen, Fußspitzen V-förmig geöffnet?', ['Musubi-dachi', 'Heisoku-dachi', 'Hachiji-dachi', 'Kiba-dachi'], '');
   L.mc('Welcher Stand: Füße geschlossen und parallel?', ['Heisoku-dachi', 'Musubi-dachi', 'Hachiji-dachi', 'Kosa-dachi'], '');
   L.mc('Welcher Stand: Füße etwa schulterbreit, Spitzen leicht nach außen?', ['Hachiji-dachi', 'Heisoku-dachi', 'Kiba-dachi', 'Zenkutsu-dachi'], '');
-  L.mc('In welchem Stand steht man zum 9. Kyu beim Choku-zuki im Stand?', ['Soto-Hachiji-dachi', 'Kiba-dachi', 'Zenkutsu-dachi', 'Kokutsu-dachi'], '', S.po);
   L.mc('Welcher Stand ist die Yoi-Position der Heian-Kata laut JKA-Buch?', ['Hachiji-dachi', 'Heisoku-dachi', 'Musubi-dachi', 'Kiba-dachi'], '', S.pdf);
   L.mc('Welcher Begriff beschreibt die „natürliche Haltung“?', ['Shizentai', 'Hanmi', 'Kamae', 'Zanshin'], '', S.po);
 
@@ -206,7 +205,6 @@
   L.mc('Was ist „Tettsui-uchi“?', ['Hammerfaustschlag', 'Faustrückenschlag', 'Handkantenschlag', 'Ellbogenschlag'], '');
   L.mc('Was ist „Shuto-uchi“?', ['Handkantenschlag', 'Hammerfaustschlag', 'Fingerstich', 'Handballenstoß'], '');
   L.mc('Was ist „Empi-uchi“ (Enpi-uchi)?', ['Ellbogenschlag', 'Knieschlag', 'Kopfstoß', 'Fußtritt'], '');
-  L.mc('Welche Technik folgt zum 6. Kyu im Kihon nach Soto-uke beim Umsetzen in Kiba-dachi?', ['Yoko-Empi-Uchi', 'Mae-geri', 'Shuto-uke', 'Gedan-barai'], '', S.po);
   L.mc('Welche Technik kommt ab dem 5. Kyu nach Yoko-Empi-Uchi hinzu?', ['Tate-Uraken', 'Mawashi-geri', 'Nukite', 'Age-uke'], '', S.po);
   L.mc('Wodurch unterscheidet sich Uchi von Tsuki laut JKA-Buch?', ['Bei Uchi wirkt die Kraft im rechten Winkel zum Unterarm, bei Tsuki in Richtung des gestreckten Unterarms', 'Uchi ist immer mit offener Hand', 'Uchi ist immer Gedan', 'Es gibt keinen Unterschied'], '', S.pdf);
 

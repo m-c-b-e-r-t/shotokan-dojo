@@ -76,33 +76,26 @@
       k.kiai.map((n) => `${n}: ${k.seq[n - 1][2]}`).join(' · '),
       P(k.seq[k.kiai[0] - 1][3])
     );
-    k.kiai.forEach((n, i) => {
-      const row = k.seq[n - 1];
-      L.mc(
-        `${k.name}: Mit welcher Technik ist der ${i === 0 ? 'erste' : 'zweite'} Kiai verbunden (Bewegung ${n})?`,
-        [row[2]].concat(distractors(row[2], techs, 3)),
-        '',
-        P(row[3])
-      );
-    });
+    // Zusätze in Klammern ignorieren, sonst taucht eine gleichwertige Yoi-Beschreibung als falsche Antwort auf.
+    const yoiBase = (s) => s.replace(/\s*\(.*\)$/, '');
     L.mc(`${k.name}: Wie ist die Yoi-Position (Bereitschaftsstellung)?`, [k.yoi].concat(
-      util.shuffle(Object.values(SK.kata).filter((o) => o.yoi !== k.yoi).map((o) => o.yoi)).filter((v, i, a) => a.indexOf(v) === i).slice(0, 3)
+      util.shuffle(Object.values(SK.kata).filter((o) => yoiBase(o.yoi) !== yoiBase(k.yoi)).map((o) => o.yoi)).filter((v, i, a) => a.indexOf(v) === i).slice(0, 3)
     ), '', P(k.firstPage));
     L.mc(`${k.name}: Wie beginnt die Kata (Bewegung 1)?`, [label(k.seq[0])].concat(distractors(label(k.seq[0]), k.seq.slice(1).map(label), 3)), '', P(k.seq[0][3]));
     const last = k.seq[k.seq.length - 1];
     L.mc(`${k.name}: Mit welcher Bewegung endet die Kata (Bewegung ${last[0]})?`, [label(last)].concat(distractors(label(last), k.seq.slice(0, -1).map(label), 3)), '', P(last[3]));
-    k.continuous.forEach((grp) => {
-      const others = util.shuffle(
-        k.seq.map((r) => r[0]).filter((n) => n + grp.length - 1 <= k.moves && !k.continuous.some((g) => g[0] === n))
-      ).slice(0, 3);
-      const fmt = (a) => Array.from({ length: grp.length }, (_, i) => a + i).join(' + ');
-      L.mc(
-        `${k.name}: Welche Bewegungen sollen schnell/fließend zusammenhängend ausgeführt werden?`,
-        [fmt(grp[0])].concat(others.map(fmt)),
-        '',
-        P(k.seq[grp[0] - 1][3])
+    if (k.continuous.length) {
+      const inGroup = new Set(k.continuous.flat());
+      const fmt = (g) => g.join(' + ');
+      const wrong = util.shuffle(k.seq.map((r) => r[0]).filter((n) => n < k.moves && !inGroup.has(n) && !inGroup.has(n + 1))).slice(0, 3);
+      L.multi(
+        `${k.name}: Welche dieser Bewegungsfolgen werden laut Buch schnell/fließend zusammenhängend ausgeführt?`,
+        util.shuffle(k.continuous).slice(0, 3).map(fmt),
+        wrong.map((n) => fmt([n, n + 1])),
+        k.continuous.map(fmt).join(' · '),
+        P(k.seq[k.continuous[0][0] - 1][3])
       );
-    });
+    }
     if (k.slow.length) {
       const fast = util.shuffle(k.seq.map((r) => r[0]).filter((n) => !k.slow.includes(n))).slice(0, 3);
       L.multi(`${k.name}: Welche dieser Bewegungen werden laut Buch langsam ausgeführt?`, k.slow.slice(0, 3).map((n) => `Bewegung ${n}`), fast.map((n) => `Bewegung ${n}`), k.slow.map((n) => `${n}: ${k.seq[n - 1][2]}`).join(' · '), P(k.seq[k.slow[0] - 1][3]));

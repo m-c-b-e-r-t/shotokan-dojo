@@ -68,7 +68,6 @@
         <li>41: Migi-te Migi-ashi Uho-e – langsam, kraftvoll: Handgelenk greifen und Gegner aus dem Gleichgewicht ziehen.</li>
       </ul>`,
     facts(L) {
-      L.mc('Bassai Dai: Wie ist die Yoi-Position?', ['Heisoku-dachi, rechte Faust in der leicht gebeugten linken Hand vor dem Unterbauch', 'Hachiji-dachi, Fäuste vor den Oberschenkeln', 'Heisoku-dachi, rechte Faust vor dem Kinn', 'Heisoku-dachi, linke Hand auf der linken Hüfte'], '', P(79));
       L.mc('Bassai Dai, Yoi: Was gilt für die linke Hand laut Karate-Do Kyohan?', ['Sie ist sanft gebeugt und umgreift die rechte Faust nicht', 'Sie umschließt die Faust fest', 'Sie liegt auf der Hüfte', 'Sie ist zur Faust geballt'], '', P(79));
       L.mc('Bassai Dai, Bewegung 1: Womit beginnt die Kata?', ['Mit einem Sprungschritt nach vorne in Migi Ashi-mae Kosa-dachi', 'Mit einem Schritt zurück in Kokutsu-dachi', 'Mit einem Stampfer in Kiba-dachi', 'Mit einem langsamen Gedan-barai'], '', P(79));
       L.mc('Bassai Dai, Bewegung 1: Wo liegt der Mittelfinger der linken Hand beim Soede-uchi-uke?', ['An der Innenseite des rechten Handgelenks', 'Am rechten Ellbogen', 'An der Stirn', 'An der linken Hüfte'], '', P(79));
@@ -186,7 +185,6 @@
       L.mc('Was bedeutet KANKU?', ['In den Himmel schauen', 'Fliegende Schwalbe', 'Festung durchbrechen', 'Eiserner Reiter'], '', P(101));
       L.mc('Kanku Dai, Bewegung 1: Wie wird sie ausgeführt?', ['Hände langsam über die Stirn heben und durch die Öffnung in den Himmel schauen', 'Schneller Doppelblock mit Kiai', 'Sprung nach vorne', 'Stampfer in Kiba-dachi'], '', P(101));
       L.mc('Kanku Dai, Bewegung 2: Welche Bedeutung hat der große Kreis der Hände laut Karate-Do Kyohan?', ['Keine Waffen zu tragen; zwei Teile, die wie Sonne und Schatten bzw. Yin und Yang zusammengehören', 'Den Gegner zu greifen', 'Einen Tritt abzulenken', 'Kraft für den Kiai zu sammeln'], '', P(101));
-      L.mc('Kanku Dai, Yoi: Wie liegen die Hände?', ['Offen vor dem Unterbauch, rechte Hand schräg auf der linken, Daumen leicht auseinander', 'Als Fäuste vor den Oberschenkeln', 'Rechte Faust in der linken Hand vor dem Kinn', 'Linke Hand an der Hüfte'], '', P(101));
       L.mc('Kanku Dai, Bewegungen 3 und 4: Wie werden sie ausgeführt?', ['Schnell, in einer fließenden Bewegung', 'Langsam und kraftvoll', 'Mit Kiai', 'Mit Sprung'], '', P(102));
       L.mc('Kanku Dai, Bewegung 5 (Hidari Tate-shuto Chudan-uke): Wie wird sie ausgeführt?', ['Langsam und kraftvoll', 'Schnell mit Kiai', 'Im Sprung', 'Mit geschlossener Faust'], '', P(103));
       L.mc('Kanku Dai, Bewegungen 20 und 25 (Renoji-dachi, Gedan): Wie werden sie ausgeführt?', ['Langsam und kraftvoll', 'Schnell mit Kiai', 'Mit Sprung', 'Mit offenen Händen'], '', P(110));
@@ -274,7 +272,6 @@
         <li>46: langsam und kraftvoll – Greifen und seitlicher Fauststoß.</li>
       </ul>`,
     facts(L) {
-      L.mc('Jion: Wie ist die Yoi-Position?', ['Heisoku-dachi, rechte Faust vor dem Kinn, von der linken Hand leicht umhüllt', 'Heisoku-dachi, Faust in der Hand vor dem Unterbauch', 'Hachiji-dachi, offene Hände vor dem Unterbauch', 'Heisoku-dachi, linke Hand auf der Hüfte'], '', P(132));
       L.mc('Jion, Bewegung 1: Wie entsteht der Migi Zenkutsu-dachi?', ['Der linke Fuß gleitet nach hinten', 'Der rechte Fuß macht einen Schritt nach vorne', 'Mit einem Sprung', 'Mit Stampfer'], '', P(133));
       L.mc('Jion, Kakiwake-uke (Bewegung 2): Wie wird er ausgeführt?', ['Langsam und kraftvoll mit dynamischer Spannung', 'Schnell mit Kiai', 'Mit offenen Händen', 'Im Sprung'], '', P(133));
       L.mc('Jion: Wie sollen laut Best Karate z. B. die Bewegungen 3 und 4 ausgeführt werden?', ['In einem einzigen Atemzug', 'Mit Pause dazwischen', 'Sehr langsam', 'Mit Kiai bei jeder Technik'], '', P(134));
@@ -354,7 +351,6 @@
       L.mc('Wie hieß Enpi früher?', ['Wanshu', 'Kushanku', 'Naihanchi', 'Pin An'], '', P(159));
       L.mc('Was bedeutet ENPI?', ['Fliegende Schwalbe', 'In den Himmel schauen', 'Festung durchbrechen', 'Tempelglocke'], '', P(159));
       L.mc('Woher kommt laut Karate-Do Kyohan der Name Enpi?', ['Von den schnellen Richtungswechseln (Bewegungen 6–8), die an den Flug einer Schwalbe erinnern', 'Von einem Sprung zu Beginn', 'Von langsamen Kreisbewegungen', 'Vom Ort ihrer Entstehung'], '', P(159));
-      L.mc('Enpi: Wie ist die Yoi-Position?', ['Heisoku-dachi, linke Hand an der linken Hüfte, rechte Faust berührt die linke Handfläche', 'Heisoku-dachi, rechte Faust vor dem Kinn', 'Hachiji-dachi, Fäuste vor den Oberschenkeln', 'Heisoku-dachi, Hände vor dem Unterbauch'], '', P(156));
       L.mc('Enpi, Bewegung 1: In welcher Position beginnt die Kata?', ['Kniend auf dem rechten Bein, linkes Knie aufgestellt (Orishiki)', 'Im Sprung', 'In Kiba-dachi mit Stampfer', 'In Neko-ashi-dachi'], '', P(156));
       L.mc('Enpi, Bewegung 1: Was beschreibt der Referenzpunkt nach Karate-Do Kyohan?', ['Das Bein des Gegners fegen, während die linke Hand ihn herunterzieht – Ansatz eines Wurfs', 'Einen Fauststoß zum Kopf', 'Einen Block gegen einen Stock', 'Eine Atemübung'], '', P(156));
       L.mc('Enpi, Bewegung 6 (Migi Jodan Age-zuki): Welche Anwendung nennt der Point?', ['Block eines linken Jodan-Fauststoßes mit dem Unterarm und gleichzeitiger Stoß aufwärts zum Kinn', 'Fußfeger', 'Ellbogenschlag zur Seite', 'Greifen des Fußes'], '', P(158));
