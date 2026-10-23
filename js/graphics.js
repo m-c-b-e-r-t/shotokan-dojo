@@ -132,14 +132,14 @@
     const pct = s.knee
       ? ''
       : s.feet
-          .map(([x, y, r, w]) => {
-            const X = mx(x);
-            const off = 13 + Math.abs(Math.sin((r * Math.PI) / 180)) * 20;
-            const right = X >= 100;
-            const col = !w ? GHOST : w >= 0.6 ? RED : w >= 0.4 ? MID : '#e57373';
-            return `<text x="${r1(right ? X + off : X - off)}" y="${y + 4}" font-size="${w ? 12 : 9.5}" font-weight="700" text-anchor="${right ? 'start' : 'end'}" fill="${col}" ${FONT}>${w ? `${Math.round(w * 100)} %` : 'angehoben'}</text>`;
-          })
-          .join('');
+        .map(([x, y, r, w]) => {
+          const X = mx(x);
+          const off = 13 + Math.abs(Math.sin((r * Math.PI) / 180)) * 20;
+          const right = X >= 100;
+          const col = !w ? GHOST : w >= 0.6 ? RED : w >= 0.4 ? MID : '#e57373';
+          return `<text x="${r1(right ? X + off : X - off)}" y="${y + 4}" font-size="${w ? 12 : 9.5}" font-weight="700" text-anchor="${right ? 'start' : 'end'}" fill="${col}" ${FONT}>${w ? `${Math.round(w * 100)} %` : 'angehoben'}</text>`;
+        })
+        .join('');
     const ball = s.feet.some((f) => f[5]);
     const legend = ball ? `${txt(8, 14, 'gestrichelt =', 'start')}${txt(8, 25, 'nur Ballen', 'start')}` : '';
     return `<svg viewBox="0 0 200 224" role="img" aria-label="${esc(title)}" xmlns="http://www.w3.org/2000/svg">
@@ -155,9 +155,9 @@
     musubi: { d: 0, L: [[112, 228], [126, 232]], R: [[106, 228], [120, 232]] },
     heisoku: { d: 0, L: [[110, 228], [128, 232]], R: [[108, 228], [126, 232]] },
     hachiji: { d: 0, L: [[114, 228], [130, 232]], R: [[104, 228], [120, 232]] },
-    zenkutsu: { d: 14, L: [[150, 228], [170, 232]], R: [[40, 226], [58, 232]] },
+    zenkutsu: { d: 34, L: [[146, 228], [166, 232]], R: [[24, 228], [42, 232]] },
     ashizenkutsu: { d: 8, L: [[138, 228], [158, 232]], R: [[64, 226], [82, 232]] },
-    kokutsu: { d: 16, L: [[158, 228], [176, 232]], R: [[98, 228], [108, 232]] },
+    kokutsu: { d: 30, L: [[184, 228], [200, 232]], R: [[102, 228], [110, 233], [122, 186]], arms: 'shuto', plumb: true },
     kiba: { d: 24, L: [[112, 228], [130, 232]], R: [[116, 228], [134, 232]] },
     kosa: { d: 22, L: [[132, 228], [152, 232]], R: [[96, 220], [112, 232]] },
     ashidachi: { d: 4, L: [[112, 228], [130, 232]], R: [[132, 190], [150, 194]] },
@@ -183,28 +183,53 @@
     const c = [base - ang, base + ang].map((t) => [r1(h[0] + Math.cos(t) * T), r1(h[1] + Math.sin(t) * T)]);
     return c[0][0] > c[1][0] ? c[0] : c[1];
   }
+  // Natürliche Stände zeigen statt der Seitenansicht eine Vorderansicht (rechtes Bein im Bild links)
+  const frontLeg = (p, foot) => ({ p, foot, w: 15, under: true });
+  const STANCE_FRONT = {
+    musubi: { hands: 'open', legs: [frontLeg([[102, 118], [102, 176], [103, 228]], [92, 236]), frontLeg([[118, 118], [118, 176], [117, 228]], [128, 236])] },
+    heisoku: { hands: 'open', legs: [frontLeg([[102, 118], [102, 176], [103, 228]], [103, 238]), frontLeg([[118, 118], [118, 176], [117, 228]], [117, 238])] },
+    hachiji: { hands: 'yoi', legs: [frontLeg([[102, 118], [94, 176], [88, 228]], [80, 236]), frontLeg([[118, 118], [126, 176], [132, 228]], [140, 236])] },
+    kiba: { d: 36, hands: 'hips', legs: [frontLeg([[100, 154], [60, 186], [58, 228]], [58, 238]), frontLeg([[120, 154], [160, 186], [162, 228]], [162, 238])] },
+  };
+  function stanceFrontSvg(key, title) {
+    const f = STANCE_FRONT[key];
+    const d = f.d || 0;
+    const dn = (pts) => pts.map(([x, y]) => [x, y + d]);
+    const arms = {
+      open: [arm([[93, 62], [88, 96], [90, 128]], 'open'), arm([[127, 62], [132, 96], [130, 128]], 'open')],
+      yoi: [arm([[93, 62], [90, 96], [100, 124]]), arm([[127, 62], [130, 96], [120, 124]])],
+      hips: [arm(dn([[93, 62], [84, 94], [92, 110]])), arm(dn([[127, 62], [136, 94], [128, 110]]))],
+    }[f.hands];
+    const spec = { head: [110, 32 + d], view: 'front', torso: dn(FRONT.torso), belt: dn(FRONT.belt), parts: f.legs.concat(arms) };
+    return `<svg viewBox="0 0 200 224" role="img" aria-label="${esc(title)} – von vorne" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="198" height="222" rx="12" fill="#fafafa" stroke="#ddd"/>
+      <g transform="translate(16 -2) scale(.84)"><path d="M20 238 H200" stroke="#cfd8dc" stroke-width="2"/>${person(spec)}</g>
+      <text x="100" y="217" font-size="9.5" text-anchor="middle" fill="#78909c" ${FONT}>von vorne</text></svg>`;
+  }
   function stanceSideSvg(key, mirrored, opts) {
+    const title = (opts && opts.title) || (STANCES[key] && STANCES[key].name);
+    if (STANCE_FRONT[key]) return stanceFrontSvg(key, title);
     const g = STANCE_SIDE[key];
     if (!g) return '';
     const d = g.d;
-    const lg = ([ankle, toe], isFar) => {
+    // optional drittes Element: Knie fest vorgegeben (z. B. nach außen zeigend, seitlich verkürzt)
+    const lg = ([ankle, toe, kn], isFar) => {
       const h = [isFar ? 106 : 110, 116 + d];
-      return { p: [h, knee(h, ankle), ankle], foot: toe, w: 15, far: isFar };
+      return { p: [h, kn || knee(h, ankle), ankle], foot: toe, w: 15, far: isFar };
     };
+    // Shuto-uke: vordere Hand (Seite des vorderen Beins) als Handkante vorne, hintere vor dem Solarplexus
+    const arms = g.arms === 'shuto'
+      ? [Object.assign(arm([[112, 62 + d], [142, 70 + d], [164, 52 + d]], 'open'), { far: !mirrored }), Object.assign(arm([[112, 62 + d], [122, 94 + d], [142, 90 + d]], 'open'), { far: !!mirrored })]
+      : [Object.assign(arm([[112, 62 + d], [100, 92 + d], [110, 104 + d]]), { far: true }), arm([[112, 62 + d], [102, 92 + d], [114, 104 + d]])];
     const spec = {
       head: [114, 30 + d], view: 'side', trunk: [[112, 52 + d], [108, 116 + d]],
-      parts: [
-        Object.assign(arm([[112, 62 + d], [100, 92 + d], [110, 104 + d]]), { far: true }),
-        lg(g.L, !mirrored),
-        lg(g.R, !!mirrored),
-        arm([[112, 62 + d], [102, 92 + d], [114, 104 + d]]),
-      ],
+      parts: arms.concat([lg(g.L, !mirrored), lg(g.R, !!mirrored)]),
     };
-    const title = (opts && opts.title) || STANCES[key].name;
+    const plumb = g.plumb ? `<path d="M106 ${120 + d} V232" stroke="${HL}" stroke-width="2.5" stroke-dasharray="5 4" opacity=".8"/><circle cx="106" cy="${116 + d}" r="4" fill="${HL}"/>` : '';
     return `<svg viewBox="0 0 200 224" role="img" aria-label="${esc(title)} – seitlich" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="198" height="222" rx="12" fill="#fafafa" stroke="#ddd"/>
       <text x="190" y="18" font-size="10" text-anchor="end" fill="#78909c" ${FONT}>vorne →</text>
-      <g transform="translate(14 4) scale(.86)"><path d="M20 232 H215" stroke="#cfd8dc" stroke-width="2"/>${person(spec)}</g>
+      <g transform="translate(14 4) scale(.86)"><path d="M20 232 H215" stroke="#cfd8dc" stroke-width="2"/>${person(spec)}${plumb}</g>
       <text x="100" y="216" font-size="9.5" text-anchor="middle" fill="#78909c" ${FONT}>seitlich</text></svg>`;
   }
 
@@ -274,8 +299,8 @@
     const side = kind === 'st' ? stanceSideSvg(k, m === 'm') : '';
     const anim = hasAnim(key);
     if (!side && !anim) return svg;
-    const btn = (act, t) => `<button type="button" class="gfx-btn" data-act="${act}" aria-pressed="false">${t}</button>`;
-    return `<div class="gfx-box" data-gfx="${esc(key)}"><div class="gfx-view">${svg}</div>${side ? `<div class="gfx-view" hidden>${side}</div>` : ''}${anim ? '<div class="gfx-view gfx-anim" hidden></div>' : ''}<div class="gfx-tools">${side ? btn('side', 'Seitenansicht') : ''}${anim ? btn('anim', '▶ Bewegung') : ''}</div></div>`;
+    const btn = (act, t) => `<button type="button" class="gfx-btn" data-act="${act}" data-label="${t}" aria-pressed="false">${t}</button>`;
+    return `<div class="gfx-box" data-gfx="${esc(key)}"><div class="gfx-view">${svg}</div>${side ? `<div class="gfx-view" hidden>${side}</div>` : ''}${anim ? '<div class="gfx-view gfx-anim" hidden></div>' : ''}<div class="gfx-tools">${side ? btn('side', STANCE_FRONT[k] ? 'Vorderansicht' : 'Seitenansicht') : ''}${anim ? btn('anim', '▶ Bewegung') : ''}</div></div>`;
   }
 
   function figure(svg, caption, note, key) {
@@ -717,7 +742,7 @@
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(s)}`;
   }
 
-  SK.gfx = { STANCES, stanceSvg, stanceSideSvg, stanceFor, stanceKey, stanceFigure, figure, box, byKey, animSvg, hasAnim, plainSvg, levels, WEAPONS, MOVES, targets, dataUri };
+  SK.gfx = { STANCES, STANCE_SIDE, stanceSvg, stanceSideSvg, stanceFor, stanceKey, stanceFigure, figure, box, byKey, animSvg, hasAnim, plainSvg, levels, WEAPONS, MOVES, targets, dataUri };
   // Bausatz für weitere Technik-Grafiken (js/graphics-tech.js)
   SK.gfx.kit = { person, scene, frame, arm, ghost, front, FRONT, SIDE, LEG_R, LEG_L, HIKITE_R, HIKITE_L, arrow, hit, tag, foot, movingFoot, timeline, animEl, animTf, mode, path, FONT, HL, HLF, HLS, INK, GHOST, ARR };
 })();

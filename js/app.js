@@ -803,7 +803,7 @@
     if (btn.dataset.act === 'side') {
       views[0].hidden = on;
       views[1].hidden = !on;
-      btn.textContent = on ? 'Fußbild' : 'Seitenansicht';
+      btn.textContent = on ? 'Fußbild' : btn.dataset.label;
     } else {
       const anim = box.querySelector(':scope > .gfx-anim');
       anim.innerHTML = on ? SK.gfx.animSvg(box.dataset.gfx) : '';
