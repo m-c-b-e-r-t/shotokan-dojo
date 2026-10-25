@@ -187,7 +187,8 @@
     const prev = allLessons[pos - 1];
     const next = allLessons[pos + 1];
     const learn = el('div', { class: 'learn' });
-    learn.innerHTML = lesson.learn;
+    // Hinweis zu den Bewegungsgrafiken einmal oben statt in jedem Bild
+    learn.innerHTML = (/data-gfx="(mv|tc):/.test(lesson.learn) ? SK.gfxHint : '') + lesson.learn;
     const n = (qByLesson[id] || []).length;
     const open = unlocked(unit, entry.idx);
     app.innerHTML = '';
@@ -233,7 +234,7 @@
       )
     );
     const list = el('div');
-    list.innerHTML = SK.glossaryHtml(SK.glossary);
+    list.innerHTML = SK.gfxHint + SK.glossaryHtml(SK.glossary);
     const count = el('p', { class: 'muted small' });
     // Bindestriche, Leerzeichen, Groß-/Kleinschreibung und Umlaute ignorieren: „mae geri“ findet „Mae-geri“.
     const norm = (s) => s.toLowerCase().replace(/ß/g, 'ss').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();

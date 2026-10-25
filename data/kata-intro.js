@@ -50,7 +50,6 @@
             <li><b>Ashi-zenkutsu</b> ist kleiner (Breite und Länge) als Zenkutsu-dachi – z. B. Heian Nidan 16 und 19. Bei <b>Hiza-kutsu</b> ist die Technikrichtung anders als die Richtung des Zenkutsu-dachi – z. B. Heian Yondan 11.</li>
             <li><b>Jodan</b> = Gesichtshöhe, <b>Chudan</b> = Brusthöhe, <b>Gedan</b> = unterer Bauchbereich.</li>
           </ul>
-          ${SK.gfxHint}
           <div class="gfx-grid">${[
             SK.gfx.figure(SK.gfx.TECH['tsuki-uchi'](), 'Tsuki und Uchi'),
             SK.gfx.figure(SK.gfx.TECH['keage-kekomi'](), 'Kekomi und Keage'),

@@ -341,7 +341,8 @@
   }
 
   function figure(svg, caption, note, key) {
-    return `<figure class="gfx">${box(key, svg)}<figcaption><b>${esc(caption)}</b>${note ? `<br>${esc(note)}` : ''}</figcaption></figure>`;
+    // Name und Hinweis über der Grafik – beim Scrollen ist klar, welches Bild dazugehört
+    return `<figure class="gfx"><figcaption><b>${esc(caption)}</b>${note ? `<br>${esc(note)}` : ''}</figcaption>${box(key, svg)}</figure>`;
   }
 
   function stanceFigure(key, mirrored, caption) {

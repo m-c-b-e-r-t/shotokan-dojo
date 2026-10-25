@@ -443,7 +443,7 @@ table.moves tr.kiai td {
 .gfx-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 0.8rem;
+  gap: 1.2rem;
   margin: 0.8rem 0;
 }
 
@@ -452,6 +452,35 @@ figure.gfx {
   margin: 0;
   text-align: center;
   font-size: 0.85rem;
+}
+
+/* Grafik als Karte: Name oben, roter Rand links (wie im Lexikon) */
+figure.gfx {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--red);
+  border-radius: 12px;
+  padding: 0.7rem;
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+figure.gfx figcaption {
+  margin-bottom: 0.4rem;
+  font-size: 0.88rem;
+}
+
+figure.gfx figcaption b {
+  font-size: 1.1rem;
+}
+
+figure.gfx svg {
+  display: block;
+  margin: 0 auto;
+}
+
+figure.gfx svg > rect:first-of-type {
+  stroke: none;
 }
 
 figure.stance svg,
