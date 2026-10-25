@@ -7,12 +7,7 @@
   const LIGHT = '#ef9a9a';
   const HL = '#ff6f00';
   const INK = '#37474f';
-  const SKIN = '#f2c9a6';
-  const SKIN_D = '#d9a57f';
-  const GI = '#ffffff';
-  const FAR = '#b0bec5';
-  const FAR_SKIN = '#dcb593';
-  const ACT = '#90caf9';
+  const SKIN_D = '#cdb6a4';
   const GHOST = '#90a4ae';
   const GH_LINE = '#78909c';
   const BG = '#fafafa';
@@ -599,11 +594,28 @@
   const HLF = `fill="${HL}" opacity=".85"`;
   const HLS = `stroke="${HL}" stroke-linecap="round" fill="none" opacity=".85"`;
   const caption = (x, y, t) => `<text x="${x}" y="${y}" font-size="10.5" text-anchor="middle" fill="#455a64" ${FONT}>${t}</text>`;
+  // Großansichten: jede Fläche einzeln im Skizzen-Stil – Schattenseite (helle Fläche nach links oben
+  // versetzt, auf die Form beschnitten), Bleistift-Kontur, zarte Zweitlinie. k = Maßstab der Gruppe.
+  let clipN = 0;
+  function solid(el, fill, k) {
+    const f = k || 1;
+    const id = `skc${++clipN}`;
+    const at = (a) => el.replace(/\/>$/, ` ${a}/>`);
+    const w = r1(1.7 / f * 10) / 10;
+    const o = (v) => r1((v / f) * 100) / 100;
+    return `<clipPath id="${id}">${el}</clipPath>` +
+      `<g opacity=".1" transform="translate(${o(1.6)} ${o(2)})">${at(`fill="${PEN}" stroke="${PEN}" stroke-width="${w}"`)}</g>` +
+      `<g opacity=".3" transform="translate(${o(1)} ${o(-0.9)})">${at(`fill="none" stroke="${PEN}" stroke-width="${w}"`)}</g>` +
+      at(`fill="${SHADE[fill] || fill}"`) +
+      `<g clip-path="url(#${id})"><g transform="translate(${o(-5)} ${o(-4)})">${at(`fill="${fill}"`)}</g></g>` +
+      at(`fill="none" stroke="${PEN}" stroke-width="${w}" stroke-linejoin="round"`);
+  }
+  const solids = (els, fill, k) => els.match(/<[^>]+\/>/g).map((e) => solid(e, fill, k)).join('');
   function fist(hl) {
     const h = (k, shape) => (hl === k ? shape : '');
     // Frontansicht: rechte Faust, Blick auf die Knöchel – Zeigefinger im Bild rechts, kleiner Finger links
     const knuckles = [0, 1, 2, 3].map((i) => `<rect x="${-34 + i * 17}" y="-22" width="17" height="24" rx="8"/>`).join('');
-    const frontView = `<g transform="translate(110 246) scale(1.3)"><g stroke="${INK}" stroke-width="1.6" stroke-linejoin="round" fill="${SKIN}"><rect x="-34" y="-22" width="68" height="44" rx="12"/>${knuckles}<rect x="-14" y="4" width="44" height="14" rx="7"/></g>
+    const frontView = `<g transform="translate(110 246) scale(1.3)">${solids(`<rect x="-34" y="-22" width="68" height="44" rx="12"/>${knuckles}<rect x="-14" y="4" width="44" height="14" rx="7"/>`, F_SKIN, 1.3)}
       ${h('seiken', `<rect x="0" y="-22" width="34" height="24" rx="8" ${HLF}/>`)}${h('uraken', `<rect x="0" y="-27" width="34" height="8" rx="4" ${HLF}/>`)}${h('tettsui', `<rect x="-39" y="-20" width="9" height="40" rx="4.5" ${HLF}/>`)}</g>`;
     const labels = {
       seiken: tag(188, 104, 'Knöchel von Zeige- und Mittelfinger', 210, 162, 'end'),
@@ -614,13 +626,10 @@
       <rect x="1" y="1" width="218" height="298" rx="12" fill="#fafafa" stroke="#ddd"/>
       ${caption(110, 16, 'rechte Faust von oben (Handrücken)')}
       <g transform="translate(0 22)">
-      <g stroke="${INK}" stroke-width="2" stroke-linejoin="round">
-        <path d="M42 62 Q60 60 78 56 L78 116 Q60 112 42 108 Z" fill="${SKIN}"/>
-        <path d="M6 50 H44 V118 H6" fill="${GI}"/>
-        <g fill="${SKIN}"><rect x="140" y="38" width="44" height="22" rx="11"/><rect x="140" y="60" width="46" height="22" rx="11"/><rect x="140" y="82" width="44" height="21" rx="10.5"/><rect x="138" y="103" width="38" height="19" rx="9.5"/></g>
-        <path d="M74 46 Q76 36 96 36 L152 36 Q160 36 160 46 L160 116 Q160 126 150 126 L96 126 Q76 126 74 114 Z" fill="${SKIN}"/>
-        <path d="M96 38 Q112 22 152 26 Q172 28 176 38 Q166 44 146 42 Q120 42 100 46 Z" fill="${SKIN}"/>
-      </g>
+      ${solid('<path d="M42 62 Q60 60 78 56 L78 116 Q60 112 42 108 Z"/>', F_SKIN)}${solid('<path d="M6 50 H44 V118 H6"/>', F_GI)}
+      ${solids('<rect x="140" y="38" width="44" height="22" rx="11"/><rect x="140" y="60" width="46" height="22" rx="11"/><rect x="140" y="82" width="44" height="21" rx="10.5"/><rect x="138" y="103" width="38" height="19" rx="9.5"/>', F_SKIN)}
+      ${solid('<path d="M74 46 Q76 36 96 36 L152 36 Q160 36 160 46 L160 116 Q160 126 150 126 L96 126 Q76 126 74 114 Z"/>', F_SKIN)}
+      ${solid('<path d="M96 38 Q112 22 152 26 Q172 28 176 38 Q166 44 146 42 Q120 42 100 46 Z"/>', F_SKIN)}
       <g fill="${SKIN_D}"><ellipse cx="158" cy="49" rx="5" ry="7"/><ellipse cx="160" cy="71" rx="5" ry="7"/><ellipse cx="159" cy="92" rx="4.5" ry="6.5"/><ellipse cx="155" cy="112" rx="4" ry="6"/></g>
       ${h('seiken', `<rect x="179" y="38" width="11" height="44" rx="5.5" ${HLF}/>`)}
       ${h('uraken', `<ellipse cx="152" cy="60" rx="13" ry="22" ${HLF}/>`)}
@@ -639,12 +648,9 @@
     const detail = back
       ? `<g fill="#fbe3d2" stroke="${SKIN_D}" stroke-width="1"><rect x="73" y="32" width="12" height="10" rx="5"/><rect x="91" y="24" width="12" height="10" rx="5"/><rect x="109" y="30" width="11" height="10" rx="5"/><rect x="126" y="46" width="9" height="9" rx="4"/></g><path d="M74 104 q5 -4 10 0 M92 102 q5 -4 10 0 M110 103 q5 -4 10 0 M126 106 q4 -3 8 0" stroke="${SKIN_D}" stroke-width="2" fill="none"/>`
       : `<path d="M72 62 h14 M90 56 h14 M108 60 h13 M125 72 h11 M72 84 h14 M90 80 h14 M108 82 h13 M125 90 h11 M80 120 Q104 112 132 118 M78 136 Q96 130 110 150" stroke="${SKIN_D}" stroke-width="1.5" fill="none"/>`;
-    let body = `<g stroke="${INK}" stroke-width="2" stroke-linejoin="round">
-        <path d="M74,160 Q54,150 48,124 Q44,106 54,104 Q63,103 65,118 Q68,134 74,138 Z" fill="${SKIN}"/>
-        <path d="${HAND}" fill="${SKIN}"/>
-        <path d="M88 39 V100 M106 37 V100 M123 53 V102" fill="none" stroke-width="1.5"/>
-      </g>${detail}${back ? `<path d="${HAND}" fill="${HL}" opacity=".35"/>` : ''}
-      <path d="M76 192 H138 V224 H76 Z" fill="${GI}" stroke="${INK}" stroke-width="2"/>`;
+    let body = `${solid('<path d="M74,160 Q54,150 48,124 Q44,106 54,104 Q63,103 65,118 Q68,134 74,138 Z"/>', F_SKIN)}${solid(`<path d="${HAND}"/>`, F_SKIN)}
+      <path d="M88 39 V100 M106 37 V100 M123 53 V102" fill="none" stroke="${PEN}" stroke-width="1.3"/>${detail}${back ? `<path d="${HAND}" fill="${HL}" opacity=".35"/>` : ''}
+      ${solid('<path d="M76 192 H138 V224 H76 Z"/>', F_GI)}`;
     if (back) body = `<g transform="translate(208 0) scale(-1 1)">${body}</g>`;
     return `<svg viewBox="0 0 208 246" role="img" aria-label="Offene Hand" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="206" height="244" rx="12" fill="#fafafa" stroke="#ddd"/>
@@ -674,13 +680,13 @@
       sokuto: `<path d="M-1,25 C-7,25 -9.5,20 -9.5,12 C-9.5,4 -12,-5 -12,-12" stroke-width="3.4" ${HLS}/>`,
       haisoku: `<ellipse cx="0" cy="0" rx="8" ry="11" ${HLF}/>`,
     }[hl] || '';
-    const second = `<g transform="translate(104 244) rotate(90) scale(${top ? '-2.4 2.4' : '2.4'})"><g fill="${SKIN}" stroke="${INK}" stroke-width=".8"><path d="${SOLE}"/>${TOES}</g>${hl2}</g>`;
+    const second = `<g transform="translate(104 244) rotate(90) scale(${top ? '-2.4 2.4' : '2.4'})">${solid(`<path d="${SOLE}"/>`, F_SKIN, 2.4)}${solids(TOES, F_SKIN, 2.4)}${hl2}</g>`;
     return `<svg viewBox="0 0 230 300" role="img" aria-label="Fuß" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="228" height="298" rx="12" fill="#fafafa" stroke="#ddd"/>
-      <path d="${FOOTSIDE}" fill="${SKIN}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+      ${solid(`<path d="${FOOTSIDE}"/>`, F_SKIN)}
       <circle cx="70" cy="76" r="6" fill="${SKIN_D}"/>
       <path d="M188 105 q3 9 0 18 M198 102 q3 9 0 19" stroke="${SKIN_D}" stroke-width="1.5" fill="none"/>
-      <path d="M40 6 H90 V36 H40 Z" fill="${GI}" stroke="${INK}" stroke-width="2"/>
+      ${solid('<path d="M40 6 H90 V36 H40 Z"/>', F_GI)}
       ${h('koshi', `<ellipse cx="182" cy="123" rx="16" ry="6" ${HLF}/>`)}
       ${h('kakato', `<ellipse cx="45" cy="113" rx="12" ry="12" ${HLF}/>`)}
       ${h('haisoku', `<path d="M86 70 Q94 84 118 91 Q150 99 176 105" stroke-width="9" ${HLS}/>`)}
