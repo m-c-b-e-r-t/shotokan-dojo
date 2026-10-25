@@ -1,7 +1,7 @@
 /* Technik-Grafiken für das Lexikon und den Begriffe-Trainer (baut auf SK.gfx.kit auf). */
 (function () {
   'use strict';
-  const { person, scene, frame, arm, ghost, FRONT, SIDE, LEG_R, LEG_L, HIKITE_R, HIKITE_L, arrow, hit, tag, foot, movingFoot, timeline, animTf, mode, FONT, HL, HLS, INK, GHOST } = SK.gfx.kit;
+  const { person, scene, frame, arm, ghost, FRONT, SIDE, SA, stepLegs, STEP_SHIFT, LEG_R, LEG_L, HIKITE_R, HIKITE_L, arrow, hit, tag, timeline, animTf, fadeLoop, mode, FONT, HL, HLS, INK, GHOST } = SK.gfx.kit;
 
   const far = (p) => Object.assign({}, p, { far: true });
   const leg = (p, ft, o) => Object.assign({ p, w: 15, foot: ft }, o);
@@ -19,6 +19,8 @@
   const HIP_NEAR = arm([[112, 62], [102, 92], [114, 104]]);
   const GUARD_FAR = far(arm([[112, 62], [118, 92], [134, 88]]));
   const PUNCH = arm([[112, 62], [146, 66], [182, 68]]);
+  // Gegenhand: zieht in der Animation aus der Streckung zur Hüfte zurück (Hikite)
+  const PULL_FAR = from(HIP_FAR, PUNCH.p);
 
   // Vorderansicht: rechte Körperseite = im Bild links
   const fr = (parts, legs) => Object.assign({}, FRONT, { parts: (legs || [LEG_R, LEG_L]).concat(parts) });
@@ -26,6 +28,12 @@
   const F_KK = [leg([[102, 118], [92, 174], [88, 228]], [82, 234], { under: true }), leg([[118, 118], [140, 170], [138, 228]], [148, 234], { under: true })];
   const SHIZEN = [leg([[102, 118], [92, 176], [84, 228]], [78, 234], { under: true }), leg([[118, 118], [128, 176], [136, 228]], [142, 234], { under: true })];
 
+  // Hanmi von vorne: Rumpf schmaler (gedreht), die vordere Schulter liegt über dem Rumpf, der andere Arm dahinter
+  const HANMI_LEGS = [leg([[103, 118], [96, 176], [90, 228]], [84, 236], { under: true }), leg([[119, 118], [130, 168], [128, 228]], [134, 238], { under: true })];
+  const hanmiSpec = (gyaku) =>
+    Object.assign({}, FRONT, gyaku
+      ? { head: [108, 32], torso: [[95, 56], [121, 56], [119, 118], [99, 118]], belt: [[98, 112], [120, 112]], parts: HANMI_LEGS.concat([Object.assign(arm([[121, 62], [130, 94], [122, 110]]), { under: true }), arm([[98, 62], [102, 94], [118, 96]])]) }
+      : { head: [112, 32], torso: [[99, 56], [125, 56], [121, 118], [101, 118]], belt: [[100, 112], [122, 112]], parts: HANMI_LEGS.concat([Object.assign(arm([[101, 62], [92, 94], [100, 110]]), { under: true }), arm([[124, 62], [136, 98], [142, 132]])]) });
   const S = (label, spec, extra, lines, o) => () => scene(label, 240, spec, extra || '', lines, o);
   const F = (label, spec, extra, lines, o) => () => scene(label, 220, spec, extra || '', lines, o);
   const still = { ghost: false };
@@ -40,23 +48,7 @@
   const YOKO_KNEE = [[[117, 118], [150, 102], [128, 150]], [122, 158]];
   const KZ_STAND = [[[110, 116], [142, 168], [138, 228]], [158, 232]];
   const KZ_KNEE = [[[110, 116], [150, 100], [140, 150]], [156, 156]];
-  const frontal = `<path d="M64 148 H152" stroke="#90a4ae" stroke-width="1.5" stroke-dasharray="4 4"/><text x="64" y="142" font-size="9" fill="#78909c" ${FONT}>frontal</text>`;
   const numTag = (x, y, n) => `<g data-tag="1">${num(x, y, n)}</g>`;
-  // Schrittdiagramm von oben: Füße [x, y, Drehung] je Schlüsselbild; Ausgang gestrichelt, in der Animation gleiten die Füße
-  function steps(label, fixed, moves, extra, lines) {
-    return () => {
-      const ghosts = moves.map((m) => foot(m.frames[0][0], m.frames[0][1], m.frames[0][2], 0, { side: m.side })).join('');
-      let feet;
-      if (mode.anim) {
-        const tl = timeline(Math.max(...moves.map((m) => m.frames.length)));
-        feet = moves.map((m) => movingFoot(m.frames, m.w, { side: m.side }, tl)).join('');
-      } else {
-        feet = moves.map((m) => { const e = m.frames[m.frames.length - 1]; return foot(e[0], e[1], e[2], m.w, { side: m.side }); }).join('');
-      }
-      return scene(label, 220, { parts: [] }, extra, lines, { top: true, ghost: false, pre: fixed + ghosts + feet });
-    };
-  }
-
   const SEIZA = (hands, extra) => ({
     head: [112, 128],
     view: 'side',
@@ -69,8 +61,6 @@
     ].concat(extra || []),
   });
   SEIZA.hands = [[122, 184], [142, 206]];
-
-  const top = (spec, pre, extra, lines, o) => () => scene(spec.label, 220, spec, extra || '', lines, Object.assign({ top: true, ghost: false, pre }, o));
 
   // Partner in Grau, gespiegelt (Blick nach links); offset = Spiegelachse ×2
   const GREY = { '#ffffff': '#eceff1', '#37474f': '#90a4ae', '#f2c9a6': '#e0e0e0', '#4e342e': '#90a4ae', '#b0bec5': '#cfd8dc', '#dcb593': '#d6d6d6', '#212121': '#90a4ae', '#90caf9': '#cfd8dc' };
@@ -121,28 +111,28 @@
 
   const T = {
     /* ---------- Tsuki ---------- */
-    'choku-zuki': S('Choku-zuki', side([HIP_FAR, ...S_STAND, PUNCH, ghost(HIP_NEAR)]), arrow('M120 92 L174 84') + hit(190, 68), ['seitlich: gerader Fauststoß', 'aus dem Stand, ohne Schritt']),
+    'choku-zuki': S('Choku-zuki', side([PULL_FAR, ...S_STAND, PUNCH, ghost(HIP_NEAR)]), arrow('M120 92 L174 84') + hit(190, 68), ['seitlich: gerader Fauststoß', 'aus dem Stand, ohne Schritt']),
     'kizami-zuki': S('Kizami-zuki', side([GUARD_FAR, ...S_ZK, arm([[112, 62], [148, 50], [184, 40]]), ghost(arm([[112, 62], [132, 84], [148, 70]]))]), arrow('M154 84 L186 56') + hit(192, 38), ['seitlich: Stoß mit der vorderen Hand,', 'ohne Schritt']),
     'sanbon-zuki': S('Sanbon-zuki', side([HIP_FAR, ...S_ZK, PUNCH]), num(206, 34, 1) + num(204, 68, 2) + num(222, 68, 3), ['seitlich: drei Stöße schnell hintereinander', '1 Jodan · 2 Chudan · 3 Chudan'], still),
     'ren-zuki': S('Ren-zuki', side([far(arm([[112, 62], [146, 72], [180, 76]])), ...S_ZK, HIP_NEAR, ghost(PUNCH)]), num(200, 60, 1) + num(198, 84, 2), ['seitlich: Fauststöße in schneller Folge,', 'die Hände wechseln sich ab']),
     'morote-zuki': S('Morote-zuki', side([from(far(arm([[112, 62], [148, 74], [182, 80]])), HIP_FAR.p), ...S_ZK, from(arm([[112, 62], [148, 62], [184, 62]]), HIP_NEAR.p)]), '', ['seitlich: beide Fäuste stoßen', 'gleichzeitig nach vorne'], still),
     'kagi-zuki': F('Kagi-zuki', fr([HIKITE_L, arm([[93, 62], [66, 84], [122, 84]]), ghost(HIKITE_R)], KIBA), arrow('M72 102 C90 106 110 104 124 98'), ['von vorne (Kiba-dachi): Hakenstoß,', 'Unterarm waagerecht vor der Brust']),
-    'ura-zuki': S('Ura-zuki', side([HIP_FAR, ...S_ZK, arm([[112, 62], [126, 98], [162, 94]]), ghost(HIP_NEAR)]), arrow('M120 116 C136 116 150 112 160 108'), ['seitlich: kurzer Stoß aus nächster Nähe,', 'der Handrücken zeigt nach unten']),
-    'age-zuki': S('Age-zuki', side([HIP_FAR, ...S_ZK, arm([[112, 62], [146, 60], [164, 30]]), ghost(HIP_NEAR)]), arrow('M124 108 C154 104 176 72 176 42') + hit(166, 20), ['seitlich: Faust steigt im Bogen', 'nach oben zum Kinn']),
+    'ura-zuki': S('Ura-zuki', side([PULL_FAR, ...S_ZK, arm([[112, 62], [126, 98], [162, 94]]), ghost(HIP_NEAR)]), arrow('M120 116 C136 116 150 112 160 108'), ['seitlich: kurzer Stoß aus nächster Nähe,', 'der Handrücken zeigt nach unten']),
+    'age-zuki': S('Age-zuki', side([PULL_FAR, ...S_ZK, arm([[112, 62], [146, 60], [164, 30]]), ghost(HIP_NEAR)]), arrow('M124 108 C154 104 176 72 176 42') + hit(166, 20), ['seitlich: Faust steigt im Bogen', 'nach oben zum Kinn']),
     'yama-zuki': S('Yama-zuki', side([from(far(arm([[112, 62], [144, 104], [182, 118]])), HIP_FAR.p), ...S_ZK, from(arm([[112, 62], [150, 44], [186, 38]]), HIP_NEAR.p)], { trunk: [[116, 54], [108, 116]] }), '', ['seitlich: beide Fäuste gleichzeitig –', 'eine oben (Jodan), eine unten (Gedan)'], still),
-    'otoshi-zuki': S('Otoshi-zuki', side([HIP_FAR, ...S_ZK, arm([[112, 62], [146, 72], [168, 108]]), ghost(arm([[112, 62], [136, 40], [160, 28]]))]), arrow('M170 30 C188 50 188 84 176 104'), ['seitlich: Fauststoß von oben', 'nach unten']),
-    nukite: S('Nukite', side([HIP_FAR, ...S_ZK, arm([[112, 62], [148, 70], [180, 74]], 'open'), ghost(HIP_NEAR)]), hit(196, 76, 'Fingerspitzen', 232, 46, 'end'), ['seitlich: Stoß mit den Fingerspitzen']),
+    'otoshi-zuki': S('Otoshi-zuki', side([PULL_FAR, ...S_ZK, arm([[112, 62], [146, 72], [168, 108]]), ghost(arm([[112, 62], [136, 40], [160, 28]]))]), arrow('M170 30 C188 50 188 84 176 104'), ['seitlich: Fauststoß von oben', 'nach unten']),
+    nukite: S('Nukite', side([PULL_FAR, ...S_ZK, arm([[112, 62], [148, 70], [180, 74]], 'open'), ghost(HIP_NEAR)]), hit(196, 76, 'Fingerspitzen', 232, 46, 'end'), ['seitlich: Stoß mit den Fingerspitzen']),
 
     /* ---------- Uchi ---------- */
     'uraken-uchi': F('Uraken-uchi', fr([HIKITE_L, arm([[93, 62], [66, 58], [50, 34]]), ghost(arm([[93, 62], [108, 84], [124, 62]]))]), arrow('M120 52 C98 34 76 26 60 26') + hit(44, 30, 'Faustrücken', 20, 66, 'start'), ['von vorne: Faustrücken schnellt', 'im Bogen nach außen']),
     'tettsui-uchi': F('Tettsui-uchi', fr([HIKITE_L, Object.assign(arm([[93, 62], [70, 88], [60, 118]]), { via: [[[[93, 62], [64, 46], [44, 64]]]] }), ghost(arm([[93, 62], [86, 30], [104, 10]]))]), arrow('M96 4 C54 10 42 60 52 106') + hit(58, 126, 'Hammerfaust', 14, 160, 'start'), ['von vorne: Hammerfaust schlägt', 'im Bogen nach unten']),
-    'shuto-uchi': top({ label: 'Shuto-uchi', head: [110, 150], view: 'top', trunk: [[80, 152], [140, 152]], trunkW: 20, parts: [arm([[82, 152], [70, 108], [100, 66]], 'open'), arm([[138, 152], [146, 172]]), ghost(arm([[82, 152], [50, 150], [62, 126]], 'open'))] }, '', arrow('M44 138 C30 92 58 62 94 56'), ['von oben: Handkante schwingt waagerecht', 'von außen nach innen'], { ghost: true }),
-    'haito-uchi': top({ label: 'Haito-uchi', head: [110, 150], view: 'top', trunk: [[80, 152], [140, 152]], trunkW: 20, parts: [arm([[82, 152], [76, 106], [108, 70]], 'open'), arm([[138, 152], [146, 172]]), ghost(arm([[82, 152], [52, 170], [30, 178]], 'open'))] }, '', arrow('M24 166 C16 104 50 70 98 60'), ['von oben: Hand schwingt weit von außen,', 'die Daumenseite trifft'], { ghost: true }),
-    'enpi-uchi': S('Enpi-uchi', side([HIP_FAR, ...S_ZK, arm([[112, 62], [150, 60], [120, 52]]), ghost(HIP_NEAR)]), arrow('M122 100 C144 96 154 82 156 70') + hit(166, 58, 'Ellbogen', 226, 30, 'end'), ['seitlich: der Ellbogen schlägt', 'nach vorne']),
+    'shuto-uchi': S('Shuto-uchi', side([from(far(arm([[112, 62], [100, 92], [110, 104]])), [[112, 62], [140, 74], [168, 70]]), ...S_ZK, arm([[112, 62], [146, 58], [176, 52]], 'open'), ghost(arm([[112, 62], [96, 48], [104, 28]], 'open'))]), arrow('M96 18 C124 2 164 14 180 36') + hit(184, 52, 'Handkante', 226, 96, 'end'), ['seitlich: Hand holt am Ohr aus, die Handkante', 'schwingt im Bogen von außen nach innen']),
+    'haito-uchi': S('Haito-uchi', side([from(far(arm([[112, 62], [100, 92], [110, 104]])), [[112, 62], [140, 74], [168, 70]]), ...S_ZK, Object.assign(arm([[112, 62], [146, 52], [176, 40]], 'open'), { via: [[[[112, 62], [126, 92], [146, 96]]]] }), ghost(arm([[112, 62], [94, 90], [74, 104]], 'open'))]), arrow('M66 116 C110 140 170 96 180 54') + hit(182, 40, 'Daumenseite', 226, 96, 'end'), ['seitlich: Hand schwingt weit von unten', 'außen nach vorne – die Daumenseite trifft']),
+    'enpi-uchi': S('Enpi-uchi', side([PULL_FAR, ...S_ZK, arm([[112, 62], [150, 60], [120, 52]]), ghost(HIP_NEAR)]), arrow('M122 100 C144 96 154 82 156 70') + hit(166, 58, 'Ellbogen', 226, 30, 'end'), ['seitlich: der Ellbogen schlägt', 'nach vorne']),
     'furi-enpi': F('Furi-enpi', fr([HIKITE_L, arm([[93, 62], [60, 66], [94, 76]]), ghost(HIKITE_R)], KIBA), arrow('M98 110 C80 106 62 92 52 76') + hit(52, 64), ['von vorne (Kiba-dachi): Ellbogen', 'schwingt zur Seite']),
     'ushiro-enpi': S('Ushiro-enpi', side([GUARD_FAR, ...S_ZK, arm([[112, 62], [80, 88], [108, 96]]), ghost(PUNCH)]), arrow('M176 86 C150 104 110 108 86 104') + hit(72, 88), ['seitlich: Ellbogen stößt nach hinten']),
     'hasami-uchi': F('Hasami-uchi', fr([from(arm([[93, 62], [62, 74], [76, 56]]), [[93, 62], [56, 80], [40, 60]]), from(arm([[127, 62], [158, 74], [144, 56]]), [[127, 62], [164, 80], [180, 60]])]), arrow('M42 76 C48 62 58 54 70 52') + arrow('M178 76 C172 62 162 54 150 52'), ['von vorne: beide Fäuste schlagen', 'zangenartig von außen nach innen'], still),
-    'teisho-uchi': S('Teisho-uchi', side([HIP_FAR, ...S_ZK, arm([[112, 62], [148, 64], [180, 62]], 'vopen'), ghost(HIP_NEAR)]), arrow('M122 92 L176 80') + hit(190, 68, 'Handballen', 230, 40, 'end'), ['seitlich: Stoß mit dem Handballen']),
+    'teisho-uchi': S('Teisho-uchi', side([PULL_FAR, ...S_ZK, arm([[112, 62], [148, 64], [180, 62]], 'vopen'), ghost(HIP_NEAR)]), arrow('M122 92 L176 80') + hit(190, 68, 'Handballen', 230, 40, 'end'), ['seitlich: Stoß mit dem Handballen']),
 
     /* ---------- Uke ---------- */
     'shuto-uke': F('Shuto-uke', fr([arm([[127, 62], [134, 92], [112, 92]], 'open'), arm([[93, 62], [70, 96], [70, 56]], 'open'), ghost(arm([[93, 62], [110, 84], [128, 56]], 'open'))], F_KK), arrow('M126 46 C104 36 82 40 72 46'), ['von vorne (Kokutsu-dachi): Handkante,', 'zweite Hand vor dem Solarplexus']),
@@ -175,8 +165,8 @@
     'shuto-kamae': S('Shuto-kamae', side([far(arm([[112, 62], [118, 92], [136, 88]], 'open')), ...S_KK, arm([[112, 62], [138, 80], [160, 62]], 'open')]), '', ['seitlich (Kokutsu-dachi): beide', 'Hände als Handkanten'], still),
     'koshi-kamae': F('Koshi-kamae', fr([arm([[93, 62], [104, 96], [126, 104]]), arm([[127, 62], [140, 94], [130, 114]])]), ring(128, 110, 15), ['von vorne: beide Fäuste übereinander', 'an einer Hüfte'], still),
     'mizunagare-no-kamae': F('Mizunagare-no-kamae', fr([HIKITE_L, arm([[93, 62], [74, 100], [118, 86]])]), '', ['von vorne: Unterarm schräg vor dem', 'Solarplexus, zwei Fäuste entfernt'], still),
-    hanmi: top({ label: 'Hanmi', head: [108, 148], view: 'top', trunk: [[85, 125], [131, 171]], trunkW: 20 }, frontal + foot(70, 104, 0, 0.5, { side: 'L' }) + foot(138, 200, 60, 0.5, { side: 'R' }), `<path d="M148 148 A40 40 0 0 1 136.3 176.3" stroke="${HL}" stroke-width="2.5" fill="none"/><text x="152" y="176" font-size="12" font-weight="700" fill="#c62828" ${FONT}>45°</text>`, ['von oben: Oberkörper halb zur Seite', 'gedreht – vordere Schulter vorne']),
-    'gyaku-hanmi': top({ label: 'Gyaku-hanmi', head: [112, 148], view: 'top', trunk: [[82, 164], [138, 132]], trunkW: 20 }, frontal + foot(70, 104, 0, 0.5, { side: 'L' }) + foot(138, 200, 60, 0.5, { side: 'R' }), `<path d="M152 148 A40 40 0 0 0 146.7 128.2" stroke="${HL}" stroke-width="2.5" fill="none"/>`, ['von oben: Oberkörper zur Gegenseite', 'gedreht – hintere Schulter vorne']),
+    hanmi: F('Hanmi', hanmiSpec(false), tag(124, 60, 'vordere Schulter', 206, 20, 'end'), ['von vorne: Oberkörper halb gedreht –', 'Schulter des vorderen Beins vorne'], still),
+    'gyaku-hanmi': F('Gyaku-hanmi', hanmiSpec(true), tag(98, 60, 'vordere Schulter', 14, 20, 'start'), ['von vorne: zur Gegenseite gedreht –', 'Schulter des hinteren Beins vorne'], still),
     shizentai: F('Shizentai', fr([arm([[93, 62], [86, 96], [94, 128]]), arm([[127, 62], [134, 96], [126, 128]])], SHIZEN), '', ['von vorne: natürliche Haltung,', 'Füße etwa schulterbreit'], still),
     hikite: S('Hikite', side([far(PUNCH), ...S_ZK, HIP_NEAR]), arrow('M176 86 C150 106 132 110 124 108') + ring(114, 104), ['seitlich: zurückgezogene Faust', 'an der Hüfte']),
 
@@ -193,13 +183,34 @@
     seiza: S('Seiza', SEIZA(SEIZA.hands), '', ['seitlich: kniender Fersensitz'], still),
     mokuso: S('Mokuso', SEIZA([[116, 180], [128, 198]]), `<path d="M116 127 q3 2.5 6 0" stroke="${INK}" stroke-width="1.5" fill="none"/>`, ['seitlich: im Fersensitz,', 'Augen geschlossen'], still),
     kiritsu: S('Kiritsu', SEIZA(SEIZA.hands), arrow('M176 214 L176 110'), ['aus dem Fersensitz aufstehen'], still),
-    mawatte: top({ label: 'Mawatte', parts: [] }, foot(80, 100, 0, 0.6, { side: 'L' }) + foot(136, 190, 25, 0.4, { side: 'R' }), arrow('M60 210 C14 150 50 54 150 50') + `<text x="186" y="120" font-size="16" font-weight="700" fill="${HL}" ${FONT}>180°</text>`, ['von oben: Drehung in die', 'Gegenrichtung']),
+    mawatte: () => {
+      const k = side([GUARD_FAR, ...S_ZK, arm([[112, 62], [134, 100], [158, 124]])]);
+      let fig = person(k);
+      // Drehung auf der Stelle: die Figur wird über die Senkrechte gespiegelt (wirkt wie eine Drehung)
+      if (mode.anim) {
+        const tl = timeline(2);
+        fig = `<g transform="translate(110 0)"><g>${animTf('scale', tl.expand(['1 1', '-1 1']), tl)}<g transform="translate(-110 0)">${fig}</g></g></g>`;
+        return scene('Mawatte', 240, {}, `<g>${fadeLoop(tl)}${fig}</g>`, ['seitlich: Drehung um 180°', 'in die Gegenrichtung'], still);
+      }
+      fig = `<g transform="translate(220 0) scale(-1 1)">${fig}</g>`;
+      return scene('Mawatte', 240, {}, fig + arrow('M162 20 C140 -4 84 -4 62 20') + `<text x="112" y="-2" font-size="13" font-weight="700" text-anchor="middle" fill="${HL}" ${FONT}>180°</text>`, ['seitlich: Drehung um 180° – vorher', 'Blick nach rechts, jetzt nach links'], still);
+    },
     kiai: S('Kiai', side([HIP_FAR, ...S_ZK, from(PUNCH, HIP_NEAR.p)]), `<path d="M132 24 l14 -8 M134 32 l17 0 M132 40 l14 8" stroke="${HL}" stroke-width="3" stroke-linecap="round"/>`, ['seitlich: lauter Schrei', 'im Moment des Treffers'], still),
     'sun-dome': S('Sun-dome', side([HIP_FAR, ...S_ZK, arm([[112, 62], [148, 52], [180, 44]])]), `<circle cx="210" cy="40" r="14" fill="none" stroke="${GHOST}" stroke-width="2.5" stroke-dasharray="4 3"/><path d="M190 30 V54 M195 30 V54" stroke="${HL}" stroke-width="2"/>`, ['seitlich: Technik stoppt kurz', 'vor dem Ziel'], still),
     'ashi-barai': S('Ashi-barai', side([GUARD_FAR, leg([[106, 116], [100, 176], [96, 228]], [114, 232], { far: true }), arm([[112, 62], [134, 88], [160, 78]]), from(leg([[110, 116], [146, 176], [186, 220]], [194, 208]), [[110, 116], [118, 174], [126, 226]], [144, 230])]), `<path d="M212 150 L214 228 L232 232" stroke="${GHOST}" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="6 4"/>` + arrow('M140 226 L192 226'), ['seitlich: der Fuß fegt das Bein', 'des Gegners weg'], still),
-    'yori-ashi': steps('Yori-ashi', '', [{ side: 'L', w: 0.6, frames: [[80, 150, 0], [80, 66, 0]] }, { side: 'R', w: 0.4, frames: [[136, 236, 25], [136, 152, 25]] }], arrow('M80 124 L80 98') + arrow('M136 210 L136 184'), ['von oben: beide Füße gleiten gemeinsam,', 'der Stand bleibt gleich']),
-    'suri-ashi': steps('Suri-ashi', foot(80, 130, 0, 0.6, { side: 'L' }), [{ side: 'R', w: 0.4, frames: [[138, 222, 25], [108, 140, 8], [140, 50, 0]] }], arrow('M136 198 C100 160 100 110 138 82'), ['von oben: der Fuß gleitet über den Boden', 'nah am Standbein vorbei nach vorne']),
-    'tai-sabaki': steps('Tai-sabaki', '', [{ side: 'R', w: 0.5, frames: [[150, 200, 25], [98, 212, -40], [98, 212, -40]] }, { side: 'L', w: 0.5, frames: [[108, 120, 0], [108, 120, 0], [52, 150, -50]] }], arrow('M128 30 L128 100') + `<text x="136" y="44" font-size="10" fill="#c62828" ${FONT}>Angriff</text>` + arrow('M144 206 L114 214') + numTag(130, 230, 1) + arrow('M102 126 L68 142') + numTag(80, 118, 2), ['von oben: erst Fuß 1, dann Fuß 2 –', 'raus aus der Angriffslinie']),
+    'yori-ashi': () => scene('Yori-ashi', 240, side([GUARD_FAR, ...S_ZK, arm([[112, 62], [134, 88], [162, 76]])], { shift: [-30, 30] }), '', ['seitlich: beide Füße gleiten gemeinsam', 'nach vorne, der Stand bleibt gleich'], still),
+    'suri-ashi': () => scene('Suri-ashi', 300, side([far(arm(SA.guardFar)), ...stepLegs([[[110, 116], [118, 172], [110, 226]], [128, 232]]), arm(SA.guardNear)], { shift: STEP_SHIFT }), '', ['seitlich: der hintere Fuß gleitet nah am', 'Standbein vorbei nach vorne'], still),
+    'tai-sabaki': () => {
+      const R0 = [[[102, 118], [94, 176], [86, 228]], [80, 236]];
+      const L0 = [[[118, 118], [126, 176], [134, 228]], [140, 236]];
+      const spec = fr([arm([[93, 62], [90, 94], [104, 90]]), arm([[127, 62], [130, 94], [116, 90]])], [
+        leg(R0[0], R0[1], { under: true, seq: [R0, [[[102, 118], [80, 176], [60, 228]], [55, 236]], R0] }),
+        leg(L0[0], L0[1], { under: true, act: true, seq: [L0, [[[118, 118], [140, 174], [158, 228]], [165, 236]], L0] }),
+      ]);
+      spec.shift = [0, 25, 50];
+      const line = `<path d="M110 -4 V236" stroke="${GHOST}" stroke-width="2" stroke-dasharray="6 5"/><text x="104" y="4" font-size="10" text-anchor="end" fill="#c62828" ${FONT}>Angriffslinie</text>`;
+      return scene('Tai-sabaki', 220, spec, numTag(204, 222, 1) + numTag(146, 222, 2), ['von vorne: zur Seite aus der Angriffslinie –', 'erst Fuß 1, dann Fuß 2'], { ghost: false, pre: line });
+    },
     maai: () => {
       const k = side([GUARD_FAR, ...S_ZK, arm([[112, 62], [134, 88], [162, 76]])]);
       return scene('Maai', 260, {}, `<g transform="translate(26 47.6) scale(.8)"><g transform="translate(-50 0)">${person(k)}</g><g transform="translate(310 0) scale(-1 1)">${person(k)}</g>${arrow('M96 150 L164 150', false, true)}</g>`, ['Abstand zwischen den Partnern'], still);
