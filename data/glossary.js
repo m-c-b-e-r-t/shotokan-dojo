@@ -179,12 +179,15 @@
     return unit;
   };
 
+  // Hinweis zu den Bewegungsgrafiken einmal über der Liste statt in jedem Bild
+  SK.gfxHint = '<p class="muted small gfx-hint">In den Grafiken: gestrichelt = Ausgangsstellung, blau = bewegtes Körperteil. „▶ Bewegung“ spielt den Ablauf ab.</p>';
   SK.glossaryHtml = function (items) {
-    return `<div class="lex-grid">${items
+    const moving = items.some((e) => e.img && /^(mv|tc):/.test(e.img.key));
+    return `${moving ? SK.gfxHint : ''}<div class="lex-grid">${items
       .map(
         (e) => `<article class="lex-card" data-cat="${e.cat}" data-text="${SK.util.esc(`${e.t} ${e.de}`.toLowerCase())}">
-          ${e.img ? `<div class="lex-img">${G.box(e.img.key, e.img())}</div>` : ''}
-          <h4>${SK.util.esc(e.t)}</h4><p>${SK.util.esc(e.de)}</p></article>`
+          <h4>${SK.util.esc(e.t)}</h4><p>${SK.util.esc(e.de)}</p>
+          ${e.img ? `<div class="lex-img">${G.box(e.img.key, e.img())}</div>` : ''}</article>`
       )
       .join('')}</div>`;
   };

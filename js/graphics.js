@@ -607,14 +607,16 @@
     return hitDot(x, y) + (label ? tag(x, y, label, tx, ty, anchor) : '');
   }
   const ground = (w, y) => `<path d="M14 ${y} H${w - 14}" stroke="#cfd8dc" stroke-width="2"/>`;
-  function frame(w, h, label, inner, lines, o) {
-    const opt = o || {};
-    const cap = (lines || []).map((t, i, a) => `<text x="${w / 2}" y="${h - 10 - (a.length - 1 - i) * 13}" font-size="10.5" text-anchor="middle" fill="#455a64" ${FONT}>${esc(t)}</text>`).join('');
-    const legend = opt.ghost && !mode.anim ? `<text x="12" y="17" font-size="9" fill="#78909c" ${FONT}>gestrichelt = Ausgang · blau = Bewegung</text>` : '';
-    return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}" xmlns="http://www.w3.org/2000/svg">${DEFS}<rect x="1" y="1" width="${w - 2}" height="${h - 2}" rx="12" fill="#fafafa" stroke="#ddd"/>${legend}${inner}${cap}</svg>`;
+  function frame(w, h, label, inner, lines) {
+    // Unter dem Bild nur die Blickrichtung – die Erklärung steht im Text zur Grafik
+    const view = /^(seitlich|von vorne)[^:]*(?=:)/.exec((lines && lines[0]) || '');
+    const shown = view ? [view[0]] : lines || [];
+    const hh = view ? 290 : h;
+    const cap = shown.map((t, i, a) => `<text x="${w / 2}" y="${hh - 10 - (a.length - 1 - i) * 13}" font-size="10.5" text-anchor="middle" fill="#455a64" ${FONT}>${esc(t)}</text>`).join('');
+    return `<svg viewBox="0 0 ${w} ${hh}" role="img" aria-label="${esc(label)}" xmlns="http://www.w3.org/2000/svg">${DEFS}<rect x="1" y="1" width="${w - 2}" height="${hh - 2}" rx="12" fill="#fafafa" stroke="#ddd"/>${inner}${cap}</svg>`;
   }
   function scene(label, w, spec, extra, lines, o) {
-    const opt = Object.assign({ ghost: true }, o);
+    const opt = o || {};
     let fig = person(spec);
     const tl = mode.tl;
     mode.tl = null;
@@ -626,7 +628,7 @@
     if (mode.anim) rest = rest.replace(/<circle data-hit="([\d.-]+) ([\d.-]+)"[^>]*\/>/g, (_, x, y) => (tl ? flash(x, y, tl) : '')).replace(/<g data-arrow="1">/g, '<g data-arrow="1" opacity=".25">');
     const [pre, ex] = rest.split('\u0000');
     const inner = `<g transform="translate(0 24)">${ground(w, 238)}${pre}${fig}${ex}</g>`;
-    return frame(w, lines && lines.length > 1 ? 300 : 290, label, inner, lines, opt);
+    return frame(w, lines && lines.length > 1 ? 300 : 290, label, inner, lines);
   }
 
   // Grundfigur von vorne (rechte Körperseite = im Bild links)
