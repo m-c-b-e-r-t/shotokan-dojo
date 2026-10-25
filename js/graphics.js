@@ -352,10 +352,60 @@
     const cloth = p.slice(0, n - 1).concat([cuff]);
     return { segs: cloth.slice(1).map((q, i) => [cloth[i], q]), skin: leg ? [cuff, end, ft] : [cuff, end], end, prev: p[n - 2] };
   }
-  function pathA(vals, w, col, extra, tl) {
-    const an = vals.length > 1 ? animEl('d', vals, tl) : '';
-    return `<path d="${vals[0]}" stroke="${col}" stroke-width="${w}" ${CAP}${extra || ''}>${an}</path>`;
+  // Glied als geschlossene, sich verjüngende Form (ws = Breite je Punkt). Gleicher Befehlsaufbau
+  // für jede Stellung, damit SMIL die Form zwischen Schlüsselbildern überblenden kann.
+  function taper(pts, ws) {
+    const n = pts.length;
+    const dir = (a, b) => {
+      const l = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      return l < 0.01 ? null : [(b[0] - a[0]) / l, (b[1] - a[1]) / l];
+    };
+    const ds = [];
+    for (let i = 0; i < n - 1; i++) ds.push(dir(pts[i], pts[i + 1]));
+    for (let i = 0; i < ds.length; i++) ds[i] = ds[i] || ds[i - 1] || ds.find(Boolean) || [0, 1];
+    const at = (p, v, k) => `${r1(p[0] + v[0] * k)} ${r1(p[1] + v[1] * k)}`;
+    const L = [];
+    const R = [];
+    pts.forEach((p, i) => {
+      const r = ws[i] / 2;
+      const d0 = ds[Math.max(0, i - 1)];
+      const d1 = ds[Math.min(ds.length - 1, i)];
+      const n0 = [-d0[1], d0[0]];
+      const n1 = [-d1[1], d1[0]];
+      if (i === 0 || i === n - 1) {
+        const nn = i === 0 ? n1 : n0;
+        L.push([`L${at(p, nn, r)}`]);
+        R.push([`L${at(p, nn, -r)}`]);
+        return;
+      }
+      // Gelenk: außen abgerundet (Q über den Gehrungspunkt), innen ein Gehrungspunkt (begrenzt)
+      const m = [n0[0] + n1[0], n0[1] + n1[1]];
+      const ml = Math.hypot(m[0], m[1]) || 1;
+      const cos = Math.max(0.55, ml / 2);
+      const mv = [m[0] / ml, m[1] / ml];
+      const left = d0[0] * d1[1] - d0[1] * d1[0] < 0;
+      const outer = (s) => `L${at(p, s > 0 ? n0 : [-n0[0], -n0[1]], r)} Q${at(p, s > 0 ? mv : [-mv[0], -mv[1]], r / cos)} ${at(p, s > 0 ? n1 : [-n1[0], -n1[1]], r)}`;
+      const inner = (s) => {
+        const q = at(p, s > 0 ? mv : [-mv[0], -mv[1]], Math.min(r / cos, r * 1.4));
+        return `L${q} Q${q} ${q}`;
+      };
+      L.push([left ? outer(1) : inner(1)]);
+      R.push([left ? inner(-1) : outer(-1)]);
+    });
+    const cap = (p, d, rA, rB, nn, k) => `Q${at([p[0] + nn[0] * rA, p[1] + nn[1] * rA], d, k)} ${at(p, d, k)} Q${at([p[0] - nn[0] * rB, p[1] - nn[1] * rB], d, k)} ${at(p, nn, -rB)}`;
+    const dl = ds[ds.length - 1];
+    const df = ds[0];
+    const rl = ws[n - 1] / 2;
+    const rf = ws[0] / 2;
+    const endCap = cap(pts[n - 1], dl, rl, rl, [-dl[1], dl[0]], rl);
+    const back = R.slice().reverse().map((x, i) => (i === 0 ? '' : x[0].replace(/^L(\S+ \S+) Q(\S+ \S+) (\S+ \S+)$/, 'L$3 Q$2 $1')));
+    // Rückweg: Gelenkpunkte rechts in umgekehrter Reihenfolge
+    const nb = [-df[1], df[0]];
+    const startCap = `Q${at([pts[0][0] - nb[0] * rf, pts[0][1] - nb[1] * rf], df, -rf)} ${at(pts[0], df, -rf)} Q${at([pts[0][0] + nb[0] * rf, pts[0][1] + nb[1] * rf], df, -rf)} ${at(pts[0], nb, rf)}`;
+    return 'M' + L.map((x) => x[0]).join(' ').slice(1) + ' ' + endCap + ' ' + back.filter(Boolean).join(' ') + ' L' + at(pts[0], nb, -rf) + ' ' + startCap + 'Z';
   }
+  const shapeA = (vals, col, extra, tl) => `<path d="${vals[0]}" fill="${col}"${extra || ''}>${vals.length > 1 ? animEl('d', vals, tl) : ''}</path>`;
+  const inkA = (vals, w, col, extra, tl) => `<path d="${vals[0]}" fill="${col}" stroke="${col}" stroke-width="${w}" stroke-linejoin="round"${extra || ''}>${vals.length > 1 ? animEl('d', vals, tl) : ''}</path>`;
   function handA(geos, kind, c, tl) {
     const open = kind === 'open' || kind === 'vopen';
     const pos = geos.map((g) => {
@@ -381,32 +431,36 @@
     return el;
   }
   // look: 'ghost' = gestrichelter Umriss, 'act' = bewegtes Glied (zartblau)
+  // Breiten: Schulter/Hüfte breit, zum Handgelenk/Knöchel schmaler
+  function widths(n, a, b) {
+    return Array.from({ length: n }, (_, i) => r1(a + ((b - a) * i) / Math.max(1, n - 1)));
+  }
   function limb(frames, p, tl, look) {
     const leg = !!p.foot;
     const geos = frames.map((f) => geo(f.p, f.foot, leg));
+    const nc = geos[0].segs.length + 1;
+    const wc = leg ? widths(nc, p.w + 5, p.w - 1) : widths(nc, p.w + 5.5, p.w + 1.5);
+    const wsk = leg ? [p.w * 0.66, p.w * 0.58, p.w * 0.5] : [p.w - 1.5, p.w - 3];
+    const cl = (g) => [g.segs[0][0]].concat(g.segs.map((sg) => sg[1]));
     const vals = (fn) => {
-      const v = geos.map((g) => path(fn(g)));
+      const v = geos.map(fn);
       return tl && v.length > 1 ? tl.expand(v) : [v[0]];
     };
+    const shrink = (ws, k) => ws.map((w) => Math.max(1, w + k));
+    const sk = (k) => vals((g) => taper(g.skin, shrink(wsk, k)));
+    const gc = (k) => vals((g) => taper(cl(g), shrink(wc, k)));
     const ghost = look === 'ghost';
-    const W = leg ? [p.w + 4, p.w] : [p.w + 3, p.w + 1];
-    const sw = leg ? Math.round(p.w * 0.6) : p.w - 2;
     const gi = ghost ? BG : look === 'act' ? F_ACT : p.far ? F_FAR : F_GI;
     const skin = ghost ? BG : p.far ? F_FAR_SKIN : F_SKIN;
-    const sk = vals((g) => g.skin);
-    const segs = geos[0].segs.map((_, i) => vals((g) => g.segs[i]));
     const hand = p.end ? handA(geos, p.end, { skin, line: GH_LINE, ghost }, tl) : '';
     if (ghost) {
-      const dash = ' stroke-dasharray="5 3"';
-      let s = pathA(sk, sw + 3, GH_LINE, dash, tl) + pathA(sk, sw, skin, '', tl);
-      segs.forEach((v, i) => (s += pathA(v, W[Math.min(i, 1)] + 3, GH_LINE, dash, tl)));
-      segs.forEach((v, i) => (s += pathA(v, W[Math.min(i, 1)], gi, '', tl)));
-      return s + hand;
+      const dash = ` stroke="${GH_LINE}" stroke-width="1.5" stroke-dasharray="5 3"`;
+      return shapeA(sk(0), skin, dash, tl) + shapeA(gc(0), gi, dash, tl) + hand;
     }
-    const cloth = (add, col) => segs.map((v, i) => pathA(v, W[Math.min(i, 1)] + add, col, '', tl)).join('');
-    const all = (add) => pathA(sk, sw + add, PEN, '', tl) + cloth(add, PEN);
+    const lit2 = (v0, v1, col) => shapeA(v0, SHADE[col] || col, '', tl) + `<g transform="translate(-1 -1)">${shapeA(v1, col, '', tl)}</g>`;
+    const ink = inkA(sk(0), 2.4, PEN, '', tl) + inkA(gc(0), 2.4, PEN, '', tl);
     const near = !p.far && !tl && mode.view !== 'top';
-    return `${under(all(2.4))}${pathA(sk, sw + 2.4, PEN, '', tl)}${lit((c, dw) => pathA(sk, sw + dw, c, '', tl), skin)}${cloth(2.4, PEN)}${lit((c, dw) => cloth(dw, c), gi)}${hand}${near ? guides(frames[0].p) : ''}`;
+    return `${under(ink)}${inkA(sk(0), 2.4, PEN, '', tl)}${lit2(sk(0), sk(-3), skin)}${inkA(gc(0), 2.4, PEN, '', tl)}${lit2(gc(0), gc(-3), gi)}${hand}${near ? guides(frames[0].p) : ''}`;
   }
   function head([x, y], view) {
     if (view === 'top') return `<circle cx="${x}" cy="${y}" r="13" fill="#5b5b5b" stroke="${PEN}" stroke-width="1.3"/>`;
