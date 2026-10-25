@@ -28,7 +28,7 @@
   const CAP = 'fill="none" stroke-linecap="round" stroke-linejoin="round"';
 
   // ANIM: SMIL-Animation statt Ausgangsstellung (tl = Zeitleiste der zuletzt gezeichneten Figur)
-  const mode = { anim: false, tl: null, uid: 'sk0-', view: null };
+  const mode = { anim: false, tl: null, view: null };
   const r1 = (v) => Math.round(v * 10) / 10;
   const lerp = (a, b, t) => [r1(a[0] + (b[0] - a[0]) * t), r1(a[1] + (b[1] - a[1]) * t)];
   // Zeitleiste für K Schlüsselbilder: kurz halten, zügig bewegen, Endstellung halten
@@ -322,22 +322,15 @@
   /* ---------- Figuren: Karateka im Gi (Gliedmaßen = Punktlisten) ---------- */
   const path = (pts) => 'M' + pts.map((p) => p.join(' ')).join(' L');
   const same = (a, b) => a[0] === b[0] && a[1] === b[1];
-  // Filter je Figur mit eigener ID (mehrere SVGs auf einer Seite, teils versteckt)
-  let uidN = 0;
-  const fx = (n) => `filter="url(#${mode.uid}${n})"`;
-  function sketchDefs(id) {
-    return `<defs><filter id="${id}r" filterUnits="userSpaceOnUse" x="-60" y="-60" width="420" height="420"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter>` +
-      `<filter id="${id}q" filterUnits="userSpaceOnUse" x="-60" y="-60" width="420" height="420"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="11"/><feDisplacementMap in="SourceGraphic" scale="4" xChannelSelector="R" yChannelSelector="G"/></filter>` +
-      `<filter id="${id}s" filterUnits="userSpaceOnUse" x="-60" y="-60" width="420" height="420"><feGaussianBlur in="SourceAlpha" stdDeviation="1.8" result="b"/><feOffset in="b" dx="-2.6" dy="-1.8" result="o"/><feComposite in="SourceAlpha" in2="o" operator="out" result="e"/>` +
-      `<feTurbulence type="fractalNoise" baseFrequency=".9 .22" numOctaves="1" seed="5" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .38 0 0 0 0 .39 0 0 0 0 .41 0 0 0 1.1 -.45" result="t"/><feComposite in="t" in2="e" operator="in" result="h"/>` +
-      `<feFlood flood-color="#8d9196" flood-opacity=".32"/><feComposite in2="e" operator="in" result="w"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="w"/><feMergeNode in="h"/></feMerge></filter>` +
-      `<filter id="${id}d" filterUnits="userSpaceOnUse" x="-60" y="-60" width="420" height="420"><feDropShadow dx="1.2" dy="1.6" stdDeviation="1.4" flood-color="#000" flood-opacity=".1"/></filter></defs>`;
-  }
-  // Kontur: kräftige, leicht unruhige Linie + zarte, versetzte Zweitlinie; Fläche mit Schraffur-Schatten
-  const rough = (svg, add) => (mode.tl ? svg(add) : `<g ${fx('q')} opacity=".35">${svg(add + 2)}</g><g ${fx('r')}>${svg(add)}</g>`);
-  const shaded = (svg) => `<g ${fx('s')}>${svg}</g>`;
+  // Skizzen-Look ohne SVG-Filter (Filter machen das Scrollen langsam):
+  // Schlagschatten und zarte Zweitlinie als versetzte Kopien der Kontur,
+  // Schattenseite als dunklere Fläche unter einer schmaleren, nach links oben versetzten hellen Fläche
+  const SHADE = { [F_GI]: '#dcdcda', [F_SKIN]: '#e3d3c5', [F_FAR]: '#cbcbca', [F_FAR_SKIN]: '#cfc4b9', [F_ACT]: '#a9c6e0' };
+  const under = (ink) => `<g opacity=".1" transform="translate(1.4 1.8)">${ink}</g>` + (mode.tl ? '' : `<g opacity=".3" transform="translate(.9 -.8)">${ink}</g>`);
+  const lit = (draw, col) => draw(SHADE[col] || col, 0) + `<g transform="translate(-1 -1)">${draw(col, -3)}</g>`;
   function outlined(d, w, col) {
-    return `<g ${fx('d')}>${rough((a) => `<path d="${d}" stroke="${PEN}" stroke-width="${w + a}" ${CAP}/>`, 2.4)}${shaded(`<path d="${d}" stroke="${col}" stroke-width="${w}" ${CAP}/>`)}</g>`;
+    const st = (c, ww) => `<path d="${d}" stroke="${c}" stroke-width="${ww}" ${CAP}/>`;
+    return under(st(PEN, w + 2.4)) + st(PEN, w + 2.4) + lit((c, dw) => st(c, w + dw), col);
   }
   // Hilfslinien wie in Zeichenvorlagen: Gliedachsen über die Gelenke hinaus verlängert
   function guides(pts) {
@@ -385,7 +378,7 @@
       // Fingerglieder der Faust (nur im Standbild)
       if (!c.ghost && P.length === 1) el += `<path d="M${cx - 3.5} ${cy - 3.5} q1.5 3.5 0 7 M${cx} ${cy - 4.5} q1.5 4.5 0 9 M${cx + 3.5} ${cy - 3.5} q1.5 3.5 0 7" stroke="${PEN}" stroke-width=".7" fill="none" opacity=".55"/>`;
     }
-    return c.ghost || tl ? el : `<g ${fx('r')}>${el}</g>`;
+    return el;
   }
   // look: 'ghost' = gestrichelter Umriss, 'act' = bewegtes Glied (zartblau)
   function limb(frames, p, tl, look) {
@@ -413,14 +406,15 @@
     const cloth = (add, col) => segs.map((v, i) => pathA(v, W[Math.min(i, 1)] + add, col, '', tl)).join('');
     const all = (add) => pathA(sk, sw + add, PEN, '', tl) + cloth(add, PEN);
     const near = !p.far && !tl && mode.view !== 'top';
-    return `<g ${fx('d')}>${tl ? '' : `<g ${fx('q')} opacity=".3">${all(4.4)}</g>`}${tl ? pathA(sk, sw + 2.4, PEN, '', tl) : `<g ${fx('r')}>${pathA(sk, sw + 2.4, PEN, '', tl)}</g>`}${shaded(pathA(sk, sw, skin, '', tl))}${tl ? cloth(2.4, PEN) : `<g ${fx('r')}>${cloth(2.4, PEN)}</g>`}${shaded(cloth(0, gi))}${hand}</g>${near ? guides(frames[0].p) : ''}`;
+    return `${under(all(2.4))}${pathA(sk, sw + 2.4, PEN, '', tl)}${lit((c, dw) => pathA(sk, sw + dw, c, '', tl), skin)}${cloth(2.4, PEN)}${lit((c, dw) => cloth(dw, c), gi)}${hand}${near ? guides(frames[0].p) : ''}`;
   }
   function head([x, y], view) {
-    if (view === 'top') return `<g ${fx('d')}><circle cx="${x}" cy="${y}" r="13" fill="#5b5b5b" stroke="${PEN}" stroke-width="1.3" ${fx('r')}/></g>`;
+    if (view === 'top') return `<circle cx="${x}" cy="${y}" r="13" fill="#5b5b5b" stroke="${PEN}" stroke-width="1.3"/>`;
     const tilt = view === 'side' ? 12 : 0;
-    const egg = `<ellipse rx="12" ry="14.5" transform="rotate(${tilt})"`;
     const axis = view === 'side' ? 'M-16 1 H14 M3 -18 Q8 0 3 18' : 'M0 -19 V19 M-16 1 H16';
-    return `<g transform="translate(${x} ${y})"><g ${fx('d')}><g ${fx('r')}>${egg} fill="none" stroke="${PEN}" stroke-width="2.6"/></g>${shaded(`${egg} fill="${F_GI}"/>`)}</g><path d="${axis}" stroke="${PEN}" stroke-width=".5" fill="none" opacity=".3"/></g>`;
+    const egg = (rx, ry, extra) => `<ellipse rx="${rx}" ry="${ry}" transform="rotate(${tilt})" ${extra}/>`;
+    const line = egg(12, 14.5, `fill="none" stroke="${PEN}" stroke-width="2.6"`);
+    return `<g transform="translate(${x} ${y})">${under(line)}${line}${egg(12, 14.5, `fill="${SHADE[F_GI]}"`)}<g transform="translate(-1 -1)">${egg(10.5, 13, `fill="${F_GI}"`)}</g><path d="${axis}" stroke="${PEN}" stroke-width=".5" fill="none" opacity=".3"/></g>`;
   }
   // Hals, Jacke mit Revers, Kopf, Gürtel (seitlich quer zum Rumpf); von oben nur Schultern und Kopf
   function body(s) {
@@ -431,7 +425,8 @@
     if (s.torso) {
       const m = lerp(s.torso[0], s.torso[1], 0.5);
       const d = path(s.torso) + 'Z';
-      out += neck(m) + `<g ${fx('d')}><g ${fx('r')}><path d="${d}" fill="${PEN}" stroke="${PEN}" stroke-width="10.4" stroke-linejoin="round"/></g>${shaded(`<path d="${d}" fill="${F_GI}" stroke="${F_GI}" stroke-width="8" stroke-linejoin="round"/>`)}</g>`;
+      const poly = (c, w) => `<path d="${d}" fill="${c}" stroke="${c}" stroke-width="${w}" stroke-linejoin="round"/>`;
+      out += neck(m) + under(poly(PEN, 10.4)) + poly(PEN, 10.4) + lit((c, dw) => poly(c, 8 + dw), F_GI);
       if (!top) {
         const [bl, br] = [s.torso[3], s.torso[2]];
         out += `<path d="M${m[0] - 7} ${m[1] - 3} L${m[0]} ${m[1] + 16} L${m[0] + 7} ${m[1] - 3}Z" fill="${F_SKIN}" stroke="${PEN}" stroke-width=".8"/><path d="M${m[0] - 7} ${m[1] - 3} L${m[0] + 5} ${m[1] + 34} M${m[0] + 7} ${m[1] - 3} L${m[0]} ${m[1] + 16}" stroke="${PEN}" stroke-width="1" fill="none" opacity=".75"/>`;
@@ -485,12 +480,11 @@
     const imp = live.find((p) => p.impact != null);
     const tl = mode.anim && K > 1 ? timeline(K, imp ? imp.impact : null) : null;
     mode.tl = tl;
-    mode.uid = `sk${++uidN}-`;
     mode.view = s.view;
     const draw = (p) => limb(fr.get(p), p, tl, pairs.has(p) || p.act ? 'act' : '');
     const pick = (f) => live.filter(f).map(draw).join('');
     const ghosts = mode.anim ? '' : ps.filter((p) => p.ghost).map((p) => `<g opacity=".7">${limb([{ p: p.p, foot: p.foot }], p, null, 'ghost')}</g>`).join('');
-    return sketchDefs(mode.uid) + pick((p) => p.far) + pick((p) => p.under && !p.far) + body(s) + pick((p) => !p.far && !p.under) + ghosts;
+    return pick((p) => p.far) + pick((p) => p.under && !p.far) + body(s) + pick((p) => !p.far && !p.under) + ghosts;
   }
 
   const DEFS = `<defs><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="${ARR}"/></marker></defs>`;
