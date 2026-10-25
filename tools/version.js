@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+/* Versionsnummer an einer Stelle pflegen: setzt SK.VERSION samt Datum und Uhrzeit in js/core.js
+   und hängt ?v=<Version> an alle lokalen Dateien in index.html, damit Browser nach einem Update
+   keine alten Dateien aus dem Zwischenspeicher mischen.
+
+   node tools/version.js                 aktuelle Version zeigen und index.html prüfen
+   node tools/version.js patch|minor|major|1.2.3   neue Version setzen */
+'use strict';
+const fs = require('fs');
+const path = require('path');
+
+const root = path.join(__dirname, '..');
+const coreFile = path.join(root, 'js', 'core.js');
+const indexFile = path.join(root, 'index.html');
+const ASSET = /((?:href|src)=")((?:css|js|data|assets)\/[^"?]+)(?:\?v=[^"]*)?"/g;
+
+let core = fs.readFileSync(coreFile, 'utf8');
+let index = fs.readFileSync(indexFile, 'utf8');
+const m = /SK\.VERSION = '(\d+)\.(\d+)\.(\d+)';/.exec(core);
+if (!m) {
+  console.error('SK.VERSION in js/core.js nicht gefunden');
+  process.exit(1);
+}
+const current = m.slice(1, 4).join('.');
+const arg = process.argv[2];
+
+if (!arg) {
+  const stale = [...index.matchAll(ASSET)].filter((x) => !x[0].endsWith(`?v=${current}"`)).map((x) => x[2]);
+  console.log(`Version ${current}`);
+  if (stale.length) {
+    console.error(`index.html: ohne ?v=${current}: ${stale.join(', ')}\n→ node tools/version.js ${current}`);
+    process.exit(1);
+  }
+  process.exit(0);
+}
+
+let [major, minor, patch] = m.slice(1, 4).map(Number);
+let next;
+if (arg === 'major') next = `${major + 1}.0.0`;
+else if (arg === 'minor') next = `${major}.${minor + 1}.0`;
+else if (arg === 'patch') next = `${major}.${minor}.${patch + 1}`;
+else if (/^\d+\.\d+\.\d+$/.test(arg)) next = arg;
+else {
+  console.error(`Unbekanntes Argument „${arg}“ – erwartet patch, minor, major oder z. B. 1.2.3`);
+  process.exit(1);
+}
+
+const parts = Object.fromEntries(
+  new Intl.DateTimeFormat('de-DE', { timeZone: 'Europe/Berlin', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+    .formatToParts(new Date())
+    .map((p) => [p.type, p.value])
+);
+core = core
+  .replace(/SK\.VERSION = '[^']*';/, `SK.VERSION = '${next}';`)
+  .replace(/SK\.VERSION_DATE = '[^']*';/, `SK.VERSION_DATE = '${parts.day}.${parts.month}.${parts.year}';`)
+  .replace(/SK\.VERSION_TIME = '[^']*';/, `SK.VERSION_TIME = '${parts.hour}:${parts.minute}';`);
+index = index.replace(ASSET, `$1$2?v=${next}"`);
+fs.writeFileSync(coreFile, core);
+fs.writeFileSync(indexFile, index);
+console.log(`Version ${current} → ${next} (Stand ${parts.day}.${parts.month}.${parts.year}, ${parts.hour}:${parts.minute} Uhr)`);

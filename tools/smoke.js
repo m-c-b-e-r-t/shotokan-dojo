@@ -84,6 +84,16 @@
       log.push(`Wiederholung fällig: ${SK.srs.due().length}`);
       const d = SK.store.data;
       log.push(`XP ${d.xp}, Serie ${d.streak}, beantwortet ${d.answered}, richtig ${d.correct}`);
+      // Umzug Datenversion 1 → 2: alte laufende Nummern zeigen danach auf dieselbe Frage.
+      const old = { version: 1, srs: { 'et-dojo-1': { b: 3, due: '2026-01-01', w: 0 }, 'gl-zenkutsu-dachi-a': { b: 2, due: '2026-01-01', w: 0 } }, asked: { 'et-dojo-2': 1, 'heian-shodan-ueberblick-1': 1 } };
+      const m = SK.store.migrate(old);
+      const byId = (id) => (SK.questions.find((q) => q.id === id) || {}).q;
+      const ok = m.version === 2
+        && byId(Object.keys(m.srs)[0]) === 'Was bedeutet „Dojo“?'
+        && m.srs['gl-zenkutsu-dachi-a'].b === 2
+        && byId(Object.keys(m.asked)[0]) === 'Was bedeutet „Rei“?'
+        && Object.keys(m.asked).every((id) => byId(id));
+      log.push(`Umzug v1 → v2: ${ok ? 'OK' : `FEHLER ${JSON.stringify(m)}`}`);
       log.push('OK');
     } catch (e) {
       log.push(`FEHLER: ${e.message}\n${e.stack}`);

@@ -35,6 +35,8 @@
     if (q.g && SK.gradeIndex(q.g) < 0) errors.push(`${q.id}: unbekannter Grad ${q.g}`);
   }
 
+  SK.idCollisions.forEach((id) => errors.push(`${id}: gleiche Frage mit gleicher Lösung mehrfach in der Lektion`));
+
   out.push(`Fragen gesamt: ${SK.questions.length}`);
   out.push(`Kata-Fragen: ${SK.questions.filter((q) => lessons.get(q.lesson) && lessons.get(q.lesson).kind === 'kata').length}`);
   out.push(`Typen: ${['mc', 'multi', 'order'].map((t) => `${t}=${SK.questions.filter((q) => q.type === t).length}`).join(', ')}`);

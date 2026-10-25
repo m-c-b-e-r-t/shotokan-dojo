@@ -19,10 +19,10 @@
     return 'Vorwort';
   };
   SK.bookSrc = (n) => `${SK.BOOK_SOURCE}, ${SK.bookPages(n)}`;
-  // Bei jeder veröffentlichten Änderung hochzählen
-  SK.VERSION = '1.10.1';
-  SK.VERSION_DATE = '23.10.2026';
-  SK.VERSION_TIME = '16:18';
+  // Bei jeder veröffentlichten Änderung hochzählen: node tools/version.js patch|minor|major (setzt auch ?v= in index.html)
+  SK.VERSION = '1.11.0';
+  SK.VERSION_DATE = '25.10.2026';
+  SK.VERSION_TIME = '10:05';
 
   SK.util = {
     shuffle(arr) {
@@ -73,9 +73,11 @@
     },
   };
 
+  // Schlüssel bleibt trotz neuer Datenversion gleich, damit bestehende Speicherstände gefunden werden.
   const KEY = 'shotokan-dojo-v1';
+  const DATA_VERSION = 2;
   const blank = () => ({
-    version: 1,
+    version: DATA_VERSION,
     xp: 0,
     streak: 0,
     bestStreak: 0,
@@ -90,16 +92,41 @@
     read: {},
   });
 
+  // Version 1 → 2: Fragen-IDs von laufender Nummer auf Hash umstellen (Tabelle in data/legacy-ids.js).
+  function migrateIds(map) {
+    const out = {};
+    for (const [id, v] of Object.entries(map || {})) {
+      const m = /^(.+)-(\d+)$/.exec(id);
+      const list = m && SK.legacyIds && SK.legacyIds[m[1]];
+      const h = list && list.split(' ')[Number(m[2]) - 1];
+      out[h ? `${m[1]}-${h}` : id] = v;
+    }
+    return out;
+  }
+  function migrate(d) {
+    if (d.version === 1) {
+      d.srs = migrateIds(d.srs);
+      d.asked = migrateIds(d.asked);
+      d.version = 2;
+    }
+    return d;
+  }
+
   SK.store = {
     data: blank(),
     load() {
       try {
         const raw = localStorage.getItem(KEY);
-        if (raw) SK.store.data = Object.assign(blank(), JSON.parse(raw));
+        if (!raw) return;
+        const d = Object.assign(blank(), JSON.parse(raw));
+        const old = d.version;
+        SK.store.data = migrate(d);
+        if (old !== d.version) SK.store.save();
       } catch (e) {
         SK.store.data = blank();
       }
     },
+    migrate,
     save() {
       try {
         localStorage.setItem(KEY, JSON.stringify(SK.store.data));
@@ -116,10 +143,11 @@
     },
     importJson(text) {
       const obj = JSON.parse(text);
-      if (!obj || typeof obj !== 'object' || obj.version !== 1 || typeof obj.lessons !== 'object' || typeof obj.srs !== 'object') {
+      if (!obj || typeof obj !== 'object' || ![1, DATA_VERSION].includes(obj.version) || typeof obj.lessons !== 'object' || typeof obj.srs !== 'object') {
         throw new Error('Ungültige Sicherungsdatei');
       }
       SK.store.data = Object.assign(blank(), {
+        version: obj.version,
         xp: Number(obj.xp) || 0,
         streak: Number(obj.streak) || 0,
         bestStreak: Number(obj.bestStreak) || 0,
@@ -133,6 +161,7 @@
         asked: typeof obj.asked === 'object' && obj.asked ? obj.asked : {},
         read: typeof obj.read === 'object' && obj.read ? obj.read : {},
       });
+      migrate(SK.store.data);
       SK.store.save();
     },
     touchStreak() {
@@ -155,12 +184,31 @@
     for (const q of list) SK.questions.push(q);
   };
 
-  /* Fragen-Baukasten: richtige Antwort steht im Quelltext immer zuerst, die Anzeige mischt. */
-  const qCount = {};
+  // FNV-1a (32 Bit) als kurze Base36-Zeichenkette
+  SK.hash = function (s) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < s.length; i++) {
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 0x01000193);
+    }
+    return (h >>> 0).toString(36);
+  };
+
+  /* Fragen-Baukasten: richtige Antwort steht im Quelltext immer zuerst, die Anzeige mischt.
+     Die ID ergibt sich aus Lektion, Fragetext und richtiger Antwort – Einfügen, Löschen oder
+     Umsortieren anderer Fragen verschiebt sie nicht. Ändert sich Frage oder Lösung, gilt sie als neu. */
+  const qIds = new Set();
+  SK.idCollisions = [];
   SK.qb = function (lesson, defaultSrc, extra) {
     const base = (type, q, options, answer, explain, src) => {
-      qCount[lesson] = (qCount[lesson] || 0) + 1;
-      const item = Object.assign({ id: `${lesson}-${qCount[lesson]}`, lesson, type, q, options, answer, explain: explain || '', src: src || defaultSrc }, extra || {});
+      const right = type === 'mc' ? [options[answer]] : type === 'multi' ? answer.map((i) => options[i]) : options;
+      const stem = `${lesson}-${SK.hash(`${type}|${q}|${right.join('|')}`)}`;
+      let id = stem;
+      // Gleiche Frage mit gleicher Lösung in derselben Lektion – meldet tools/validate.html
+      for (let n = 2; qIds.has(id); n++) id = `${stem}-${n}`;
+      if (id !== stem) SK.idCollisions.push(id);
+      qIds.add(id);
+      const item = Object.assign({ id, lesson, type, q, options, answer, explain: explain || '', src: src || defaultSrc }, extra || {});
       SK.questions.push(item);
       return item;
     };

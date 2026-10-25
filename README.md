@@ -13,6 +13,14 @@ Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikett
 
 Prüfwerkzeuge: `tools/validate.html` (Datenkonsistenz) und `tools/smoke.html` (klickt automatisch durch alle Prüfungen; löscht dabei den lokalen Fortschritt).
 
+## Neue Version veröffentlichen
+
+`node tools/version.js patch` (bzw. `minor`, `major` oder z. B. `1.12.0`) setzt Versionsnummer, Datum und Uhrzeit in `js/core.js` und hängt `?v=<Version>` an alle Dateien in `index.html`, damit Browser nach dem Update keine alten Dateien verwenden. Ohne Argument prüft das Skript, ob `index.html` zur Version passt.
+
+## Fragen-IDs
+
+Fragen-IDs ergeben sich aus Lektion, Fragetext und richtiger Antwort (`SK.qb` in `js/core.js`). Fragen dürfen daher eingefügt, gelöscht und umsortiert werden, ohne dass der gespeicherte Fortschritt bei anderen Fragen landet. Wird Fragetext oder Lösung geändert, gilt die Frage als neu. `data/legacy-ids.js` ist eingefroren und überträgt nur alte Speicherstände (bis v1.10.1, laufende Nummern) einmalig auf die neuen IDs.
+
 ## Veröffentlichen auf GitHub Pages
 
 1. In VS Code bei GitHub anmelden und „Publish to GitHub“ wählen (öffentliches Repository).
