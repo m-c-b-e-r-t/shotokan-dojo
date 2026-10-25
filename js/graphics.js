@@ -5,7 +5,7 @@
   const RED = '#b71c1c';
   const MID = '#e53935';
   const LIGHT = '#ef9a9a';
-  const HL = '#ff6f00';
+  const HL = '#d32f2f';
   const INK = '#37474f';
   const SKIN_D = '#cdb6a4';
   const GHOST = '#90a4ae';
@@ -542,7 +542,7 @@
     return `<g data-arrow="1"><path d="${d}" stroke="#fff" stroke-width="7" ${CAP} opacity=".9"/><path d="${d}" stroke="${ARR}" stroke-width="3.2" ${CAP}${dashed ? ' stroke-dasharray="7 5"' : ''}${both ? ' marker-start="url(#ah)"' : ''} marker-end="url(#ah)"/></g>`;
   }
   function tag(x, y, text, tx, ty, anchor) {
-    return `<g data-tag="1"><path d="M${x} ${y} L${tx} ${ty - 4}" stroke="${HL}" stroke-width="1.3"/><text x="${tx}" y="${ty + (ty < y ? -2 : 8)}" font-size="10" font-weight="700" text-anchor="${anchor || 'middle'}" fill="#bf360c" ${FONT}>${esc(text)}</text></g>`;
+    return `<g data-tag="1"><path d="M${x} ${y} L${tx} ${ty - 4}" stroke="${HL}" stroke-width="1.3"/><text x="${tx}" y="${ty + (ty < y ? -2 : 8)}" font-size="10" font-weight="700" text-anchor="${anchor || 'middle'}" fill="#b71c1c" ${FONT}>${esc(text)}</text></g>`;
   }
   const stripTags = (svg) => svg.replace(/<g data-tag="1">[\s\S]*?<\/g>/g, '');
   const hitDot = (x, y) => `<circle data-hit="${x} ${y}" cx="${x}" cy="${y}" r="6" fill="${HL}" stroke="#fff" stroke-width="2"/>`;
@@ -760,7 +760,7 @@
       head: [110, 150], view: 'top',
       parts: [Object.assign(arm([[140, 150], [128, 106], [112, 64]]), { from: [[134, 170], [146, 184], [138, 196]] }), Object.assign(arm([[80, 150], [74, 164], [80, 176]]), { from: [[86, 126], [80, 96], [76, 66]] })],
     };
-    const extra = arrow('M143 183 A46 46 0 0 0 156 150') + `<text x="164" y="162" font-size="12" font-weight="700" fill="#c62828" ${FONT}>45°</text><text x="66" y="154" font-size="10" font-weight="700" text-anchor="end" fill="#e65100" ${FONT}>Hüfte</text>`;
+    const extra = arrow('M143 183 A46 46 0 0 0 156 150') + `<text x="164" y="162" font-size="12" font-weight="700" fill="#c62828" ${FONT}>45°</text><text x="66" y="154" font-size="10" font-weight="700" text-anchor="end" fill="#b71c1c" ${FONT}>Hüfte</text>`;
     return scene('Gyaku-zuki', 220, spec, extra, ['von oben: Hüfte dreht von schräg nach', 'frontal – Faust der Gegenseite'], { top: true, ghost: false, pre: foot(70, 104, 0, 0.7, { side: 'L' }) + foot(138, 196, 25, 0.3, { side: 'R' }) + hip });
   }
   const MOVES = {
