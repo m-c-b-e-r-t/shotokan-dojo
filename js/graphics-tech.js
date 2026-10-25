@@ -14,13 +14,18 @@
   const side = (parts, o) => Object.assign({}, SIDE, o, { parts });
   const S_STAND = [leg([[108, 116], [104, 176], [102, 228]], [120, 232], { far: true }), leg([[110, 116], [112, 176], [114, 228]], [132, 232])];
   const S_ZK = [leg([[106, 116], [72, 172], [38, 226]], [56, 232], { far: true }), leg([[110, 116], [142, 168], [138, 228]], [158, 232])];
-  const S_KK = [leg([[104, 116], [82, 168], [86, 228]], [104, 232], { far: true }), leg([[108, 116], [144, 170], [162, 228]], [180, 232])];
+  const S_KK = [leg([[104, 116], [121, 175], [88, 228]], [104, 233], { far: true }), leg([[108, 116], [144, 170], [162, 228]], [180, 232])];
   const HIP_FAR = far(arm([[112, 62], [100, 92], [110, 104]]));
   const HIP_NEAR = arm([[112, 62], [102, 92], [114, 104]]);
   const GUARD_FAR = far(arm([[112, 62], [118, 92], [134, 88]]));
   const PUNCH = arm([[112, 62], [146, 66], [182, 68]]);
   // Gegenhand: zieht in der Animation aus der Streckung zur Hüfte zurück (Hikite)
   const PULL_FAR = from(HIP_FAR, PUNCH.p);
+  // Stoß-Ziele seitlich: Jodan (Gesicht) und Chudan (Solarplexus), Arm ganz gestreckt
+  const JODAN = [[112, 62], [146, 54], [181, 46]];
+  const CHUDAN = [[112, 62], [146, 68], [181, 74]];
+  // Glied mit festen Schlüsselbildern (Punktlisten) für die Animation
+  const keys = (p, frames, impact) => Object.assign({}, p, { seq: frames.map((q) => [q]) }, impact == null ? {} : { impact });
 
   // Vorderansicht: rechte Körperseite = im Bild links
   const fr = (parts, legs) => Object.assign({}, FRONT, { parts: (legs || [LEG_R, LEG_L]).concat(parts) });
@@ -113,25 +118,25 @@
     /* ---------- Tsuki ---------- */
     'choku-zuki': S('Choku-zuki', side([PULL_FAR, ...S_STAND, PUNCH, ghost(HIP_NEAR)]), arrow('M120 92 L174 84') + hit(190, 68), ['seitlich: gerader Fauststoß', 'aus dem Stand, ohne Schritt']),
     'kizami-zuki': S('Kizami-zuki', side([GUARD_FAR, ...S_ZK, arm([[112, 62], [148, 50], [184, 40]]), ghost(arm([[112, 62], [132, 84], [148, 70]]))]), arrow('M154 84 L186 56') + hit(192, 38), ['seitlich: Stoß mit der vorderen Hand,', 'ohne Schritt']),
-    'sanbon-zuki': S('Sanbon-zuki', side([HIP_FAR, ...S_ZK, PUNCH]), num(206, 34, 1) + num(204, 68, 2) + num(222, 68, 3), ['seitlich: drei Stöße schnell hintereinander', '1 Jodan · 2 Chudan · 3 Chudan'], still),
-    'ren-zuki': S('Ren-zuki', side([far(arm([[112, 62], [146, 72], [180, 76]])), ...S_ZK, HIP_NEAR, ghost(PUNCH)]), num(200, 60, 1) + num(198, 84, 2), ['seitlich: Fauststöße in schneller Folge,', 'die Hände wechseln sich ab']),
+    'sanbon-zuki': S('Sanbon-zuki', side([keys(HIP_FAR, [CHUDAN, HIP_FAR.p, HIP_FAR.p, CHUDAN, CHUDAN, HIP_FAR.p, HIP_FAR.p]), ...S_ZK, keys(arm(CHUDAN), [HIP_NEAR.p, JODAN, JODAN, HIP_NEAR.p, HIP_NEAR.p, CHUDAN, CHUDAN]), ghost(arm(JODAN))]), num(196, 36, 1) + num(196, 84, 2) + num(214, 84, 3), ['seitlich: drei Stöße schnell hintereinander –', '1 Jodan (vorne) · 2 Chudan (hinten) · 3 Chudan (vorne)']),
+    'ren-zuki': S('Ren-zuki', side([keys(far(arm(CHUDAN)), [CHUDAN, HIP_FAR.p, HIP_FAR.p, CHUDAN, CHUDAN]), ...S_ZK, keys(HIP_NEAR, [HIP_NEAR.p, JODAN, JODAN, HIP_NEAR.p, HIP_NEAR.p]), ghost(arm(JODAN))]), num(196, 36, 1) + num(196, 84, 2), ['seitlich: zwei Stöße schnell hintereinander –', '1 Jodan (vordere Hand) · 2 Chudan (hintere Hand)']),
     'morote-zuki': S('Morote-zuki', side([from(far(arm([[112, 62], [148, 74], [182, 80]])), HIP_FAR.p), ...S_ZK, from(arm([[112, 62], [148, 62], [184, 62]]), HIP_NEAR.p)]), '', ['seitlich: beide Fäuste stoßen', 'gleichzeitig nach vorne'], still),
-    'kagi-zuki': F('Kagi-zuki', fr([HIKITE_L, arm([[93, 62], [66, 84], [122, 84]]), ghost(HIKITE_R)], KIBA), arrow('M72 102 C90 106 110 104 124 98'), ['von vorne (Kiba-dachi): Hakenstoß,', 'Unterarm waagerecht vor der Brust']),
-    'ura-zuki': S('Ura-zuki', side([PULL_FAR, ...S_ZK, arm([[112, 62], [126, 98], [162, 94]]), ghost(HIP_NEAR)]), arrow('M120 116 C136 116 150 112 160 108'), ['seitlich: kurzer Stoß aus nächster Nähe,', 'der Handrücken zeigt nach unten']),
-    'age-zuki': S('Age-zuki', side([PULL_FAR, ...S_ZK, arm([[112, 62], [146, 60], [164, 30]]), ghost(HIP_NEAR)]), arrow('M124 108 C154 104 176 72 176 42') + hit(166, 20), ['seitlich: Faust steigt im Bogen', 'nach oben zum Kinn']),
+    'kagi-zuki': F('Kagi-zuki', fr([from(HIKITE_L, [[127, 62], [146, 92], [166, 116]]), arm([[93, 62], [98, 88], [134, 86]]), ghost(HIKITE_R)], KIBA), arrow('M84 118 C98 110 120 104 146 98'), ['von vorne (Kiba-dachi): Hakenstoß zur Seite,', 'Unterarm waagerecht vor dem Solarplexus']),
+    'ura-zuki': S('Ura-zuki', side([PULL_FAR, ...S_ZK, Object.assign(arm([[112, 62], [124, 95], [160, 90]]), { via: [[[[112, 62], [110, 96], [144, 100]]]] }), ghost(HIP_NEAR)]), arrow('M118 116 L156 104') + hit(170, 90, 'Handrücken unten', 230, 140, 'end'), ['seitlich: kurzer Stoß aus nächster Nähe,', 'der Handrücken zeigt nach unten']),
+    'age-zuki': S('Age-zuki', side([PULL_FAR, ...S_ZK, Object.assign(arm([[112, 62], [142, 46], [172, 30]]), { via: [[[[112, 62], [118, 96], [150, 92]]]] }), ghost(HIP_NEAR)]), arrow('M124 112 C158 106 180 78 184 46') + hit(178, 24), ['seitlich: Faust steigt im Bogen nach oben', 'zum Kinn, der Arm ist am Ende gestreckt']),
     'yama-zuki': S('Yama-zuki', side([from(far(arm([[112, 62], [144, 104], [182, 118]])), HIP_FAR.p), ...S_ZK, from(arm([[112, 62], [150, 44], [186, 38]]), HIP_NEAR.p)], { trunk: [[116, 54], [108, 116]] }), '', ['seitlich: beide Fäuste gleichzeitig –', 'eine oben (Jodan), eine unten (Gedan)'], still),
-    'otoshi-zuki': S('Otoshi-zuki', side([PULL_FAR, ...S_ZK, arm([[112, 62], [146, 72], [168, 108]]), ghost(arm([[112, 62], [136, 40], [160, 28]]))]), arrow('M170 30 C188 50 188 84 176 104'), ['seitlich: Fauststoß von oben', 'nach unten']),
+    'otoshi-zuki': S('Otoshi-zuki', side([PULL_FAR, ...S_ZK, arm([[112, 62], [140, 84], [168, 106]]), ghost(arm([[112, 62], [138, 40], [146, 8]]))]), arrow('M158 4 C186 22 194 62 184 96') + hit(174, 112), ['seitlich: Faust fällt von oben schräg nach', 'unten, der Arm streckt sich dabei']),
     nukite: S('Nukite', side([PULL_FAR, ...S_ZK, arm([[112, 62], [148, 70], [180, 74]], 'open'), ghost(HIP_NEAR)]), hit(196, 76, 'Fingerspitzen', 232, 46, 'end'), ['seitlich: Stoß mit den Fingerspitzen']),
 
     /* ---------- Uchi ---------- */
-    'uraken-uchi': F('Uraken-uchi', fr([HIKITE_L, arm([[93, 62], [66, 58], [50, 34]]), ghost(arm([[93, 62], [108, 84], [124, 62]]))]), arrow('M120 52 C98 34 76 26 60 26') + hit(44, 30, 'Faustrücken', 20, 66, 'start'), ['von vorne: Faustrücken schnellt', 'im Bogen nach außen']),
-    'tettsui-uchi': F('Tettsui-uchi', fr([HIKITE_L, Object.assign(arm([[93, 62], [70, 88], [60, 118]]), { via: [[[[93, 62], [64, 46], [44, 64]]]] }), ghost(arm([[93, 62], [86, 30], [104, 10]]))]), arrow('M96 4 C54 10 42 60 52 106') + hit(58, 126, 'Hammerfaust', 14, 160, 'start'), ['von vorne: Hammerfaust schlägt', 'im Bogen nach unten']),
-    'shuto-uchi': S('Shuto-uchi', side([from(far(arm([[112, 62], [100, 92], [110, 104]])), [[112, 62], [140, 74], [168, 70]]), ...S_ZK, arm([[112, 62], [146, 58], [176, 52]], 'open'), ghost(arm([[112, 62], [96, 48], [104, 28]], 'open'))]), arrow('M96 18 C124 2 164 14 180 36') + hit(184, 52, 'Handkante', 226, 96, 'end'), ['seitlich: Hand holt am Ohr aus, die Handkante', 'schwingt im Bogen von außen nach innen']),
+    'uraken-uchi': F('Uraken-uchi', fr([HIKITE_L, arm([[93, 62], [62, 54], [32, 46]]), ghost(arm([[93, 62], [108, 84], [124, 62]]))]), arrow('M122 48 C100 24 62 26 36 36') + hit(24, 44, 'Faustrücken', 14, 84, 'start'), ['von vorne: Faustrücken schnellt', 'im Bogen nach außen']),
+    'tettsui-uchi': F('Tettsui-uchi', fr([HIKITE_L, arm([[93, 62], [62, 70], [30, 76]]), ghost(arm([[93, 62], [112, 80], [128, 54]]))]), arrow('M86 22 C64 20 42 32 30 58') + hit(22, 78, 'Hammerfaust', 14, 150, 'start'), ['von vorne: Hammerfaust schwingt von der', 'Gegenschulter im Bogen zur Seite']),
+    'shuto-uchi': S('Shuto-uchi', side([from(far(arm([[112, 62], [100, 92], [110, 104]])), [[112, 62], [140, 74], [168, 70]]), ...S_ZK, keys(arm([[112, 62], [146, 56], [180, 50]], 'open'), [[[112, 62], [104, 60], [100, 36]], [[112, 62], [114, 60], [128, 42]], [[112, 62], [146, 56], [180, 50]]]), ghost(arm([[112, 62], [104, 60], [100, 36]], 'open'))]), arrow('M94 24 C124 24 160 32 188 40') + hit(188, 50, 'Handkante', 226, 96, 'end'), ['seitlich: Hand holt am Ohr aus, die Handkante', 'schwingt waagerecht von der Seite nach vorne']),
     'haito-uchi': S('Haito-uchi', side([from(far(arm([[112, 62], [100, 92], [110, 104]])), [[112, 62], [140, 74], [168, 70]]), ...S_ZK, Object.assign(arm([[112, 62], [146, 52], [176, 40]], 'open'), { via: [[[[112, 62], [126, 92], [146, 96]]]] }), ghost(arm([[112, 62], [94, 90], [74, 104]], 'open'))]), arrow('M66 116 C110 140 170 96 180 54') + hit(182, 40, 'Daumenseite', 226, 96, 'end'), ['seitlich: Hand schwingt weit von unten', 'außen nach vorne – die Daumenseite trifft']),
-    'enpi-uchi': S('Enpi-uchi', side([PULL_FAR, ...S_ZK, arm([[112, 62], [150, 60], [120, 52]]), ghost(HIP_NEAR)]), arrow('M122 100 C144 96 154 82 156 70') + hit(166, 58, 'Ellbogen', 226, 30, 'end'), ['seitlich: der Ellbogen schlägt', 'nach vorne']),
+    'enpi-uchi': S('Enpi-uchi', side([PULL_FAR, ...S_ZK, Object.assign(arm([[112, 62], [146, 68], [118, 62]]), { via: [[[[112, 62], [126, 94], [130, 70]]]] }), ghost(HIP_NEAR)]), arrow('M118 110 C140 106 152 92 154 80') + hit(156, 68, 'Ellbogen', 226, 30, 'end'), ['seitlich: der Ellbogen stößt nach vorne,', 'die Faust bleibt dicht an der Brust']),
     'furi-enpi': F('Furi-enpi', fr([HIKITE_L, arm([[93, 62], [60, 66], [94, 76]]), ghost(HIKITE_R)], KIBA), arrow('M98 110 C80 106 62 92 52 76') + hit(52, 64), ['von vorne (Kiba-dachi): Ellbogen', 'schwingt zur Seite']),
     'ushiro-enpi': S('Ushiro-enpi', side([GUARD_FAR, ...S_ZK, arm([[112, 62], [80, 88], [108, 96]]), ghost(PUNCH)]), arrow('M176 86 C150 104 110 108 86 104') + hit(72, 88), ['seitlich: Ellbogen stößt nach hinten']),
-    'hasami-uchi': F('Hasami-uchi', fr([from(arm([[93, 62], [62, 74], [76, 56]]), [[93, 62], [56, 80], [40, 60]]), from(arm([[127, 62], [158, 74], [144, 56]]), [[127, 62], [164, 80], [180, 60]])]), arrow('M42 76 C48 62 58 54 70 52') + arrow('M178 76 C172 62 162 54 150 52'), ['von vorne: beide Fäuste schlagen', 'zangenartig von außen nach innen'], still),
+    'hasami-uchi': F('Hasami-uchi', fr([keys(arm([[93, 62], [64, 82], [90, 90]]), [[[93, 62], [78, 36], [100, 14]], [[93, 62], [64, 74], [36, 86]], [[93, 62], [62, 78], [62, 96]], [[93, 62], [64, 82], [90, 90]]], 3), keys(arm([[127, 62], [156, 82], [130, 90]]), [[[127, 62], [142, 36], [120, 14]], [[127, 62], [156, 74], [184, 86]], [[127, 62], [158, 78], [158, 96]], [[127, 62], [156, 82], [130, 90]]], 3), ghost(arm([[93, 62], [64, 74], [36, 86]])), ghost(arm([[127, 62], [156, 74], [184, 86]]))]), arrow('M26 70 C30 90 48 100 72 98') + arrow('M194 70 C190 90 172 100 148 98'), ['von vorne: beide Hammerfäuste schlagen zangenartig', 'von außen zu beiden Seiten des Bauches']),
     'teisho-uchi': S('Teisho-uchi', side([PULL_FAR, ...S_ZK, arm([[112, 62], [148, 64], [180, 62]], 'vopen'), ghost(HIP_NEAR)]), arrow('M122 92 L176 80') + hit(190, 68, 'Handballen', 230, 40, 'end'), ['seitlich: Stoß mit dem Handballen']),
 
     /* ---------- Uke ---------- */
