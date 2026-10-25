@@ -196,15 +196,10 @@
     ashizenkutsu: { d: 8, L: [[138, 228], [158, 232]], R: [[64, 226], [82, 232]] },
     kokutsu: { d: 30, L: [[184, 228], [200, 232]], R: [[102, 228], [110, 233], [122, 186]], arms: 'shuto', plumb: true },
     kiba: { d: 24, L: [[112, 228], [130, 232]], R: [[116, 228], [134, 232]] },
-    kosa: { d: 22, L: [[132, 228], [152, 232]], R: [[96, 220], [112, 232]] },
     ashidachi: { d: 4, L: [[112, 228], [130, 232]], R: [[132, 190], [150, 194]] },
     hizakutsu: { d: 14, L: [[150, 228], [170, 232]], R: [[42, 226], [60, 232]] },
-    renoji: { d: 10, L: [[148, 228], [166, 232]], R: [[100, 228], [108, 232]] },
-    teiji: { d: 8, L: [[142, 228], [160, 232]], R: [[104, 228], [112, 232]] },
-    fudo: { d: 20, L: [[150, 228], [168, 232]], R: [[54, 228], [72, 232]] },
-    neko: { d: 24, L: [[144, 222], [158, 232]], R: [[106, 228], [122, 232]] },
-    sanchin: { d: 10, L: [[130, 228], [148, 232]], R: [[94, 228], [112, 232]] },
-    hangetsu: { d: 16, L: [[140, 228], [158, 232]], R: [[72, 228], [90, 232]] },
+    fudo: { d: 32, L: [[150, 228], [168, 232]], R: [[34, 228], [52, 232]] },
+    neko: { d: 32, L: [[144, 222], [158, 232]], R: [[106, 228], [118, 233], [136, 192]] },
     orishiki: { d: 50, L: [[146, 228], [164, 232]], R: [[52, 228], [40, 232]] },
   };
   // Knie aus Hüfte und Knöchel (Oberschenkel 60, Schienbein 56), immer nach vorne gebeugt
@@ -221,31 +216,50 @@
     return c[0][0] > c[1][0] ? c[0] : c[1];
   }
   // Natürliche Stände zeigen statt der Seitenansicht eine Vorderansicht (rechtes Bein im Bild links)
-  const frontLeg = (p, foot) => ({ p, foot, w: 15, under: true });
+  // toward = Fuß zeigt zum Betrachter: kurz und zur Sohle hin breiter statt spitz nach unten
+  const frontLeg = (p, foot, toward) => ({ p, foot, w: 15, under: true, toward });
   const STANCE_FRONT = {
     musubi: { hands: 'open', legs: [frontLeg([[102, 118], [102, 176], [103, 228]], [92, 236]), frontLeg([[118, 118], [118, 176], [117, 228]], [128, 236])] },
-    heisoku: { hands: 'open', legs: [frontLeg([[102, 118], [102, 176], [103, 228]], [103, 238]), frontLeg([[118, 118], [118, 176], [117, 228]], [117, 238])] },
+    heisoku: { hands: 'open', legs: [frontLeg([[102, 118], [102, 176], [103, 226]], [102, 231], true), frontLeg([[118, 118], [118, 176], [117, 226]], [118, 231], true)] },
     hachiji: { hands: 'yoi', legs: [frontLeg([[102, 118], [94, 176], [88, 228]], [80, 236]), frontLeg([[118, 118], [126, 176], [132, 228]], [140, 236])] },
-    kiba: { d: 36, hands: 'hips', legs: [frontLeg([[100, 154], [60, 186], [58, 228]], [58, 238]), frontLeg([[120, 154], [160, 186], [162, 228]], [162, 238])] },
+    kiba: { d: 36, hands: 'hips', legs: [frontLeg([[100, 154], [60, 186], [58, 226]], [58, 231], true), frontLeg([[120, 154], [160, 186], [162, 226]], [162, 231], true)] },
+    // Grundform linker Fuß vorne (im Bild rechts); das rechte Bein kreuzt dahinter, Knie in der Kniekehle, Fuß außen nur auf dem Ballen
+    // Grundform linker Fuß vorne (im Bild rechts), Fußspitzen und Knie nach innen gedrückt; hinteres Bein grau und höher (weiter weg).
+    // Sanchin: hüftbreit, kurz und hoch. Hangetsu: deutlich breiter, länger (hinterer Fuß höher) und tiefer.
+    sanchin: { d: 10, hands: 'hips', legs: [Object.assign(frontLeg([[102, 128], [104, 179], [91, 225]], [98, 233]), { far: true }), frontLeg([[118, 128], [115, 181], [129, 228]], [122, 236])] },
+    hangetsu: { d: 26, hands: 'hips', legs: [Object.assign(frontLeg([[102, 144], [96, 186], [78, 220]], [87, 228]), { far: true }), frontLeg([[118, 144], [127, 190], [147, 228]], [137, 236])] },
+    // Renoji/Teiji: vorderer Fuß zeigt zum Betrachter, hinterer (grau, weiter weg) quer nach außen.
+    // Renoji: hinterer Fuß ragt nur zu einer Seite heraus (Ferse hinter dem vorderen Fuß = L), Teiji: zu beiden Seiten (Mitte dahinter = T)
+    renoji: { d: 4, hands: 'open', sideFoot: [106, 229], legs: [Object.assign(frontLeg([[102, 122], [104, 172], [106, 214]], [105, 218]), { far: true }), frontLeg([[118, 122], [115, 176], [108, 228]], [108, 233], true)] },
+    teiji: { d: 4, hands: 'open', sideFoot: [117, 229], legs: [Object.assign(frontLeg([[102, 122], [108, 172], [114, 214]], [113, 218]), { far: true }), frontLeg([[118, 122], [112, 176], [100, 228]], [100, 233], true)] },
+    kosa: { d: 42, hands: 'hips', legs: [Object.assign(frontLeg([[102, 160], [128, 204], [149, 214]], [151, 231]), { far: true }), frontLeg([[118, 160], [136, 194], [123, 226]], [122, 231], true)] },
   };
-  function stanceFrontSvg(key, title) {
+  function stanceFrontSvg(key, title, mirrored) {
     const f = STANCE_FRONT[key];
     const d = f.d || 0;
     const dn = (pts) => pts.map(([x, y]) => [x, y + d]);
+    const mx = ([x, y]) => [220 - x, y];
+    const legs = mirrored ? f.legs.map((l) => Object.assign({}, l, { p: l.p.map(mx), foot: mx(l.foot) })) : f.legs;
     const arms = {
       open: [arm([[93, 62], [88, 96], [90, 128]], 'open'), arm([[127, 62], [132, 96], [130, 128]], 'open')],
       yoi: [arm([[93, 62], [90, 96], [100, 124]]), arm([[127, 62], [130, 96], [120, 124]])],
       hips: [arm(dn([[93, 62], [84, 94], [92, 110]])), arm(dn([[127, 62], [136, 94], [128, 110]]))],
     }[f.hands];
-    const spec = { head: [110, 32 + d], view: 'front', torso: dn(FRONT.torso), belt: dn(FRONT.belt), parts: f.legs.concat(arms) };
+    const spec = { head: [110, 32 + d], view: 'front', torso: dn(FRONT.torso), belt: dn(FRONT.belt), parts: legs.concat(arms) };
+    // quer gestellter hinterer Fuß im Profil (Zehen nach außen), sideFoot = Ferse am Boden; Hosenbein überdeckt den Knöchel
+    let sf = '';
+    if (f.sideFoot) {
+      const [ax, ay] = mirrored ? mx(f.sideFoot) : f.sideFoot;
+      sf = `<path d="M5,-15 C7,-6 7,0 2,0 L-27,0 C-32,0 -33,-5 -29,-6.5 C-21,-8 -13,-11 -6,-16 Z" transform="translate(${ax} ${ay}) scale(${mirrored ? -1.25 : 1.25} 1.25)" fill="${F_FAR_SKIN}" stroke="${PEN}" stroke-width="1.9" stroke-linejoin="round"/>`;
+    }
     return `<svg viewBox="0 0 200 224" role="img" aria-label="${esc(title)} – von vorne" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="198" height="222" rx="12" fill="#fafafa" stroke="#ddd"/>
-      <g transform="translate(16 -2) scale(.84)"><path d="M20 238 H200" stroke="#cfd8dc" stroke-width="2"/>${person(spec)}</g>
+      <g transform="translate(16 -2) scale(.84)"><path d="M20 238 H200" stroke="#cfd8dc" stroke-width="2"/>${sf}${person(spec)}</g>
       <text x="100" y="217" font-size="9.5" text-anchor="middle" fill="#78909c" ${FONT}>von vorne</text></svg>`;
   }
   function stanceSideSvg(key, mirrored, opts) {
     const title = (opts && opts.title) || (STANCES[key] && STANCES[key].name);
-    if (STANCE_FRONT[key]) return stanceFrontSvg(key, title);
+    if (STANCE_FRONT[key]) return stanceFrontSvg(key, title, mirrored);
     const g = STANCE_SIDE[key];
     if (!g) return '';
     const d = g.d;
@@ -503,7 +517,7 @@
     const geos = poses.map((f) => geo(f.p, f.foot, leg));
     const nc = geos[0].segs.length + 1;
     const wc = leg ? widths(nc, p.w + 5, p.w - 1) : widths(nc, p.w + 5.5, p.w + 1.5);
-    const wsk = leg ? [p.w * 0.66, p.w * 0.58, p.w * 0.5] : [p.w - 1.5, p.w - 3];
+    const wsk = leg ? (p.toward ? [p.w * 0.66, p.w * 0.66, p.w * 1.1] : [p.w * 0.66, p.w * 0.58, p.w * 0.5]) : [p.w - 1.5, p.w - 3];
     const cl = (g) => [g.segs[0][0]].concat(g.segs.map((sg) => sg[1]));
     const vals = (fn) => geos.map(fn);
     const shrink = (ws, k) => ws.map((w) => Math.max(1, w + k));
