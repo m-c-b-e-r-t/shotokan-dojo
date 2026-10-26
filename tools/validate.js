@@ -15,6 +15,21 @@
     k.seq.forEach((r, i) => { if (r[0] !== i + 1) errors.push(`${id}: Nummer ${r[0]} an Position ${i + 1}`); });
     k.kiai.forEach((n) => { if (n < 1 || n > k.moves) errors.push(`${id}: Kiai ${n} ausserhalb`); });
     [...k.continuous.flat(), ...k.slow].forEach((n) => { if (n < 1 || n > k.moves) errors.push(`${id}: Bewegung ${n} ausserhalb`); });
+    // Aufteilung für die Bewegungskarten: jede Technik muss Teile ergeben, Höhen nur noch im Label
+    k.seq.forEach((r) => {
+      const mp = SK.moveParts(r[2]);
+      if (!mp) {
+        if (!/^(Kao |Jotai|Rechte|Linker|Rechter|Migi Ashi-jiku)/.test(r[2])) errors.push(`${id} ${r[0]}: Technik nicht aufgeteilt: ${r[2]}`);
+        return;
+      }
+      const all = mp.l.concat(mp.r, mp.b, mp.f);
+      if (!all.length) errors.push(`${id} ${r[0]}: keine Hand/kein Bein erkannt: ${r[2]}`);
+      all.forEach((p) => {
+        if (!p.t || /undefined/.test(p.t)) errors.push(`${id} ${r[0]}: leerer Teil: ${r[2]}`);
+        if (/(^| )(Jodan|Chudan|Gedan)( |$)/.test(p.t) && p.t !== { J: 'Jodan', C: 'Chudan', G: 'Gedan' }[p.h]) errors.push(`${id} ${r[0]}: Höhe doppelt im Text „${p.t}“`);
+        if (/\b(Hidari|Migi)$/.test(p.t)) errors.push(`${id} ${r[0]}: Seitenangabe ohne Technik „${p.t}“`);
+      });
+    });
   }
 
   const ids = new Set();

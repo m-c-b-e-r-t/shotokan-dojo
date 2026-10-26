@@ -37,17 +37,109 @@
 
   const label = (row) => `${row[1]} – ${row[2]}`;
 
+  // Zerlegt einen Technik-Text in linke Hand, rechte Hand, beide Hände und Bein samt Höhe (J/C/G).
+  // Die Höhe steht danach nur im Label; bleibt ohne sie nur „-uke“, „-barai“ … übrig, bleibt der Name ganz.
+  const HAND = { Saken: 'l', Sasho: 'l', Uken: 'r', Usho: 'r', Ryoken: 'b', Ryosho: 'b', Morote: 'b', Kaisho: 'b', Ryote: 'b', 'Ryo-kentsui': 'b' };
+  const OPEN = new Set(['Sasho', 'Usho', 'Ryosho', 'Kaisho']);
+  const SIDE = { Hidari: 'l', Migi: 'r' };
+  const LEVEL = { Jodan: 'J', Chudan: 'C', Gedan: 'G' };
+  const LEVEL_NAME = { J: 'Jodan', C: 'Chudan', G: 'Gedan' };
+  const MERGE = /^(Shuto|Tate-shuto|Uraken)$/;
+  const LEG = /geri|kekomi|Hiza-(ts|z)uchi/;
+  const NO_TECH = /^(Jotai|Rechte|Rechter|Linker|(Migi|Hidari) Ashi-jiku)\b/;
+
+  function parseSegment(seg) {
+    const tok = seg.split(/\s+/);
+    const parts = [];
+    let cur = null;
+    let dir = null;
+    const start = (slot, open) => parts.push((cur = { slot, open: !!open, toks: [], h: null }));
+    for (let i = 0; i < tok.length; i++) {
+      const t = tok[i];
+      const ni = /^(Sasho|Usho)-ni$/.exec(t);
+      if (ni) {
+        parts.push({ slot: HAND[ni[1]], open: false, toks: ['offene Hand als Ziel'], h: null });
+        cur = null;
+        continue;
+      }
+      if (!cur || cur.done) {
+        if (SIDE[t] && tok[i + 1] === 'Sokumen') { dir = t; i++; continue; }
+        if (HAND[t]) start(HAND[t], OPEN.has(t));
+        else if (SIDE[t]) start(SIDE[t]);
+        else { start(dir ? SIDE[dir] : 'b'); i--; }
+        if (t === 'Ryo-kentsui') cur.toks.push('Kentsui');
+        if (dir) cur.toks.push(...(SIDE[dir] === cur.slot ? ['Sokumen'] : [dir, 'Sokumen']));
+        dir = null;
+        continue;
+      }
+      if (HAND[t]) { start(HAND[t], OPEN.has(t)); continue; }
+      if (LEVEL[t]) { cur.h = LEVEL[t]; continue; }
+      if (t === 'Sokumen' && SIDE[cur.toks[cur.toks.length - 1]] === cur.slot) cur.toks.pop();
+      const lv = /^(Jodan|Chudan|Gedan)-(.+)$/.exec(t);
+      if (lv) {
+        cur.h = LEVEL[lv[1]];
+        const prev = cur.toks[cur.toks.length - 1];
+        if (prev && MERGE.test(prev)) { cur.toks[cur.toks.length - 1] = `${prev}-${lv[2]}`; continue; }
+      }
+      cur.toks.push(t);
+      if (t === 'Soede') cur.done = true;
+    }
+    // „Saken Jodan Uken Gedan Yama-zuki“: beide Hände teilen sich die Technik am Ende
+    const shared = [...parts].reverse().find((p) => p.toks.length);
+    return parts.map((p) => {
+      const text = p.toks.length ? p.toks.join(' ') : shared ? shared.toks.join(' ') : LEVEL_NAME[p.h];
+      return { slot: LEG.test(text) ? `f${p.slot}` : p.slot, t: text, h: p.h, open: p.open };
+    });
+  }
+
+  SK.moveParts = function (tech) {
+    const res = { l: [], r: [], b: [], f: [], notes: [] };
+    let s = tech;
+    const kao = /^(Kao \S+-muki)\s*/.exec(s);
+    if (kao) { res.notes.push(kao[1]); s = s.slice(kao[0].length); }
+    const segs = [];
+    s = s.replace(/\s*\(([^)]*)\)/g, (m, inner) => {
+      if (HAND[inner.split(' ')[0]] || SIDE[inner.split(' ')[0]]) segs.push(inner);
+      else res.notes.push(inner);
+      return '';
+    }).trim();
+    if (!s || NO_TECH.test(s)) return null;
+    s.split(' + ').concat(segs).forEach((seg) => parseSegment(seg).forEach((p) => {
+      if (p.slot[0] === 'f') res.f.push(Object.assign(p, { side: p.slot[1] }));
+      else res[p.slot].push(p);
+    }));
+    return res;
+  };
+
+  const SIDE_NAME = { l: 'links', r: 'rechts' };
+  function partHtml(p) {
+    return `<span class="mp-t">${util.esc(p.t)}</span>${p.open ? ' <span class="mp-open">offen</span>' : ''}${p.h ? ` <span class="lvl lvl-${p.h}">${LEVEL_NAME[p.h]}</span>` : ''}`;
+  }
+  function cell(label, list, cls) {
+    const body = list.length ? list.map((p) => `<div class="mp-part">${partHtml(p)}</div>`).join('') : '<span class="mp-none">–</span>';
+    return `<div class="mp-cell${cls ? ` ${cls}` : ''}"><span class="mp-lbl">${label}</span>${body}</div>`;
+  }
+
+  function moveCard(k, r) {
+    const kiai = k.kiai.includes(r[0]);
+    const mp = SK.moveParts(r[2]);
+    let body;
+    if (!mp) body = `<div class="mp-row"><div class="mp-cell mp-wide"><span class="mp-t">${util.esc(r[2])}</span></div></div>`;
+    else {
+      const legLabel = mp.f.length && mp.f.every((p) => p.side === mp.f[0].side) && mp.f[0].side !== 'b' ? `Bein ${SIDE_NAME[mp.f[0].side]}` : 'Bein';
+      const hands = mp.b.length && !mp.l.length && !mp.r.length
+        ? cell('Beide Hände', mp.b, 'mp-both')
+        : cell('Links', mp.l.concat(mp.b)) + cell('Rechts', mp.r.concat(mp.b));
+      body = `<div class="mp-row">${hands}${cell(legLabel, mp.f)}</div>`;
+    }
+    const notes = (mp ? mp.notes : []).concat(r[4] ? [r[4]] : []);
+    return `<div class="mcard${kiai ? ' kiai' : ''}"><div class="mcard-top"><span class="mcard-n">${r[0]}</span>${SK.gfx.stanceFor(r[1], { mini: true })}<span class="mcard-st">${util.esc(r[1])}</span>${kiai ? '<span class="badge">Kiai</span>' : ''}</div>${body}${notes.length ? `<div class="mcard-note">${util.esc(notes.join(' · '))}</div>` : ''}</div>`;
+  }
+
   function moveTable(k, from, to) {
-    const rows = k.seq
-      .filter((r) => r[0] >= from && r[0] <= to)
-      .map(
-        (r) =>
-          `<tr${k.kiai.includes(r[0]) ? ' class="kiai"' : ''}><td>${r[0]}</td><td class="st-cell">${SK.gfx.stanceFor(r[1], { mini: true })}<span>${util.esc(r[1])}</span></td><td>${util.esc(r[2])}${k.kiai.includes(r[0]) ? ' <span class="badge">Kiai</span>' : ''
-          }${r[4] ? `<br><span class="muted small">${util.esc(r[4])}</span>` : ''}</td></tr>`
-      )
-      .join('');
-    return `<table class="moves"><thead><tr><th>#</th><th>Stand</th><th>Technik</th></tr></thead><tbody>${rows}</tbody></table>
-      <p class="muted small">Bei mehrteiligen Bewegungen ist die Endstellung angegeben (im Buch jeweils zuletzt aufgeführt); Zwischenschritte stehen grau darunter.</p>
+    const cards = k.seq.filter((r) => r[0] >= from && r[0] <= to).map((r) => moveCard(k, r)).join('');
+    return `<div class="mcards">${cards}</div>
+      <p class="muted small">Die Höhe steht im farbigen Label (<span class="lvl lvl-J">Jodan</span> <span class="lvl lvl-C">Chudan</span> <span class="lvl lvl-G">Gedan</span>); ohne Label nennt das Buch keine Höhe. Bei mehrteiligen Bewegungen ist die Endstellung angegeben (im Buch jeweils zuletzt aufgeführt); Zwischenschritte stehen grau darunter.</p>
       <p class="src">Quelle: ${util.esc(SK.BOOK_SOURCE)}, ab ${SK.bookPages(k.seq.find((r) => r[0] === from)[3])}</p>`;
   }
 
