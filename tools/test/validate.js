@@ -31,6 +31,25 @@
     });
   }
 
+  // Kata-Ansage: Zeitplan mit allen Bewegungen, Zeiten steigend, Zählwörter vorhanden
+  SK.ansageKata().forEach((id) => {
+    const k = SK.kata[id];
+    if (!k.ansage.kana || !k.ansage.de) errors.push(`${id}: Ansage ohne Namen (Kana/Lautschrift)`);
+    [true, false].forEach((frame) => {
+      const tl = SK.ansageTimeline(k, 2, frame);
+      const moves = tl.filter((s) => s.kind === 'move');
+      if (moves.length !== k.moves) errors.push(`${id}: Ansage hat ${moves.length} statt ${k.moves} Bewegungen`);
+      tl.forEach((s, i) => {
+        if (i && !(s.t > tl[i - 1].t)) errors.push(`${id}: Ansage-Zeit ${i} nicht steigend`);
+        if (!s.kana || !s.de || !s.ro) errors.push(`${id}: Ansage ${i} ohne Zählwort`);
+      });
+    });
+  });
+  for (let n = 1; n <= 65; n++) {
+    const c = SK.ansageCount(n);
+    if (!c.kana || !c.de || !c.kan || /undefined/.test(Object.values(c).join())) errors.push(`Zählwort ${n} fehlerhaft`);
+  }
+
   const ids = new Set();
   const perUnit = {};
   for (const q of SK.questions) {
@@ -64,6 +83,7 @@
   out.push(`Kata-Fragen: ${SK.questions.filter((q) => lessons.get(q.lesson) && lessons.get(q.lesson).kind === 'kata').length}`);
   out.push(`Typen: ${['mc', 'multi', 'order'].map((t) => `${t}=${SK.questions.filter((q) => q.type === t).length}`).join(', ')}`);
   Object.entries(perUnit).forEach(([k, v]) => out.push(`  ${k}: ${v}`));
+  out.push(`Kata-Ansage: ${SK.ansageKata().join(', ')}`);
   out.push(`Prüfungsprogramm: ${SK.grades.map((g) => `${g.id} ${g.kihon.items.length} Kihon`).join(', ')}`);
   out.push('');
   out.push(errors.length ? `FEHLER (${errors.length}):\n${errors.join('\n')}` : 'OK – keine Fehler');

@@ -122,6 +122,8 @@
 
   SK.kata['heian-sandan'] = {
     id: 'heian-sandan', name: 'Heian Sandan', moves: 20, kiai: [10, 20], firstPage: 30,
+    // Kata-Ansage: Name für eine japanische Stimme (Kana) und eine deutsche (Lautschrift)
+    ansage: { kana: 'へいあん さんだん', de: 'hehjan sandann' },
     yoi: 'Hachiji-dachi, beide Fäuste vor den Oberschenkeln',
     naore: 'Der linke Fuß bleibt, der rechte Fuß geht leicht nach links; Knie strecken, zurück in Yoi.',
     continuous: [[2, 3], [5, 6], [9, 10]],

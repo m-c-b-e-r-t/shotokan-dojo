@@ -1,4 +1,4 @@
-/* Router und Ansichten: Wissen, Lexikon, Quiz-Lernpfad, Zufallsmix, Begriffe-Trainer, Wiederholung, Prüfungen, Fortschritt, Datenschutz. */
+/* Router und Ansichten: Wissen, Lexikon, Quiz-Lernpfad, Zufallsmix, Begriffe-Trainer, Wiederholung, Prüfungen, Kata-Ansage, Fortschritt, Datenschutz. */
 (function () {
   'use strict';
   const { util, store } = SK;
@@ -188,6 +188,7 @@
     learn.innerHTML = (/data-gfx="(mv|tc):/.test(lesson.learn) ? SK.gfxHint : '') + lesson.learn;
     const n = (qByLesson[id] || []).length;
     const open = unlocked(unit, entry.idx);
+    const ansageKata = unit.kind === 'kata' && unit.id.replace(/^kata-/, '');
     app.innerHTML = '';
     app.append(
       el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Wissen' }), ' › ', el('span', { text: unit.title })),
@@ -197,7 +198,8 @@
         'div',
         { class: 'actions' },
         n && open ? el('a', { class: 'btn primary', href: `#/quiz/${id}`, text: `Quiz zu diesem Thema (${n} Fragen)` }) : '',
-        n && !open ? el('span', { class: 'muted small', text: 'Quiz noch gesperrt – im Lernpfad zuerst die vorherige Lektion bestehen.' }) : ''
+        n && !open ? el('span', { class: 'muted small', text: 'Quiz noch gesperrt – im Lernpfad zuerst die vorherige Lektion bestehen.' }) : '',
+        ansageKata && SK.kata[ansageKata] && SK.kata[ansageKata].ansage ? el('a', { class: 'btn', href: `#/ansage/${ansageKata}`, text: '🔊 Kata-Ansage (zählen)' }) : ''
       ),
       el(
         'nav',
@@ -810,6 +812,15 @@
     finishView();
   }
 
+  function viewAnsage(id) {
+    const k = SK.kata[id];
+    if (!k || !k.ansage) return viewNotFound();
+    setNav('wissen');
+    setTitle(`${k.name} – Ansage`);
+    SK.viewAnsage(app, k);
+    finishView();
+  }
+
   function viewNotFound() {
     app.innerHTML = '';
     app.append(el('h1', { text: 'Seite nicht gefunden' }), el('a', { class: 'btn', href: '#/', text: 'Zur Startseite' }));
@@ -819,6 +830,7 @@
   // ---------- Router ----------
   function route() {
     if (SK.quizCleanup) SK.quizCleanup();
+    if (SK.ansageCleanup) SK.ansageCleanup();
     const [view, arg] = (location.hash.replace(/^#\/?/, '') || '').split('/').map(decodeURIComponent);
     if (!view) return viewStart();
     if (view === 'wissen') return arg ? viewWissen(arg) : viewWissenList();
@@ -831,6 +843,7 @@
     if (view === 'exam') return arg ? viewExamGrade(arg) : viewExamList();
     if (view === 'stats') return viewStats();
     if (view === 'datenschutz') return viewDatenschutz();
+    if (view === 'ansage') return viewAnsage(arg);
     return viewNotFound();
   }
   window.addEventListener('hashchange', route);
