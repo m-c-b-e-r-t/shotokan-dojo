@@ -1,4 +1,4 @@
-/* Klickt automatisch durch Lektionen und Prüfungen und protokolliert Fehler. Nur für lokale Tests. */
+/* Klickt automatisch durch Prüfungsseiten und Lektionen und protokolliert Fehler. Nur für lokale Tests. */
 (function () {
   'use strict';
   const log = [];
@@ -40,13 +40,7 @@
         const filled = tabs.map((t) => (t.click(), app.querySelector('.program').textContent.length > 20));
         log.push(`Prüfungsseite ${g.id}: ${tabs.map((t) => t.textContent).join('/')}${filled.every(Boolean) ? '' : ' – FEHLER: leerer Reiter'}`);
         if (!filled.every(Boolean)) throw new Error(`leerer Reiter bei ${g.id}`);
-        tabs[0].click();
-        if (!SK.grades.includes(g)) continue;
-        app.querySelector('.actions .btn.primary').click();
-        const n = app.querySelector('.quiz-count').textContent;
-        await answerAll(true);
-        const score = app.querySelector('.result .score');
-        log.push(`Theorie-Quiz ${g.id}: ${n.split('/')[1]} Fragen, Ergebnis ${score ? score.textContent : 'FEHLT'}`);
+        if (app.querySelector('.quiz-card, .actions .btn.primary')) throw new Error(`Quiz-Knopf auf Prüfungsseite ${g.id}`);
       }
       for (const id of ['et-dojo', 'heian-shodan-ueberblick', 'gl-stand', 'gl-waffe']) {
         location.hash = `#/quiz/${id}`;

@@ -3,7 +3,7 @@
 Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikette, Geschichte, Begriffe, Stände, Kihon, Kumite, detailliertes Kata-Wissen und das DJKB-Prüfungsprogramm (9. Kyu bis 5. Dan).
 
 - Kata-Fragen stammen ausschließlich aus „Karate-Do Kata Vol. 1“ (JKA) – mit Angabe der gedruckten Buchseiten.
-- Getrennte Bereiche: **Wissen** (alle Inhalte + Lexikon mit Grafiken), **Quiz** (Lernpfad, Zufallsmix aus dem Gesamtpool), **Begriffe-Trainer** (Stände, Techniken, Körperwaffen stumpf abfragen), **Prüfungen** (DJKB-Prüfungsprogramm je Gürtel, unterteilt in Kihon, Kata, Kumite und Theorie – mit Theorie-Quiz je Grad).
+- Getrennte Bereiche: **Wissen** (alle Inhalte + Lexikon mit Grafiken), **Quiz** (Lernpfad, Zufallsmix aus dem Gesamtpool), **Begriffe-Trainer** (Stände, Techniken, Körperwaffen stumpf abfragen), **Prüfungen** (DJKB-Prüfungsprogramm je Gürtel, unterteilt in Kihon, Kata, Kumite und Theorie).
 - Lernpfad mit Freischalten, XP, Tages-Serie, Wiederholung nach Karteikasten-Prinzip.
 - Fortschritt nur lokal im Browser (localStorage), Export/Import unter „Fortschritt“.
 
@@ -11,7 +11,7 @@ Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikett
 
 `index.html` im Browser öffnen – kein Build, kein Server nötig.
 
-Prüfwerkzeuge: `tools/validate.html` (Datenkonsistenz) und `tools/smoke.html` (klickt automatisch durch alle Prüfungsseiten und Quiz; löscht dabei den lokalen Fortschritt).
+Prüfwerkzeuge: `tools/validate.html` (Datenkonsistenz) und `tools/smoke.html` (klickt automatisch durch Prüfungsseiten, Lektionen und Quiz; löscht dabei den lokalen Fortschritt).
 
 ## Neue Version veröffentlichen
 
