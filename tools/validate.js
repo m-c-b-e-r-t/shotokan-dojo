@@ -3,7 +3,6 @@
   'use strict';
   const errors = [];
   const out = [];
-  SK.fillGradeLearn();
   const kataUnits = SK.buildKataContent();
   const units = SK.generalUnits.concat(kataUnits, [SK.buildGlossaryContent()]);
   const lessons = new Map();
@@ -50,13 +49,22 @@
     if (q.g && SK.gradeIndex(q.g) < 0) errors.push(`${q.id}: unbekannter Grad ${q.g}`);
   }
 
+  // Prüfungsprogramm: jede Seite braucht Kihon, Kata und Kumite; Kata-Verweise müssen im Buch existieren
+  SK.grades.concat([SK.higherDan]).forEach((g) => {
+    if (!g.kihon || !g.kihon.items.length || g.kihon.items.some((l) => !Array.isArray(l) || !l.length || l.some((t) => typeof t !== 'string' || !t))) errors.push(`${g.id}: Kihon unvollständig`);
+    if (!g.kataProg || !g.kataProg.items.length) errors.push(`${g.id}: Kata fehlt`);
+    if (!g.kumite || !g.kumite.form || !(g.kumite.angriff || g.kumite.text)) errors.push(`${g.id}: Kumite unvollständig`);
+    (g.kata || []).forEach((k) => { if (!lessons.has(`${k}-ueberblick`)) errors.push(`${g.id}: Kata ${k} nicht im Kata-Wissen`); });
+    ((g.kihon && g.kihon.ref) || []).forEach((id) => { if (SK.gradeIndex(id) < 0) errors.push(`${g.id}: Verweis auf unbekannten Grad ${id}`); });
+  });
+
   SK.idCollisions.forEach((id) => errors.push(`${id}: gleiche Frage mit gleicher Lösung mehrfach in der Lektion`));
 
   out.push(`Fragen gesamt: ${SK.questions.length}`);
   out.push(`Kata-Fragen: ${SK.questions.filter((q) => lessons.get(q.lesson) && lessons.get(q.lesson).kind === 'kata').length}`);
   out.push(`Typen: ${['mc', 'multi', 'order'].map((t) => `${t}=${SK.questions.filter((q) => q.type === t).length}`).join(', ')}`);
   Object.entries(perUnit).forEach(([k, v]) => out.push(`  ${k}: ${v}`));
-  SK.grades.forEach((g) => out.push(`  Programmfragen ${g.id}: ${SK.questions.filter((q) => q.g === g.id).length}`));
+  out.push(`Prüfungsprogramm: ${SK.grades.map((g) => `${g.id} ${g.kihon.items.length} Kihon`).join(', ')}`);
   out.push('');
   out.push(errors.length ? `FEHLER (${errors.length}):\n${errors.join('\n')}` : 'OK – keine Fehler');
   document.getElementById('out').textContent = out.join('\n');

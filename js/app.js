@@ -1,4 +1,4 @@
-/* Router und Ansichten: Wissen, Lexikon, Quiz-Lernpfad, Zufallsmix, Begriffe-Trainer, Wiederholung, Prüfung, Fortschritt, Datenschutz. */
+/* Router und Ansichten: Wissen, Lexikon, Quiz-Lernpfad, Zufallsmix, Begriffe-Trainer, Wiederholung, Prüfungen, Fortschritt, Datenschutz. */
 (function () {
   'use strict';
   const { util, store } = SK;
@@ -9,7 +9,6 @@
   const ROUND = 10;
 
   // ---------- Aufbau ----------
-  SK.fillGradeLearn();
   const kataUnits = SK.buildKataContent();
   const drillUnit = SK.buildGlossaryContent();
   const units = SK.generalUnits.concat(kataUnits, [drillUnit]);
@@ -110,7 +109,7 @@
         tile('#/begriffe', 'Begriffe-Trainer', 'Stände, Techniken & Begriffe – kurz abgefragt'),
         tile('#/zufall', 'Zufallsmix', `${SK.questions.length - asked} Fragen noch nie gestellt`),
         tile('#/review', 'Wiederholen', due ? `${due} Fragen fällig` : 'Heute nichts fällig'),
-        tile('#/exam', 'Prüfung', 'Theorieprüfung 9. Kyu bis 3. Dan simulieren')
+        tile('#/exam', 'Prüfungen', 'DJKB-Prüfungsprogramm je Gürtel: Kihon, Kata, Kumite')
       ),
       versionLine()
     );
@@ -529,77 +528,180 @@
     finishView();
   }
 
-  // ---------- Prüfung ----------
+  // ---------- Prüfungen ----------
+  // Theorie-Quiz zum Grad: Fragen zur Prüfungs-Kata (JKA-Buch) und allgemeines Wissen bis zu diesem Grad.
   function examQuestions(g) {
     const gi = SK.gradeIndex(g.id);
     const dan = g.id.endsWith('dan');
     const total = dan ? 30 : 20;
-    const program = SK.questions.filter((q) => q.g === g.id);
     const kataSet = new Set(g.kata.map((k) => `kata-${k}`));
     const kata = SK.questions.filter((q) => isKataQ(q) && kataSet.has(unitOf(q).id));
     const general = SK.questions.filter((q) => {
       const u = unitOf(q);
-      if (!u || u.kind !== 'general' || q.g === g.id) return false;
+      if (!u || u.kind !== 'general') return false;
       const le = lessonIndex[q.lesson];
-      const minG = le.lesson.minGrade ? SK.gradeIndex(le.lesson.minGrade) : 0;
-      const qg = q.g ? SK.gradeIndex(q.g) : 0;
-      return minG <= gi && qg <= gi;
+      return (le.lesson.minGrade ? SK.gradeIndex(le.lesson.minGrade) : 0) <= gi;
     });
-    const pick = [];
-    pick.push(...util.sample(program, dan ? 8 : 6));
-    pick.push(...util.sample(kata, g.kata.length ? (dan ? 12 : 6) : 0));
-    pick.push(...util.sample(general.filter((q) => !pick.includes(q)), total - pick.length));
+    const pick = util.sample(kata, g.kata.length ? (dan ? 12 : 6) : 0);
+    pick.push(...util.sample(general, total - pick.length));
     return util.shuffle(pick);
   }
 
+  const examPages = () => SK.grades.concat([SK.higherDan]);
+  const EXAM_TABS = [
+    { id: 'kihon', title: 'Kihon' },
+    { id: 'kata', title: 'Kata' },
+    { id: 'kumite', title: 'Kumite' },
+    { id: 'theorie', title: 'Theorie' },
+  ];
+  let examTab = 'kihon';
+
   function viewExamList() {
     setNav('exam');
-    setTitle('Prüfungssimulation');
+    setTitle('Prüfungen');
     app.innerHTML = '';
     const list = el('div', { class: 'grade-list' });
-    SK.grades.forEach((g) => {
+    examPages().forEach((g) => {
       const best = store.data.exams[g.id];
+      const kata = g.kataProg.short || g.kataProg.items[0];
       list.append(
         el(
           'a',
           { class: 'grade', href: `#/exam/${g.id}` },
           el('span', { class: `belt ${g.cls}` }),
-          el('span', { class: 'grade-name', text: g.name }),
-          el('span', { class: 'muted small', text: g.belt }),
+          el('span', {}, el('span', { class: 'grade-name', text: g.name }), el('span', { class: 'grade-sub muted small', text: `${g.belt} · ${kata} · ${g.kumite.form}` })),
           el('span', { class: 'grade-best', text: best ? `${Math.round(best.best * 100)} %${best.passed ? ' ✓' : ''}` : '' })
         )
       );
     });
     app.append(
-      el('h1', { text: 'Prüfungssimulation' }),
-      el('p', { class: 'muted', text: 'Theorieprüfung nach DJKB-Prüfungsordnung: Fragen zum Prüfungsprogramm deines Grades, zur Prüfungs-Kata (aus dem JKA-Buch) und zum allgemeinen Wissen. Kein Feedback während der Prüfung – Bestehensgrenze 70 %.' }),
-      list
+      el('h1', { text: 'Prüfungen' }),
+      el('p', { class: 'muted', text: 'DJKB-Prüfungsprogramm je Gürtel – genau das, was in der Prüfung verlangt wird: Kihon, Kata und Kumite nach der DJKB-Prüfungsordnung (Stand Juli 2013) und den DJKB-Übersichten.' }),
+      list,
+      el('p', { class: 'muted small', text: 'Angaben ohne Gewähr – maßgeblich ist die jeweils gültige DJKB-Prüfungsordnung.' })
     );
     finishView();
   }
 
+  // Liste aus Zeilen: erste Zeile = Übung, weitere Zeilen = Fortsetzung
+  function progList(items) {
+    return el(
+      'ol',
+      { class: 'prog' },
+      items.map((lines) => el('li', {}, el('div', { class: 'prog-main', text: lines[0] }), lines.slice(1).map((t) => el('div', { class: 'prog-sub', text: t }))))
+    );
+  }
+  function plainList(items, cls) {
+    return el(
+      'ul',
+      { class: cls || 'prog-plain' },
+      items.map((it) => (typeof it === 'string' ? el('li', { text: it }) : el('li', {}, el('div', { class: 'prog-main', text: it.t }), el('ul', { class: 'prog-var' }, it.v.map((t) => el('li', { text: t }))))))
+    );
+  }
+  function focusBox(title, lines) {
+    return lines && lines.length ? el('details', { class: 'prog-focus' }, el('summary', { text: title }), el('ul', {}, lines.map((t) => el('li', { text: t })))) : '';
+  }
+
+  function examPanel(g, tab) {
+    const stufe = SK.examStufe(g);
+    if (tab === 'kihon') {
+      const k = g.kihon;
+      return [
+        k.reps ? el('p', { class: 'prog-reps', text: k.reps }) : '',
+        progList(k.items),
+        k.ref ? el('p', {}, 'Reihen siehe: ', k.ref.flatMap((id, i) => [i ? ' · ' : '', el('a', { href: `#/exam/${id}`, text: SK.grades[SK.gradeIndex(id)].name })])) : '',
+        k.note ? el('p', { class: 'muted small', text: k.note }) : '',
+        focusBox('Hinweise zur Ausführung', SK.examHints),
+        stufe ? focusBox(`Schwerpunkte ${stufe.name}`, stufe.kihon) : '',
+      ];
+    }
+    if (tab === 'kata') {
+      const k = g.kataProg;
+      const links = (g.kata || []).map((id) => lessonIndex[`${id}-ueberblick`]).filter(Boolean);
+      return [
+        plainList(k.items),
+        k.focus ? el('p', {}, el('b', { text: 'Besondere Schwerpunkte: ' }), k.focus) : '',
+        k.note ? el('p', { class: 'muted', text: k.note }) : '',
+        links.length
+          ? el('div', { class: 'prog-links' }, el('span', { class: 'muted small', text: 'Kata-Wissen aus „Karate-Do Kata Vol. 1“:' }), el('div', { class: 'actions' }, links.map((e) => el('a', { class: 'btn', href: `#/wissen/${e.lesson.id}`, text: e.unit.title }))))
+          : '',
+      ];
+    }
+    if (tab === 'kumite') {
+      const k = g.kumite;
+      const jiyu = k.form === 'Jiyu-Ippon-Kumite';
+      return [
+        el('h3', { text: k.form }),
+        k.ziel ? el('p', { class: 'prog-ziel' }, el('b', { text: 'Ziel: ' }), k.ziel) : '',
+        k.text ? k.text.map((t) => el('p', { text: t })) : '',
+        k.angriff ? [el('h4', { text: `Angriff (Kogeki)${k.angriffVon ? ` – ${k.angriffVon}` : ''}` }), plainList(k.angriff)] : '',
+        k.abwehr ? [el('h4', { text: 'Abwehr (Uke)' }), k.abwehrNote ? el('p', { class: 'prog-reps', text: k.abwehrNote }) : '', plainList(k.abwehr)] : '',
+        k.ablauf ? [el('h4', { text: 'Ablauf' }), plainList(k.ablauf)] : '',
+        stufe ? focusBox(`Schwerpunkte ${stufe.name}`, stufe.kumite) : '',
+        jiyu ? focusBox('Jiyu-Ippon-Kumite – worauf es ankommt', SK.examJiyuIppon) : '',
+      ];
+    }
+    return [plainList(g.theory)];
+  }
+
   function viewExamGrade(id) {
-    const g = SK.grades.find((x) => x.id === id);
+    const pages = examPages();
+    const pos = pages.findIndex((x) => x.id === id);
+    const g = pages[pos];
     if (!g) return viewNotFound();
     setNav('exam');
     setTitle(`Prüfung ${g.name}`);
     app.innerHTML = '';
-    const dan = id.endsWith('dan');
+    const tabs = EXAM_TABS.filter((t) => t.id !== 'theorie' || g.theory);
+    if (!tabs.some((t) => t.id === examTab)) examTab = 'kihon';
+    const panel = el('section', { class: 'card program', role: 'tabpanel' });
+    const bar = el(
+      'div',
+      { class: 'tabs', role: 'tablist' },
+      tabs.map((t) =>
+        el('button', {
+          class: 'tab',
+          role: 'tab',
+          text: t.title,
+          'data-tab': t.id,
+          onclick: () => {
+            examTab = t.id;
+            show();
+          },
+        })
+      )
+    );
+    function show() {
+      bar.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === examTab)));
+      panel.innerHTML = '';
+      panel.append(...[examPanel(g, examTab)].flat(3).filter(Boolean));
+    }
+    show();
+    const prev = pages[pos - 1];
+    const next = pages[pos + 1];
+    const quiz = SK.grades.includes(g);
     app.append(
       el('nav', { class: 'crumbs' }, el('a', { href: '#/exam', text: 'Prüfungen' }), ' › ', el('span', { text: g.name })),
       el('h1', {}, el('span', { class: `belt big ${g.cls}` }), ` ${g.name}`),
+      el('p', { class: 'muted' }, g.belt, g.wait ? [el('br'), `Wartezeit/Voraussetzung: ${g.wait}`] : ''),
+      bar,
+      panel,
+      el('p', { class: 'src', text: `Quelle: ${SK.sources.po}; ${SK.sources.ueb}` }),
+      quiz
+        ? el(
+            'section',
+            { class: 'card' },
+            el('h3', { text: 'Theorie-Quiz' }),
+            el('p', { class: 'muted small', text: 'Fragen zur Prüfungs-Kata (aus dem JKA-Buch) und zum allgemeinen Wissen bis zu diesem Grad. Kein Feedback während des Quiz – Bestehensgrenze 70 %.' }),
+            el('div', { class: 'actions' }, el('button', { class: 'btn primary', text: `Quiz starten (${id.endsWith('dan') ? 30 : 20} Fragen)`, onclick: () => runExam(g) }))
+          )
+        : '',
       el(
-        'section',
-        { class: 'card program' },
-        el('h3', { text: 'Prüfungsprogramm (Auszug)' }),
-        el('p', {}, el('b', { text: 'Kata: ' }), g.examKata),
-        el('p', {}, el('b', { text: 'Kumite: ' }), g.kumite),
-        el('p', {}, el('b', { text: 'Theorie: ' }), g.theory),
-        el('p', {}, el('b', { text: 'Voraussetzung: ' }), g.wait),
-        el('details', {}, el('summary', { text: 'Kihon' }), el('ul', {}, g.kihon.map((k) => el('li', { text: k })))),
-        el('p', { class: 'src', text: `Quelle: ${SK.sources.po}; ${SK.sources.vo}` })
-      ),
-      el('div', { class: 'actions' }, el('button', { class: 'btn primary', text: `Prüfung starten (${dan ? 30 : 20} Fragen)`, onclick: () => runExam(g) }))
+        'nav',
+        { class: 'pager' },
+        prev ? el('a', { class: 'btn', href: `#/exam/${prev.id}`, text: `‹ ${prev.name}` }) : el('span'),
+        next ? el('a', { class: 'btn', href: `#/exam/${next.id}`, text: `${next.name} ›` }) : el('span')
+      )
     );
     finishView();
   }
@@ -607,17 +709,16 @@
   function runExam(g) {
     SK.runQuiz(app, examQuestions(g), {
       mode: 'exam',
-      title: `Prüfung ${g.name}`,
+      title: `Theorie-Quiz ${g.name}`,
       onExit: () => go(`#/exam/${g.id}`),
       onFinish: (results) => {
         const ratio = results.filter((r) => r.ok).length / results.length;
         const prev = store.data.exams[g.id] || { best: 0, passed: false };
         store.data.exams[g.id] = { best: Math.max(prev.best, ratio), passed: prev.passed || ratio >= PASS_EXAM, last: util.today() };
         const r = award(results, ratio >= PASS_EXAM ? 50 : 0);
-        const cat = (x) => (x.q.g === g.id ? 'Prüfungsprogramm' : isKataQ(x.q) ? 'Kata' : 'Allgemeines Wissen');
         const cats = {};
         results.forEach((x) => {
-          const c = cat(x);
+          const c = isKataQ(x.q) ? 'Kata' : 'Allgemeines Wissen';
           cats[c] = cats[c] || { ok: 0, n: 0 };
           cats[c].n++;
           if (x.ok) cats[c].ok++;
@@ -627,7 +728,7 @@
           { class: 'moves' },
           el('tbody', {}, Object.entries(cats).map(([c, v]) => el('tr', {}, el('td', { text: c }), el('td', { text: `${v.ok}/${v.n}` }), el('td', { text: `${Math.round((v.ok / v.n) * 100)} %` }))))
         );
-        showResult({ results, ratio, xp: r.xp, pass: ratio >= PASS_EXAM, again: `#/exam/${g.id}`, back: '#/exam', extra: table });
+        showResult({ results, ratio, xp: r.xp, pass: ratio >= PASS_EXAM, again: `#/exam/${g.id}`, back: `#/exam/${g.id}`, extra: table });
       },
     });
     renderTopStats();

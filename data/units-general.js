@@ -1,5 +1,5 @@
-/* Allgemeine Lerneinheiten (Etikette, Geschichte, Begriffe, Stände, Kihon, Kumite, Prüfungen).
-   Quellen: DJKB-Prüfungsordnung 2013, DJKB-Verfahrensordnung 2024, allgemeines Shotokan-Wissen. */
+/* Allgemeine Lerneinheiten (Etikette, Geschichte, Begriffe, Stände, Kihon, Kumite).
+   Quellen: DJKB-Prüfungsordnung 2013, allgemeines Shotokan-Wissen. */
 (function () {
   'use strict';
   const G = SK.gfx;
@@ -332,68 +332,5 @@
         },
       ],
     },
-    {
-      id: 'pruefung', title: 'DJKB-Prüfungen', kind: 'general', desc: '9. Kyu bis 3. Dan: Gürtel, Kata, Kihon, Kumite, Theorie',
-      lessons: [
-        { id: 'pr-allgemein', title: 'Gürtel & Fristen', minGrade: '9kyu', learn: 'GRADES_TABLE' },
-        {
-          id: 'pr-kata', title: 'Prüfungs-Kata', minGrade: '9kyu',
-          learn: `
-            <ul>
-              <li>9. Kyu: keine Kata (Theorie: Ablauf Taikyoku Shodan)</li>
-              <li>8. Kyu: Heian Shodan · 7. Kyu: Heian Nidan · 6. Kyu: Heian Sandan · 5. Kyu: Heian Yondan · 4. Kyu: Heian Godan</li>
-              <li>3. Kyu: Tekki Shodan</li>
-              <li>2. und 1. Kyu: eine <b>Sentei-Kata</b> nach Wahl – Bassai Dai, Kanku Dai, Jion, Enpi, Hangetsu (zum 1. Kyu auch dieselbe wie zum 2. Kyu)</li>
-              <li>1. Dan: Sentei-Kata nach Wahl + vom Prüfer angegebene Kata aus Heian 1–5 oder Tekki Shodan</li>
-              <li>2. Dan: Prüferwahl aus Heian 1–5, Tekki Shodan, Tekki Nidan, Sentei-Kata + Kata nach Wahl aus Bassai Sho, Kanku Sho, Nijushiho, Jitte, Chinte, Meikyo, Gankaku, Sochin</li>
-              <li>3. Dan: <b>Tokui-Kata</b> frei (nicht Unsu, Gojushiho Sho, Gojushiho Dai und keine bereits bei einer Dan-Prüfung gezeigte) + Prüferwahl aus Sentei-Kata, Heian/Tekki 1–3 und Bassai Sho … Sochin</li>
-            </ul>`,
-        },
-        { id: 'pr-kihon', title: 'Kihon-Programm', minGrade: '9kyu', learn: 'GRADES_KIHON' },
-        { id: 'pr-kumite', title: 'Kumite-Programm', minGrade: '9kyu', learn: 'GRADES_KUMITE' },
-        { id: 'pr-theorie', title: 'Theorie-Begriffe', minGrade: '9kyu', learn: 'GRADES_THEORY' },
-        {
-          id: 'pr-dan', title: 'Dan-Prüfungen', minGrade: '1kyu',
-          learn: `
-            <ul>
-              <li>Für alle Dan-Grade sind allein die <b>DJKB A-Lizenz-Prüfer</b> prüfungsberechtigt.</li>
-              <li>Anmeldung bei der Geschäftsstelle spätestens <b>14 Tage</b> vor dem Termin; neue DJKB-Mitglieder erst nach <b>einem Jahr</b> Mitgliedschaft.</li>
-              <li>1. Dan: vollständige Teilnahme an dem Lehrgang, an dem die Prüfung stattfindet.</li>
-              <li>Ab 2. Dan: jährlich mindestens 1 Lehrgang mit dem Chefausbilder (oder ein mehrtägiger Lehrgang ≥ 3 Tage in den letzten 2 Jahren) und Registrierung bei der JKA (JKA Membership Card).</li>
-              <li>Mindestalter/Vorbereitungszeit: 1. Dan – vollendetes 16. Lebensjahr (8 Jahre Karate), 1 Jahr nach dem 1. Kyu; 2. Dan – 20 Jahre, 2 Jahre (4 Jahre, wenn Shodan mit 16); 3. Dan – 25 Jahre, 3 Jahre.</li>
-              <li>Nicht bestandene Dan-Prüfung: Wiederholung frühestens nach <b>1 Jahr</b>; nach dreimaligem Nichtbestehen desselben Grades keine weitere Prüfung.</li>
-              <li>Theorie 1. Dan: Kosa-dachi, Sun-dome, Tai-sabaki, Ashi-barai, Nagashi-uke; Kata-Bunkai aus Heian 1–5 und Tekki Shodan.</li>
-              <li>2. Dan: Happo-Kumite; Lehrprobe aus den Kyu-Programmen; Bunkai aus den Sentei-Kata. 3. Dan: Lehrprobe aus Shodan-/Nidan-Programm.</li>
-            </ul>`,
-        },
-      ],
-    },
   ];
-
-  SK.fillGradeLearn = function () {
-    const { esc } = SK.util;
-    const pr = SK.generalUnits.find((u) => u.id === 'pruefung');
-    const byId = (id) => pr.lessons.find((l) => l.id === id);
-    byId('pr-allgemein').learn =
-      `<table class="moves"><thead><tr><th>Grad</th><th>Gürtel</th><th>Vorbereitungszeit</th></tr></thead><tbody>${SK.grades
-        .map((g) => `<tr><td>${esc(g.name)}</td><td><span class="belt ${g.cls}"></span> ${esc(g.belt)}</td><td>${esc(g.wait)}</td></tr>`)
-        .join('')}</tbody></table>
-      <ul>
-        <li>Stufe I: 9.–7. Kyu · Stufe II: 6.–4. Kyu · Stufe III: 3.–1. Kyu und Dan-Grade.</li>
-        <li>Für Kyu-Prüfungen gibt es keine Altersgrenze. Kinder bis 12 Jahre haben längere Vorbereitungszeiten (ab 7. Kyu mind. 6 Monate, ab 3. Kyu mind. 10 Monate).</li>
-        <li>Den Vorbereitungszeiten liegt ununterbrochenes Training mindestens <b>2-mal wöchentlich</b> zugrunde.</li>
-        <li>Nicht bestandene Kyu-Prüfung: Wiederholung frühestens nach <b>einem Monat</b>; nach dreimaligem Nichtbestehen desselben Grades erst nach einem Jahr.</li>
-        <li>Empfehlung: höchstens <b>4–6 Prüflinge</b> gleichzeitig. Die Prüfungsinhalte werden vom Prüfer angesagt.</li>
-        <li>Wer länger trainiert, kann direkt zum 8. Kyu antreten; reicht die Leistung nicht, kann der 9. Kyu bescheinigt werden.</li>
-        <li>Man ist berechtigt und verpflichtet, den Gürtel des zuletzt erworbenen Grades zu tragen.</li>
-      </ul>`;
-    byId('pr-kihon').learn =
-      `<p>Kihon-Techniken werden zum 9. Kyu je 2x oder 4x (nach Wahl des Prüfers), ab dem 8. Kyu je 3x ausgeführt. Auszug:</p>${SK.grades
-        .map((g) => `<h4>${esc(g.name)}</h4><ul>${g.kihon.map((k) => `<li>${esc(k)}</li>`).join('')}</ul>`)
-        .join('')}`;
-    byId('pr-kumite').learn = `<ul>${SK.grades.map((g) => `<li><b>${esc(g.name)}</b>: ${esc(g.kumite)}</li>`).join('')}</ul>`;
-    byId('pr-theorie').learn = `<p>Was zu den einzelnen Graden bekannt sein sollte (DJKB-Prüfungsordnung):</p><ul>${SK.grades
-      .map((g) => `<li><b>${esc(g.name)}</b>: ${esc(g.theory)}</li>`)
-      .join('')}</ul>`;
-  };
 })();

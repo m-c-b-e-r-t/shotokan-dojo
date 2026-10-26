@@ -33,14 +33,20 @@
 
   async function run() {
     try {
-      for (const g of SK.grades) {
+      for (const g of SK.grades.concat([SK.higherDan])) {
         location.hash = `#/exam/${g.id}`;
         await wait();
+        const tabs = [...app.querySelectorAll('.tabs .tab')];
+        const filled = tabs.map((t) => (t.click(), app.querySelector('.program').textContent.length > 20));
+        log.push(`Prüfungsseite ${g.id}: ${tabs.map((t) => t.textContent).join('/')}${filled.every(Boolean) ? '' : ' – FEHLER: leerer Reiter'}`);
+        if (!filled.every(Boolean)) throw new Error(`leerer Reiter bei ${g.id}`);
+        tabs[0].click();
+        if (!SK.grades.includes(g)) continue;
         app.querySelector('.actions .btn.primary').click();
         const n = app.querySelector('.quiz-count').textContent;
         await answerAll(true);
         const score = app.querySelector('.result .score');
-        log.push(`Prüfung ${g.id}: ${n.split('/')[1]} Fragen, Ergebnis ${score ? score.textContent : 'FEHLT'}`);
+        log.push(`Theorie-Quiz ${g.id}: ${n.split('/')[1]} Fragen, Ergebnis ${score ? score.textContent : 'FEHLT'}`);
       }
       for (const id of ['et-dojo', 'heian-shodan-ueberblick', 'gl-stand', 'gl-waffe']) {
         location.hash = `#/quiz/${id}`;
@@ -74,7 +80,7 @@
         await wait();
         log.push(`Zufall ${scope}: vorher ${before}, nachher ${app.querySelector('.card b').textContent} ungestellt`);
       }
-      for (const h of ['#/', '#/wissen', '#/wissen/da-kampf', '#/wissen/heian-godan-b17', '#/lexikon', '#/begriffe', '#/stats']) {
+      for (const h of ['#/', '#/exam', '#/wissen', '#/wissen/da-kampf', '#/wissen/heian-godan-b17', '#/lexikon', '#/begriffe', '#/stats']) {
         location.hash = h;
         await wait();
         log.push(`Seite ${h}: ${app.querySelector('h1') ? app.querySelector('h1').textContent : 'FEHLT'}`);
