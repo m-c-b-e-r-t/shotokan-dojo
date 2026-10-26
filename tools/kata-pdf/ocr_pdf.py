@@ -4,7 +4,7 @@ from pathlib import Path
 import fitz
 from rapidocr_onnxruntime import RapidOCR
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 PDF = ROOT / "Karate-do-kata-volume-1.pdf"
 OUT = ROOT / "tools" / "out"
 IMG = OUT / "pages"

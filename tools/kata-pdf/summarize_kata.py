@@ -2,7 +2,7 @@
 import re
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parent / "out"
+OUT = Path(__file__).resolve().parents[2] / "tools" / "out"
 text = (OUT / "pdf_text.txt").read_text(encoding="utf-8")
 
 UNITS = ["", "FIRST", "SECOND", "THIRD", "FOURTH", "FIFTH", "SIXTH", "SEVENTH", "EIGHTH", "NINTH"]

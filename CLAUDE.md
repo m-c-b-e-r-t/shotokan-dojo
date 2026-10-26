@@ -6,10 +6,10 @@
 - Vor dem Push `git fetch origin main` und auf den aktuellen Stand bringen.
 
 ## Vor jedem Commit
-- `tools/validate.html` im Browser (Playwright) laufen lassen – muss „OK“ melden.
-- `tools/smoke.html` nur direkt vor dem Push laufen lassen, nicht nach jeder Änderung – muss „OK“ melden.
+- `tools/test/validate.html` im Browser (Playwright) laufen lassen – muss „OK“ melden.
+- `tools/test/smoke.html` nur direkt vor dem Push laufen lassen, nicht nach jeder Änderung – muss „OK“ melden.
 - Bei jeder veröffentlichten Änderung die Version mit `node tools/version.js patch|minor|major` hochzählen (setzt Version, Datum, Uhrzeit und `?v=` in `index.html`). Die Version steht im Commit-Titel, z. B. „… (v1.11.1)“.
-- Neue Skripte in `index.html`, `tools/validate.html` und `tools/smoke.html` gleichermaßen eintragen.
+- Neue Skripte in `index.html`, `tools/test/validate.html` und `tools/test/smoke.html` gleichermaßen eintragen.
 
 ## Inhalte
 - App, Texte und Commit-Nachrichten auf Deutsch.

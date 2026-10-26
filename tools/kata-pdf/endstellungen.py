@@ -4,7 +4,7 @@ from pathlib import Path
 
 from summarize_kata import ORD
 
-OUT = Path(__file__).resolve().parent / "out"
+OUT = Path(__file__).resolve().parents[2] / "tools" / "out"
 texts = {}
 for name in ("pdf_text.txt", "pdf_ocr.txt"):
     raw = (OUT / name).read_text(encoding="utf-8")

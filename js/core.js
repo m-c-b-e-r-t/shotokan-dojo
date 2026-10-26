@@ -20,9 +20,9 @@
   };
   SK.bookSrc = (n) => `${SK.BOOK_SOURCE}, ${SK.bookPages(n)}`;
   // Bei jeder veröffentlichten Änderung hochzählen: node tools/version.js patch|minor|major (setzt auch ?v= in index.html)
-  SK.VERSION = '1.17.1';
+  SK.VERSION = '1.17.2';
   SK.VERSION_DATE = '26.10.2026';
-  SK.VERSION_TIME = '10:23';
+  SK.VERSION_TIME = '10:26';
 
   SK.util = {
     shuffle(arr) {
@@ -204,7 +204,7 @@
       const right = type === 'mc' ? [options[answer]] : type === 'multi' ? answer.map((i) => options[i]) : options;
       const stem = `${lesson}-${SK.hash(`${type}|${q}|${right.join('|')}`)}`;
       let id = stem;
-      // Gleiche Frage mit gleicher Lösung in derselben Lektion – meldet tools/validate.html
+      // Gleiche Frage mit gleicher Lösung in derselben Lektion – meldet tools/test/validate.html
       for (let n = 2; qIds.has(id); n++) id = `${stem}-${n}`;
       if (id !== stem) SK.idCollisions.push(id);
       qIds.add(id);

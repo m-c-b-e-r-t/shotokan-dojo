@@ -11,7 +11,13 @@ Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikett
 
 `index.html` im Browser öffnen – kein Build, kein Server nötig.
 
-Prüfwerkzeuge: `tools/validate.html` (Datenkonsistenz) und `tools/smoke.html` (klickt automatisch durch Prüfungsseiten, Lektionen und Quiz; löscht dabei den lokalen Fortschritt).
+## Werkzeuge
+
+- `tools/test/validate.html` – prüft Datenkonsistenz (Fragen, Kata, Prüfungsprogramm); vor jedem Commit.
+- `tools/test/smoke.html` – klickt automatisch durch Prüfungsseiten, Lektionen und Quiz; löscht dabei den lokalen Fortschritt und läuft deshalb nur lokal (`file://` oder `localhost`).
+- `tools/test/gfx.html` – Vorschau aller Grafiken.
+- `tools/version.js` – Versionsnummer setzen (siehe unten).
+- `tools/kata-pdf/` – einmalig genutzte Python-Skripte, die Text aus dem Kata-Buch gezogen haben (siehe README dort).
 
 ## Neue Version veröffentlichen
 
