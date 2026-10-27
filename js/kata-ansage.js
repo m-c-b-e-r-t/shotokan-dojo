@@ -132,6 +132,16 @@
     const [h2x, h2y] = pt(ex, ey, back + 35, 14);
     return `<path class="emb-turn" d="M${sx} ${sy} A${r} ${r} 0 ${Math.abs(deg) > 180 ? 1 : 0} ${deg > 0 ? 1 : 0} ${ex} ${ey}"/><path class="emb-turn-head" d="M${h1x} ${h1y} L${ex} ${ey} L${h2x} ${h2y}"/>`;
   }
+  // Zwischenstellung (via): Fuß zieht heran und kehrt zurück – Doppelpfeil zwischen beiden Stellen
+  function viaArrow(a, b) {
+    const d = (Math.atan2(b[1] - a[1], b[0] - a[0]) * 180) / Math.PI + 90;
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const [ox, oy] = pt(a[0], a[1], d - 90, 34); // seitlich versetzt, damit der Körperpfeil ihn nicht verdeckt
+    const [sx, sy] = pt(ox, oy, d, 4);
+    const [ex, ey] = pt(ox, oy, d, len - 4);
+    const head = (x, y, dd) => { const [h1x, h1y] = pt(x, y, dd + 150, 14); const [h2x, h2y] = pt(x, y, dd - 150, 14); return `M${h1x} ${h1y} L${x} ${y} L${h2x} ${h2y}`; };
+    return `<path class="emb-via" d="M${sx} ${sy} L${ex} ${ey}"/><path class="emb-turn-head" d="${head(ex, ey, d)} ${head(sx, sy, d + 180)}"/>`;
+  }
   // Ausschnitt fest je Kata, damit die Karte beim Zählen nicht springt
   function bounds(a) {
     const pts = [a.rei, a.yoi, a.naore, a.end].concat(a.moves).flatMap((p) => p.f);
@@ -154,6 +164,11 @@
     if (prev) prev.f.forEach((f, i) => { if (moved(f, pose.f[i])) svg += SK.gfx.foot(...P(f[0], f[1]), f[2], 0, { side: side(i), scale: 1 }); });
     const [cx, cy] = P((pose.f[0][0] + pose.f[1][0]) / 2, (pose.f[0][1] + pose.f[1][1]) / 2);
     if (pose.turn && prev) svg += turnArc(cx, cy, prev.body, pose.turn);
+    if (pose.via) {
+      const [i, vx, vy, vd] = pose.via;
+      const v = P(vx, vy);
+      svg += SK.gfx.foot(...v, vd, 0, { side: side(i), scale: 1 }) + viaArrow(P(pose.f[i][0], pose.f[i][1]), v);
+    }
     pose.f.forEach((f, i) => { svg += SK.gfx.foot(...P(f[0], f[1]), f[2], f[3], { side: side(i), scale: 1 }); });
     svg += arrow(cx, cy, pose.body, 'emb-body');
     if (pose.look != null) svg += arrow(cx, cy, pose.look, 'emb-look');

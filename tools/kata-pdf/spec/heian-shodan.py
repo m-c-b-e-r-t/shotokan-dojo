@@ -7,7 +7,7 @@ FRAMES = [
     ('1', 'LR', 'Hidari Zenkutsu-dachi', 270, {'h': 'Blick nach links, linker Fuß gleitet nach links'}),
     ('2', 'RL', 'Migi Zenkutsu-dachi', 270, {'h': 'Rechter Fuß gleitet vor'}),
     ('3', 'LR', 'Migi Zenkutsu-dachi', 90, {'turn': 180, 'h': 'Rechter Fuß gleitet zurück, Wendung rechts herum'}),
-    ('4', 'LR', 'Migi Zenkutsu-dachi', 90, {'h': 'Rechter Fuß zieht einen halben Schritt heran und geht wieder vor'}),
+    ('4', 'LR', 'Migi Zenkutsu-dachi', 90, {'via': [1, 0.18, -0.04, 90], 'h': 'Rechter Fuß zieht einen halben Schritt heran und geht wieder vor'}),
     ('5', 'RL', 'Hidari Zenkutsu-dachi', 90, {'h': 'Linker Fuß gleitet vor'}),
     ('6', 'LR', 'Hidari Zenkutsu-dachi', 0, {'h': 'Linker Fuß gleitet nach links auf die Mittellinie, Blick nach vorne'}),
     ('7', 'LR', 'Migi Zenkutsu-dachi', 0, {'h': 'Rechter Fuß gleitet vor'}),

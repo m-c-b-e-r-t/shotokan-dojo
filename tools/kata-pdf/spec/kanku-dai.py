@@ -32,7 +32,7 @@ FRAMES = [
     ('26', 'R', 'Migi Ashi-dachi', 180, {'other': [0.12, 1.4, 180], 'look': 90, 'h': 'Blick nach links, Gewicht aufs rechte Bein, linke Fußsohle an das rechte Knie'}),
     ('27', 'R', 'Migi Ashi-dachi', 180, {'other': [0.12, 1.4, 180], 'look': 90, 'h': 'Stand bleibt: Yoko-geri-keage nach links'}),
     ('28', 'RL', 'Hidari Zenkutsu-dachi', 90, {'h': 'Linker Fuß setzt nach links ab'}),
-    ('29', 'L', 'Hidari Ashi-dachi', 180, {'other': [0.6, 1.48, 180], 'look': 270, 'h': 'Blick nach rechts, linker Fuß rückt einen halben Schritt heran, rechte Fußsohle an das linke Knie'}),
+    ('29', 'L', 'Hidari Ashi-dachi', 180, {'f': [[0.4, 1.46, 181], [0.33, 1.5, 180]], 'look': 270, 'h': 'Blick nach rechts, linker Fuß rückt einen halben Schritt heran, rechte Fußsohle an das linke Knie'}),
     ('30', 'L', 'Hidari Ashi-dachi', 180, {'other': [0.5, 1.45, 180], 'look': 270, 'h': 'Stand bleibt: Yoko-geri-keage nach rechts'}),
     ('31', 'RL', 'Migi Zenkutsu-dachi', 270, {'h': 'Rechter Fuß setzt nach rechts ab'}),
     ('32', 'RL', 'Migi Kokutsu-dachi', 90, {'turn': -180, 'h': 'Rechtes Bein trägt, Hüfte dreht links herum, linker Fuß vorne'}),

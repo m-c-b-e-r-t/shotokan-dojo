@@ -1452,8 +1452,16 @@ details.unit>summary::-webkit-details-marker {
   fill: none;
 }
 
-.emb-turn {
+.emb-turn,
+.emb-via {
   stroke-dasharray: 8 6;
+}
+
+.emb-via {
+  stroke: #e65100;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  fill: none;
 }
 
 .ans-hint {

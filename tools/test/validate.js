@@ -43,6 +43,7 @@
       const ok = p && p.f && p.f.length === 2 && p.f.every((f) => f.length === 4 && f.every(Number.isFinite)) && Number.isFinite(p.body) && p.h;
       if (!ok) errors.push(`${id}: Stellung ${i} unvollständig`);
       else if (p.turn && (p.turn % 45 || Math.abs(p.turn) > 315)) errors.push(`${id}: Stellung ${i} Drehung ${p.turn}`);
+      else if (p.via && !(p.via.length === 4 && [0, 1].includes(p.via[0]) && p.via.every(Number.isFinite))) errors.push(`${id}: Stellung ${i} Zwischenstellung unvollständig`);
     });
     [true, false].forEach((frame) => {
       const tl = SK.ansageTimeline(k, 2, frame);

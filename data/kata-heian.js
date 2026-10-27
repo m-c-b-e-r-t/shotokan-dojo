@@ -20,7 +20,7 @@
         { f: [[-0.44, -0.07, 265, 0.7], [0.14, 0.12, 314, 0.3]], body: 270, turn: -90, h: 'Blick nach links, linker Fuß gleitet nach links' },
         { f: [[-0.37, -0.11, 245, 0.3], [-0.89, 0.03, 272, 0.7]], body: 270, h: 'Rechter Fuß gleitet vor' },
         { f: [[-0.14, 0.05, 40, 0.3], [0.51, -0.05, 85, 0.7]], body: 90, turn: 180, h: 'Rechter Fuß gleitet zurück, Wendung rechts herum' },
-        { f: [[-0.12, 0.07, 40, 0.3], [0.45, -0.03, 93, 0.7]], body: 90, h: 'Rechter Fuß zieht einen halben Schritt heran und geht wieder vor' },
+        { f: [[-0.12, 0.07, 40, 0.3], [0.45, -0.03, 93, 0.7]], body: 90, via: [1, 0.18, -0.04, 90], h: 'Rechter Fuß zieht einen halben Schritt heran und geht wieder vor' },
         { f: [[0.91, 0.07, 90, 0.7], [0.42, -0.13, 107, 0.3]], body: 90, h: 'Linker Fuß gleitet vor' },
         { f: [[-0.0, 0.61, 350, 0.7], [0.3, 0.03, 23, 0.3]], body: 0, turn: -90, h: 'Linker Fuß gleitet nach links auf die Mittellinie, Blick nach vorne' },
         { f: [[-0.09, 0.53, 329, 0.3], [0.09, 1.07, 335, 0.7]], body: 0, h: 'Rechter Fuß gleitet vor' },

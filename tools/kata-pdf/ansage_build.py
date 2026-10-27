@@ -9,7 +9,8 @@ Die Spezifikation ist eine Python-Datei mit:
      'manual', wenn embusen.py das Bild nicht erkannt hat (dann Extras['f'] von Hand vermessen)
      (der andere kommt dann aus Extras['other'] oder bleibt wie im Bild davor).
      Extras: f = [[x, y, Richtung], [x, y, Richtung]] ersetzt die Messung (z. B. bei zusammenliegenden Füßen),
-     look, turn, h (Fußarbeit), w = [Gewicht links, Gewicht rechts].
+     look, turn, h (Fußarbeit), w = [Gewicht links, Gewicht rechts],
+     via = [Fuß (0 links, 1 rechts), x, y, Richtung]: Zwischenstellung eines Fußes, der wieder zurückkehrt.
 Ausgabe: JavaScript-Objekt für SK.kata[…].ansage (ohne kana/de/page), auf stdout.
 """
 import json
@@ -67,7 +68,7 @@ def main(spec_path):
         w = ex.get("w", weights(stance))
         f = [[round(a[0], 2), round(a[1], 2), int(a[2]) % 360, w[i]] for i, a in enumerate(f)]
         pose = {"f": f, "body": body}
-        for k in ("look", "turn"):
+        for k in ("look", "turn", "via"):
             if k in ex:
                 pose[k] = ex[k]
         if "turn" not in pose and poses and name not in ("rei", "end"):
@@ -85,6 +86,8 @@ def main(spec_path):
         for k in ("look", "turn"):
             if k in pose:
                 parts.append(f"{k}: {pose[k]}")
+        if "via" in pose:
+            parts.append("via: [" + ", ".join(f"{v:g}" for v in pose["via"]) + "]")
         parts.append("h: " + json.dumps(pose["h"], ensure_ascii=False).replace('"', "'"))
         return "{ " + ", ".join(parts) + " }"
 
