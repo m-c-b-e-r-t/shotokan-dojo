@@ -6,10 +6,10 @@
   const { util } = SK;
 
   // ---------- Zählwörter ----------
-  // Kana für die japanische Stimme. Das Dehnungszeichen ー hält den letzten Vokal hörbar: Ohne es verschluckt die
-  // Stimme das i bzw. u nach stimmlosen Lauten, wie im Japanischen üblich (Ichi klingt wie „itsch“, Ku wie „k“).
-  // Ni und Go werden zum gleichmäßigen Zählrhythmus ebenso gedehnt.
-  const KANA = ['', 'いちー', 'にー', 'さん', 'しー', 'ごー', 'ろくー', 'しちー', 'はちー', 'くー'];
+  // Kana für die japanische Stimme, in kurzer Dojo-Aussprache: Wie im gesprochenen Japanisch verschwindet das
+  // Schluss-i bzw. -u nach stimmlosen Lauten („Ich“, „Rok“, „Shich“, „Hach“). Das kleine っ lässt die Stimme die Silbe
+  // hart abbrechen, statt den Vokal auszusprechen, wie bei geschriebenen Zählrufen (いちっ、にっ …) üblich.
+  const KANA = ['', 'いちっ', 'に', 'さん', 'し', 'ご', 'ろくっ', 'しちっ', 'はちっ', 'く'];
   const RO = ['', 'Ichi', 'Ni', 'San', 'Shi', 'Go', 'Roku', 'Shichi', 'Hachi', 'Ku'];
   const KAN = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
   function count(n) {
@@ -273,7 +273,6 @@
     const playBtn = el('button', { class: 'btn primary ans-play', type: 'button' });
     const prevBtn = el('button', { class: 'btn', type: 'button', 'aria-label': 'Eine Ansage zurück', text: '◀' });
     const nextBtn = el('button', { class: 'btn', type: 'button', 'aria-label': 'Eine Ansage weiter', text: '▶' });
-    const resetBtn = el('button', { class: 'btn', type: 'button', text: 'Von vorn' });
     const fsBtn = document.fullscreenEnabled ? el('button', { class: 'btn', type: 'button', text: 'Vollbild' }) : null;
 
     // Tempo-Regler: Änderung gilt sofort, eine laufende Ansage zählt ab der aktuellen Bewegung im neuen Takt weiter
@@ -437,7 +436,6 @@
     });
     prevBtn.addEventListener('click', () => jump(idx - 1));
     nextBtn.addEventListener('click', () => jump(idx + 1));
-    resetBtn.addEventListener('click', () => { pause(); wake(false); idx = 0; render(0); ui(); });
     track.addEventListener('click', (ev) => {
       const d = ev.target.closest('.ans-dot');
       if (d) jump(steps.findIndex((s) => s.n === Number(d.dataset.n)));
@@ -460,7 +458,7 @@
         track,
         el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-kiai', text: 'Kiai' }), el('span', { class: 'lg-slow', text: 'langsam' }), el('span', { class: 'lg-link', text: 'fließend zur nächsten' })),
         el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }))),
-      el('div', { class: 'actions' }, resetBtn, fsBtn),
+      ...(fsBtn ? [el('div', { class: 'actions' }, fsBtn)] : []),
       el('p', { class: 'muted small' }, 'Mehr zur Kata: ', el('a', { href: `#/wissen/${k.id}-ueberblick`, text: `${k.name} im Kata-Wissen` })),
       el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Fußstellungen nach der Embusen-Skizze, ${SK.bookPages(k.ansage.page)}; Drehrichtungen daraus abgeleitet. Das Tempo nennt das Buch nicht – voreingestellt ist das Trainingstempo von 2 s je Bewegung.` })
     );
