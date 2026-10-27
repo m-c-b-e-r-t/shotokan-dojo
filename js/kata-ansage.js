@@ -66,6 +66,7 @@
   const SNAP = 0.1; // so nah an einer Embusen-Linie wird der Stand auf sie gesetzt
   const ON_LINE = 0.03; // so nah an einer Linie steht ein Fuß in der Skizze „auf“ ihr
   const KOSA_BACK = 0.1; // so weit steht im Kosa-dachi der gekreuzte Fuß hinter dem tragenden
+  const KOSA_TURN = 25; // so weit darf er gegen die Körperrichtung verdreht sein
   const NEAR = 0.2; // so nah an einer Linie steht ein gleichmäßiger Stand (Kiba-dachi …) in der Skizze auf ihr
   const HEEL = 0.068; // Fersenmitte hinter der Fußmitte (Karteneinheiten, Fußabdruck in Kartengröße)
   const angDiff = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
@@ -279,6 +280,9 @@
           const u = toe(m.body);
           const ahead = (f[r][0] - f[1 - r][0]) * u[0] + (f[r][1] - f[1 - r][1]) * u[1];
           if (!held[r] && ahead > -KOSA_BACK) f[r] = [r2(f[r][0] - u[0] * (ahead + KOSA_BACK)), r2(f[r][1] - u[1] * (ahead + KOSA_BACK))].concat(f[r].slice(2));
+          // und zeigt ungefähr nach vorne: höchstens KOSA_TURN gegen die Körperrichtung verdreht
+          const turn = ((f[r][2] - m.body + 540) % 360) - 180;
+          if (Math.abs(turn) > KOSA_TURN) f[r] = f[r].slice(0, 2).concat(norm(m.body + Math.sign(turn) * KOSA_TURN), f[r][3]);
         }
         // gleichmäßiger Stand hat einen stehenden Fuß versetzt: auch in den Stellungen davor, damit er nicht springt.
         // In einem gleichmäßigen Stand davor rückt der ganze Stand mit (sonst würde er schief), dann auch der andere Fuß
