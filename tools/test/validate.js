@@ -45,8 +45,8 @@
       else if (p.turn && (p.turn % 45 || Math.abs(p.turn) > 315)) errors.push(`${id}: Stellung ${i} Drehung ${p.turn}`);
       else if (p.via && !(p.via.length === 4 && [0, 1].includes(p.via[0]) && p.via.every(Number.isFinite))) errors.push(`${id}: Stellung ${i} Zwischenstellung unvollständig`);
     });
-    [true, false].forEach((frame) => {
-      const tl = SK.ansageTimeline(k, 2, frame);
+    [true, false].flatMap((frame) => SK.ansageBeats.map((beat) => [frame, beat])).forEach(([frame, beat]) => {
+      const tl = SK.ansageTimeline(k, beat, frame);
       const moves = tl.filter((s) => s.kind === 'move');
       if (moves.length !== k.moves) errors.push(`${id}: Ansage hat ${moves.length} statt ${k.moves} Bewegungen`);
       tl.forEach((s, i) => {

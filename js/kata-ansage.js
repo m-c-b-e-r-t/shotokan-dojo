@@ -183,8 +183,26 @@
   SK.turnText = (deg) => `Wendung ${{ 45: '⅛', 90: '¼', 135: '⅜', 180: '½', 225: '⅝', 270: '¾' }[Math.abs(deg)] || `${Math.abs(deg)}°`} ${deg < 0 ? 'links' : 'rechts'} herum`;
 
   // ---------- Takt ----------
-  // Fest im Trainingstempo: 2 s je Bewegung (das Buch nennt kein Tempo), immer mit Name, Rei und Yoi vorab.
-  const BEAT = 2;
+  // Das Buch nennt kein Tempo. Mitte = Training (2 s je Bewegung); langsamer in ganzen Sekunden bis 6 s (3× langsamer),
+  // schneller spiegelbildlich bis ⅔ s (3× schneller). Immer mit Name, Rei und Yoi vorab.
+  const BEATS = [6, 5, 4, 3, 2, 4 / 3, 1, 0.8, 2 / 3];
+  const TRAINING = 4;
+  SK.ansageBeats = BEATS;
+  const fmtNum = (x) => String(Math.round(x * 10) / 10).replace('.', ',');
+  const tempoName = (beat) => (beat === 2 ? 'Training' : beat > 2 ? `${fmtNum(beat / 2)}× langsamer` : `${fmtNum(2 / beat)}× schneller`);
+  const TEMPO_KEY = 'shotokan-dojo-ansage-tempo';
+  function loadTempo() {
+    try {
+      const i = Number(localStorage.getItem(TEMPO_KEY));
+      if (localStorage.getItem(TEMPO_KEY) !== null && BEATS[i]) return i;
+    } catch (e) { /* ohne Speicher */ }
+    return TRAINING;
+  }
+  function saveTempo(i) {
+    try {
+      localStorage.setItem(TEMPO_KEY, String(i));
+    } catch (e) { /* privates Fenster */ }
+  }
 
   // ---------- Sprachausgabe ----------
   // Nur mit japanischer Stimme; fehlt sie, läuft die Ansage stumm (Anzeige und Karte im Takt).
@@ -201,11 +219,11 @@
   // Verzögerung zwischen speak() und hörbarem Beginn – wird gemessen und bei den nächsten Ansagen vorgezogen.
   let latency = 0.15;
   const live = new Set(); // Chrome verliert sonst Äußerungen samt onstart durch die Speicherbereinigung
-  function utter(text, tone, measure) {
+  function utter(text, tone, fast, measure) {
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'ja-JP';
     u.voice = voice;
-    u.rate = tone.rate;
+    u.rate = tone.rate * fast;
     u.pitch = tone.pitch;
     const t0 = performance.now();
     if (measure) u.onstart = () => {
@@ -216,17 +234,20 @@
     live.add(u);
     tts.speak(u);
   }
-  function speak(st) {
+  // Im schnellen Tempo spricht die Stimme schneller, damit die Zahl in den Takt passt.
+  function speak(st, beat) {
     if (!tts || !voice) return;
-    utter(st.say, TONE, true);
+    const fast = Math.min(1.7, Math.max(1, Math.sqrt(2 / beat)));
+    utter(st.say, TONE, fast, true);
     // Kiai als eigene Äußerung direkt nach der Zahl, damit der Ruf eigene Betonung bekommt
-    if (st.kiai) utter(KIAI, TONE_KIAI, false);
+    if (st.kiai) utter(KIAI, TONE_KIAI, fast, false);
   }
 
   // ---------- Ansicht ----------
   SK.viewAnsage = function (app, k) {
     const { el } = util;
-    const steps = SK.ansageTimeline(k, BEAT, true);
+    let tempo = loadTempo();
+    let steps = SK.ansageTimeline(k, BEATS[tempo], true);
     let idx = 0;
     let running = false;
     let base = 0; // performance.now() in ms, zu dem t = 0 gehört
@@ -254,6 +275,22 @@
     const nextBtn = el('button', { class: 'btn', type: 'button', 'aria-label': 'Eine Ansage weiter', text: '▶' });
     const resetBtn = el('button', { class: 'btn', type: 'button', text: 'Von vorn' });
     const fsBtn = document.fullscreenEnabled ? el('button', { class: 'btn', type: 'button', text: 'Vollbild' }) : null;
+
+    // Tempo-Regler: Änderung gilt sofort, eine laufende Ansage zählt ab der aktuellen Bewegung im neuen Takt weiter
+    const tempoIn = el('input', { type: 'range', id: 'ans-tempo', min: '0', max: String(BEATS.length - 1), step: '1', value: String(tempo), 'aria-label': 'Tempo' });
+    const tempoOut = el('output', { class: 'ans-tempo-out', for: 'ans-tempo' });
+    function tempoInfo() {
+      const beat = BEATS[tempo];
+      tempoOut.textContent = `${tempoName(beat)} · ${fmtNum(beat)} s je Bewegung · Kata etwa ${Math.round(steps[steps.length - 1].t)} s`;
+      tempoIn.setAttribute('aria-valuetext', tempoName(beat));
+    }
+    tempoIn.addEventListener('input', () => {
+      tempo = Number(tempoIn.value);
+      saveTempo(tempo);
+      steps = SK.ansageTimeline(k, BEATS[tempo], true);
+      tempoInfo();
+      if (running) start(idx);
+    });
 
     // Hinweis nur, wenn etwas fehlt: japanische Stimme oder Bildschirm-an
     const infoOut = el('p', { class: 'muted small ans-info' });
@@ -310,7 +347,7 @@
       const now = performance.now();
       for (let i = from; i < steps.length; i++) {
         const at = base + steps[i].t * 1000;
-        timers.push(setTimeout(() => speak(steps[i]), Math.max(0, at - latency * 1000 - now)));
+        timers.push(setTimeout(() => speak(steps[i], BEATS[tempo]), Math.max(0, at - latency * 1000 - now)));
         timers.push(setTimeout(() => { idx = i; render(i); }, Math.max(0, at - now)));
       }
       const end = base + (steps[steps.length - 1].t + 1.5) * 1000;
@@ -324,7 +361,7 @@
       }
       // erste Ansage sofort im Klick (iOS gibt die Sprachausgabe nur nach einer Berührung frei)
       base = performance.now() - steps[from].t * 1000;
-      speak(steps[from]);
+      speak(steps[from], BEATS[tempo]);
       render(from);
       // nach einem Sprung folgt die nächste Ansage mit dem normalen Abstand
       if (from + 1 < steps.length) schedule(from + 1);
@@ -417,15 +454,19 @@
       infoOut,
       el('div', { class: 'ans-wrap' }, stage,
         el('div', { class: 'ans-controls' }, prevBtn, playBtn, nextBtn),
+        el('div', { class: 'ans-tempo' },
+          el('div', { class: 'ans-tempo-row' }, el('span', { class: 'muted small', text: '3× langsamer' }), tempoIn, el('span', { class: 'muted small', text: '3× schneller' })),
+          tempoOut),
         track,
         el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-kiai', text: 'Kiai' }), el('span', { class: 'lg-slow', text: 'langsam' }), el('span', { class: 'lg-link', text: 'fließend zur nächsten' })),
         el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }))),
       el('div', { class: 'actions' }, resetBtn, fsBtn),
       el('p', { class: 'muted small' }, 'Mehr zur Kata: ', el('a', { href: `#/wissen/${k.id}-ueberblick`, text: `${k.name} im Kata-Wissen` })),
-      el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Fußstellungen nach der Embusen-Skizze, ${SK.bookPages(k.ansage.page)}; Drehrichtungen daraus abgeleitet. Das Tempo nennt das Buch nicht – die App zählt im Trainingstempo von ${BEAT} s je Bewegung.` })
+      el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Fußstellungen nach der Embusen-Skizze, ${SK.bookPages(k.ansage.page)}; Drehrichtungen daraus abgeleitet. Das Tempo nennt das Buch nicht – voreingestellt ist das Trainingstempo von 2 s je Bewegung.` })
     );
     buildTrack();
     info();
+    tempoInfo();
     render(0);
     ui();
   };
