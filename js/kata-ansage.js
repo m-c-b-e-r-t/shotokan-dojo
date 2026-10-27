@@ -372,6 +372,15 @@
     hits.forEach(([t, , c]) => { if (t + c > r0 && t - c < r0 + 52) r0 = Math.round(t + c); });
     return r0;
   }
+  // Passt der Pfeil hinter den Füßen nicht mehr in die Karte, läuft er seitlich versetzt neben ihnen vorbei
+  function placeArrow(x, y, d, dots, box) {
+    const inside = ([qx, qy]) => qx > box[0] + 8 && qx < box[1] - 8 && qy > -box[3] + 8 && qy < -box[2] - 8;
+    const tries = [0, 34, -34, 60, -60].map((o) => {
+      const [ox, oy] = pt(x, y, d + 90, o);
+      return [ox, oy, arrowStart(ox, oy, d, dots)];
+    });
+    return tries.find(([ox, oy, r0]) => inside(pt(ox, oy, d, r0 + 52))) || tries[0];
+  }
   function arrow(x, y, d, cls, r0) {
     const [ax, ay] = pt(x, y, d, r0 + 52);
     const [bx, by] = pt(x, y, d, r0);
@@ -431,7 +440,7 @@
   function bounds(k) {
     if (!half) {
       const all = SK.ansageKata().map((id) => reach(SK.kata[id]));
-      half = [Math.max(...all.map((r) => r[2])) + 0.62, Math.max(...all.map((r) => r[3])) + 0.55];
+      half = [Math.max(...all.map((r) => r[2])) + 0.3, Math.max(...all.map((r) => r[3])) + 0.3];
     }
     const [cx, cy] = reach(k);
     return [cx - half[0], cx + half[0], cy - half[1], cy + half[1]].map((v) => v * U);
@@ -450,11 +459,12 @@
     if (prev) prev.f.forEach((f, i) => { if (moved(f, pose.f[i])) svg += SK.gfx.foot(...P(f[0], f[1]), f[2], 0, { side: side(i), scale: 1, was: true }); });
     const [cx, cy] = P((pose.f[0][0] + pose.f[1][0]) / 2, (pose.f[0][1] + pose.f[1][1]) / 2);
     const dots = footDots(pose.f.map((f) => [...P(f[0], f[1]), f[2]]).concat(pose.via ? [[...P(pose.via[1], pose.via[2]), pose.via[3]]] : []));
-    const bodyR = arrowStart(cx, cy, pose.body, dots);
-    const lookR = pose.look != null ? arrowStart(cx, cy, pose.look, dots) : 0;
+    const box = [x0, x1, y0, y1];
+    const body = placeArrow(cx, cy, pose.body, dots, box);
+    const look = pose.look != null ? placeArrow(cx, cy, pose.look, dots, box) : null;
     if (pose.turn && prev) {
-      const busy = dots.concat(arrowDots(cx, cy, pose.body, bodyR), pose.look != null ? arrowDots(cx, cy, pose.look, lookR) : []);
-      svg += turnArc(cx, cy, prev.body, pose.turn, arcRadius(cx, cy, prev.body, pose.turn, busy, [x0, x1, y0, y1]));
+      const busy = dots.concat(arrowDots(body[0], body[1], pose.body, body[2]), look ? arrowDots(look[0], look[1], pose.look, look[2]) : []);
+      svg += turnArc(cx, cy, prev.body, pose.turn, arcRadius(cx, cy, prev.body, pose.turn, busy, box));
     }
     if (pose.via) {
       const [i, vx, vy, vd] = pose.via;
@@ -462,8 +472,8 @@
       svg += SK.gfx.foot(...v, vd, 0, { side: side(i), scale: 1, was: true }) + viaArrow(P(pose.f[i][0], pose.f[i][1]), v);
     }
     pose.f.forEach((f, i) => { svg += SK.gfx.foot(...P(f[0], f[1]), f[2], f[3], { side: side(i), scale: 1, lift: '#e53935' }); });
-    svg += arrow(cx, cy, pose.body, 'emb-body', bodyR);
-    if (pose.look != null) svg += arrow(cx, cy, pose.look, 'emb-look', lookR);
+    svg += arrow(body[0], body[1], pose.body, 'emb-body', body[2]);
+    if (look) svg += arrow(look[0], look[1], pose.look, 'emb-look', look[2]);
     return `<svg class="emb-map" viewBox="${Math.round(x0)} ${Math.round(-y1)} ${Math.round(x1 - x0)} ${Math.round(y1 - y0)}" role="img" aria-label="Fußstellung von oben">${svg}</svg>`;
   };
   // Drehung in Worten: ⅛ bis ¾ links/rechts herum
