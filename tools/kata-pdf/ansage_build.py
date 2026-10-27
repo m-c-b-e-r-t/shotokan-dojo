@@ -65,6 +65,10 @@ def main(spec_path):
                 if s not in got:
                     got[s] = list(ex["other"]) if "other" in ex else prev[0 if s == "L" else 1][:3]
             f = [got["L"], got["R"]]
+        if stance == "Musubi-dachi":
+            # Die Skizzen zeigen die Fersen nicht genau geschlossen: Mitte und Höhe übernehmen, Fersen aneinander, Spitzen ±30°
+            mx, my = round((f[0][0] + f[1][0]) / 2, 2), round((f[0][1] + f[1][1]) / 2, 2)
+            f = [[mx - 0.05, my, 330], [mx + 0.05, my, 30]]
         w = ex.get("w", weights(stance))
         f = [[round(a[0], 2), round(a[1], 2), int(a[2]) % 360, w[i]] for i, a in enumerate(f)]
         pose = {"f": f, "body": body}

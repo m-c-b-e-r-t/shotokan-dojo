@@ -12,7 +12,7 @@
       kana: 'てっき しょだん',
       page: 77,
       lines: [[-1, 0, 1, 0]],
-      rei: { f: [[-0.13, 0, 320, 0.5], [0.11, 0, 36, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
+      rei: { f: [[-0.06, 0, 330, 0.5], [0.04, 0, 30, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
       yoi: { f: [[-0.09, 0.02, 0, 0.5], [0.03, 0.02, 0, 0.5]], body: 0, h: 'Füße geschlossen (Heisoku-dachi)' },
       moves: [
         { f: [[0.17, 0.08, 41, 0.9], [0.03, 0.02, 9, 0.1]], body: 0, look: 90, h: 'Blick nach rechts, linker Fuß kreuzt vor dem rechten nach rechts' },
@@ -46,7 +46,7 @@
         { f: [[0.11, 0.01, 354, 0.5], [0.92, 0, 6, 0.5]], body: 0, look: 90, h: 'Stand bleibt – Kiai' },
       ],
       naore: { f: [[-0.06, 0.03, 357, 0.5], [0.07, 0.02, 6, 0.5]], body: 0, h: 'Linker Fuß bleibt, rechter Fuß zieht neben den linken zurück' },
-      end: { f: [[-0.12, -0.02, 320, 0.5], [0.12, -0.01, 38, 0.5]], body: 0, h: 'Verbeugung, Ende der Kata' },
+      end: { f: [[-0.05, -0.01, 330, 0.5], [0.05, -0.01, 30, 0.5]], body: 0, h: 'Verbeugung, Ende der Kata' },
     },
     yoi: 'Heisoku-dachi, linke Handfläche auf dem Rücken der rechten Hand vor dem Unterbauch',
     naore: 'Der linke Fuß bleibt, der rechte Fuß geht neben den linken zurück in die Yoi-Position.',
