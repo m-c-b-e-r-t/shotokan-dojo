@@ -46,11 +46,39 @@
     return beat;
   }
 
+  // ---------- Ruhige Füße ----------
+  // Die Stellungen sind aus den Fußskizzen vermessen und streuen um einige Zentimeter. Ein Fuß, der laut Ablauf stehen
+  // bleibt, soll auf der Karte nicht wandern: Bei „Stand bleibt“ übernimmt er Ort und Richtung der vorigen Stellung,
+  // bei „Füße bleiben“ den Ort; sonst gilt alles unterhalb der Messstreuung (STILL) als nicht bewegt.
+  const STILL = { d: 0.12, deg: 20 };
+  const angDiff = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
+  const steadyCache = new WeakMap();
+  function steadyPoses(a) {
+    if (steadyCache.has(a)) return steadyCache.get(a);
+    let prev = a.yoi;
+    const poses = a.moves.map((m) => {
+      const stand = /^(Langsam: )?Stand bleibt/.test(m.h);
+      const feet = stand || /^(Langsam: )?Füße bleiben/.test(m.h);
+      const f = m.f.map((x, i) => {
+        const p = prev.f[i];
+        const keepPos = feet || Math.hypot(x[0] - p[0], x[1] - p[1]) < STILL.d;
+        const keepDir = keepPos && (stand || angDiff(x[2], p[2]) < STILL.deg);
+        return [keepPos ? p[0] : x[0], keepPos ? p[1] : x[1], keepDir ? p[2] : x[2], x[3]];
+      });
+      prev = Object.assign({}, m, { f });
+      return prev;
+    });
+    steadyCache.set(a, poses);
+    return poses;
+  }
+  SK.ansagePoses = steadyPoses;
+
   // Liefert alle Ansagen mit Zeitpunkt t (Sekunden ab Start). frame = Name, Rei, Yoi vorab und Naore, Rei am Ende.
   SK.ansageTimeline = function (k, beat, frame) {
     const steps = [];
     let t = 0;
     const a = k.ansage;
+    const poses = steadyPoses(a);
     const cmd = (key, extra) => Object.assign({ kind: 'cmd', t }, CMD[key], extra);
     if (frame) {
       steps.push({ kind: 'name', t, kan: '', ro: k.name, kana: a.kana, de: a.de, stance: 'Musubi-dachi', pose: a.rei });
@@ -63,7 +91,7 @@
     k.seq.forEach((r) => {
       const n = r[0];
       // gezählt wird wie im Dojo nur bis Ju (10), danach wieder ab Ichi
-      steps.push(Object.assign({ kind: 'move', t, n, stance: r[1], tech: r[2], note: r[4] || '', page: r[3], pose: a.moves[n - 1],
+      steps.push(Object.assign({ kind: 'move', t, n, stance: r[1], tech: r[2], note: r[4] || '', page: r[3], pose: poses[n - 1],
         kiai: k.kiai.includes(n), slow: k.slow.includes(n), cont: k.continuous.some((g) => g.includes(n)) }, count(((n - 1) % 10) + 1)));
       t += n < k.moves ? moveGap(k, n, beat) : R.end * beat;
     });
@@ -85,7 +113,8 @@
   const P = (x, y) => [Math.round(x * U), Math.round(-y * U)];
   const rad = (d) => ((d - 90) * Math.PI) / 180;
   const pt = (x, y, d, r) => [Math.round(x + Math.cos(rad(d)) * r), Math.round(y + Math.sin(rad(d)) * r)];
-  const moved = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) > 0.03 || Math.abs(((a[2] - b[2] + 540) % 360) - 180) > 10;
+  // Spur nur, wenn der Fuß den Platz wechselt oder deutlich auf der Stelle dreht (kleines Ausdrehen der Ferse zählt nicht)
+  const moved = (a, b) => a[0] !== b[0] || a[1] !== b[1] || angDiff(a[2], b[2]) >= 45;
   function arrow(x, y, d, cls) {
     const [ax, ay] = pt(x, y, d, 92);
     const [bx, by] = pt(x, y, d, 40);

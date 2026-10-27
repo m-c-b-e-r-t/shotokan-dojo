@@ -52,6 +52,8 @@
         if (i && !(s.t > tl[i - 1].t)) errors.push(`${id}: Ansage-Zeit ${i} nicht steigend`);
         if (!s.kana || !s.de || !s.ro) errors.push(`${id}: Ansage ${i} ohne Zählwort`);
         if (s.kind === 'move' && s.ro !== SK.ansageCount(((s.n - 1) % 10) + 1).ro) errors.push(`${id}: Bewegung ${s.n} nicht bis 10 gezählt`);
+        // „Stand bleibt“: kein Fuß darf auf der Karte wandern
+        if (s.kind === 'move' && /^(Langsam: )?Stand bleibt/.test(s.pose.h) && s.pose.f.some((f, j) => f.slice(0, 3).some((v, m) => v !== s.prev.f[j][m]))) errors.push(`${id}: Bewegung ${s.n} – Stand bleibt, Füße wandern`);
       });
     });
   });
