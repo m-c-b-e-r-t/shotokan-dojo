@@ -150,13 +150,38 @@
   }
 
   const steadyCache = new WeakMap();
+  const mid = (f) => [(f[0][0] + f[1][0]) / 2, (f[0][1] + f[1][1]) / 2];
+  // Eine Kata endet, wo sie begonnen hat: Naore steht genau wie Yoi. Die kleinen Messfehler der festgehaltenen Füße
+  // summieren sich aber auf; deshalb rückt Naore auf die Yoi-Mitte (z. B. die Mittellinie genau zwischen den Füßen), und der stehende Fuß wird in den Stellungen davor
+  // mitgenommen (bei gleichmäßigen Ständen wie Kiba-dachi der ganze Stand), damit er nicht springt.
   function steadyPoses(k) {
     if (steadyCache.has(k)) return steadyCache.get(k);
+    const out = steadyRun(k);
+    const [y, n] = [out.yoi.f, out.naore.f].map(mid);
+    // nur in der Richtung, in der eine Linie durch die Yoi-Mitte läuft – dort fällt eine schiefe Mitte auf
+    const on = (j) => k.ansage.lines.some((l) => l[j] === l[j + 2] && Math.abs(y[j] - l[j]) < 0.005);
+    const e = [on(0) ? y[0] - n[0] : 0, on(1) ? y[1] - n[1] : 0];
+    const all = [out.rei, out.yoi].concat(out.moves);
+    const r3 = (v) => Math.round(v * 1000) / 1000; // feiner als r2, damit die Mitte genau stimmt
+    const move = (x) => [r3(x[0] + e[0]), r3(x[1] + e[1])].concat(x.slice(2));
+    out.naore.f.forEach((x, i) => {
+      if (!out.naorePin[i]) return;
+      for (let j = all.length - 1; j >= 0 && all[j].f[i][0] === x[0] && all[j].f[i][1] === x[1]; j--) {
+        const both = SYM.some(([rx]) => rx.test(out.stances[j]));
+        all[j].f = all[j].f.map((f, m) => (m === i || both ? move(f) : f));
+      }
+    });
+    out.naore.f = out.naore.f.map((x) => move(x));
+    steadyCache.set(k, out);
+    return out;
+  }
+  function steadyRun(k) {
     const a = k.ansage;
     const yoiStance = k.yoi.split(',')[0];
     let prev = null;
     const done = [];
     let raw = null; // vorige Stellung, wie gemessen
+    let lastPin = [false, false];
     // Ein festgehaltener Fuß weicht von seiner Messung ab; der bewegte Fuß rückt um dieselbe Strecke mit, damit die Länge
     // des Standes zur Skizze passt – quer zu einer Embusen-Linie, auf der er laut Skizze steht, bleibt er aber genau dort.
     const shift = (x, d) => {
@@ -167,11 +192,11 @@
       });
       return q.map(r2);
     };
-    const fix = (m, stance, move) => {
+    const fix = (m, stance, n) => {
       let f = m.f.map((x) => x.slice());
       let pin = [false, false];
       let via = m.via;
-      const p = prev ? pins(m.h, prev.f, raw.f, f, move) : pin;
+      const p = prev ? pins(m.h, prev.f, raw.f, f, n > 0) : pin;
       if (p === 'stand') f = prev.f.map((x, i) => [x[0], x[1], x[2], f[i][3]]);
       else {
         pin = p;
@@ -187,16 +212,18 @@
           for (let j = done.length - 1; j >= 0 && done[j].f[i][0] === ox && done[j].f[i][1] === oy; j--) done[j].f[i] = [f[i][0], f[i][1]].concat(done[j].f[i].slice(2));
         });
       }
+      lastPin = p === 'stand' ? [true, true] : pin;
       prev = Object.assign({}, m, { f }, via ? { via } : {});
       raw = m;
       done.push(prev);
       return prev;
     };
-    const out = { rei: fix(a.rei, 'Musubi-dachi'), yoi: fix(a.yoi, yoiStance) };
-    out.moves = a.moves.map((m, n) => fix(m, k.seq[n][1], true));
-    out.naore = fix(a.naore, yoiStance);
-    out.end = fix(a.end, 'Musubi-dachi');
-    steadyCache.set(k, out);
+    const out = { rei: fix(a.rei, 'Musubi-dachi', 0), yoi: fix(a.yoi, yoiStance, 0) };
+    out.moves = a.moves.map((m, n) => fix(m, k.seq[n][1], n + 1));
+    out.naore = fix(a.naore, yoiStance, 0);
+    out.naorePin = lastPin;
+    out.stances = ['Musubi-dachi', yoiStance].concat(k.seq.map((r) => r[1]));
+    out.end = fix(a.end, 'Musubi-dachi', 0);
     return out;
   }
   SK.ansagePoses = steadyPoses;
@@ -392,9 +419,8 @@
     const map = el('div', { class: 'ans-map' });
     const cHint = el('div', { class: 'ans-hint' });
     const cTech = el('div', { class: 'ans-tech muted' });
-    const stage = el('section', { class: 'ans-stage', 'aria-live': 'polite' },
-      el('div', { class: 'ans-head' }, cKan, el('div', { class: 'ans-head-txt' }, cRo, cPos), chips),
-      map, cHint, cTech);
+    const head = el('div', { class: 'ans-head' }, cKan, el('div', { class: 'ans-head-txt' }, cRo, cPos), chips);
+    const stage = el('section', { class: 'ans-stage', 'aria-live': 'polite' }, head, map, cHint, cTech);
     const track = el('div', { class: 'ans-track', role: 'group', 'aria-label': 'Bewegungen' });
     const playBtn = el('button', { class: 'btn primary ans-play', type: 'button' });
     const prevBtn = el('button', { class: 'btn', type: 'button', 'aria-label': 'Eine Ansage zurück', text: '◀' });
@@ -427,9 +453,8 @@
       infoOut.hidden = !msg.length;
     }
 
-    function render(i) {
-      const s = steps[i];
-      if (!s) return;
+    // Texte einer Ansage (ohne Karte und Fortschritt) – auch zum Ausmessen
+    function fill(s) {
       cKan.textContent = s.kan;
       cKan.hidden = !s.kan;
       cRo.textContent = s.ro;
@@ -439,10 +464,41 @@
       if (s.kiai) chips.append(el('span', { class: 'ans-chip kiai', text: 'Kiai' }));
       if (s.slow) chips.append(el('span', { class: 'ans-chip slow', text: 'langsam' }));
       if (s.cont) chips.append(el('span', { class: 'ans-chip cont', text: 'fließend' }));
-      stage.classList.toggle('kiai', !!s.kiai);
-      map.innerHTML = SK.embusenSvg(k, s.pose, i ? s.prev : null);
       cHint.textContent = s.pose.h;
       cTech.textContent = s.kind === 'move' ? s.tech + (s.note ? ` · ${s.note}` : '') : s.note || '';
+    }
+    // Der Kasten soll beim Zählen nicht wachsen und schrumpfen: Kopf, Fußarbeit und Technik bekommen die Höhe der
+    // längsten Ansage dieser Kata (bei der aktuellen Breite, daher neu bei Größenänderung und Vollbild).
+    const boxes = [head, cHint, cTech];
+    function reserve() {
+      if (!stage.isConnected) {
+        window.removeEventListener('resize', onResize);
+        document.removeEventListener('fullscreenchange', onResize);
+        return;
+      }
+      boxes.forEach((b) => { b.style.minHeight = ''; });
+      const max = boxes.map(() => 0);
+      steps.forEach((s) => {
+        fill(s);
+        boxes.forEach((b, j) => { max[j] = Math.max(max[j], b.offsetHeight); });
+      });
+      boxes.forEach((b, j) => { b.style.minHeight = `${max[j]}px`; });
+      render(idx);
+    }
+    let resizeTimer = 0;
+    function onResize() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(reserve, 150);
+    }
+    window.addEventListener('resize', onResize);
+    document.addEventListener('fullscreenchange', onResize);
+
+    function render(i) {
+      const s = steps[i];
+      if (!s) return;
+      fill(s);
+      stage.classList.toggle('kiai', !!s.kiai);
+      map.innerHTML = SK.embusenSvg(k, s.pose, i ? s.prev : null);
       const firstMove = steps.findIndex((x) => x.kind === 'move');
       const cur = s.kind === 'move' ? s.n : i < firstMove ? 0 : Infinity;
       track.querySelectorAll('.ans-dot').forEach((d) => {
@@ -592,6 +648,8 @@
     info();
     tempoInfo();
     render(0);
+    reserve();
+    if (document.fonts) document.fonts.ready.then(reserve);
     ui();
   };
 })();
