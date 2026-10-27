@@ -35,14 +35,14 @@
   SK.ansageKata().forEach((id) => {
     const k = SK.kata[id];
     if (!k.ansage.kana || !k.ansage.de) errors.push(`${id}: Ansage ohne Namen (Kana/Lautschrift)`);
-    // Bodenkarte: je Bewegung zwei Füße mit Zahlen, Richtungen in Grad, Drehungen nur in Vierteln
+    // Bodenkarte: je Bewegung zwei Füße mit Zahlen, Richtungen in Grad, Drehungen in Achteln (Diagonalen)
     const a = k.ansage;
     if (!a.page || !Array.isArray(a.lines)) errors.push(`${id}: Bodenkarte ohne Buchseite oder Linien`);
     if (!a.moves || a.moves.length !== k.moves) errors.push(`${id}: Bodenkarte hat ${a.moves ? a.moves.length : 0} statt ${k.moves} Stellungen`);
     [a.rei, a.yoi, a.naore, a.end].concat(a.moves || []).forEach((p, i) => {
       const ok = p && p.f && p.f.length === 2 && p.f.every((f) => f.length === 4 && f.every(Number.isFinite)) && Number.isFinite(p.body) && p.h;
       if (!ok) errors.push(`${id}: Stellung ${i} unvollständig`);
-      else if (p.turn && (p.turn % 90 || Math.abs(p.turn) > 270)) errors.push(`${id}: Stellung ${i} Drehung ${p.turn}`);
+      else if (p.turn && (p.turn % 45 || Math.abs(p.turn) > 315)) errors.push(`${id}: Stellung ${i} Drehung ${p.turn}`);
     });
     [true, false].forEach((frame) => {
       const tl = SK.ansageTimeline(k, 2, frame);

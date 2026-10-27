@@ -130,8 +130,8 @@
     if (pose.look != null) svg += arrow(cx, cy, pose.look, 'emb-look');
     return `<svg class="emb-map" viewBox="${Math.round(x0)} ${Math.round(-y1)} ${Math.round(x1 - x0)} ${Math.round(y1 - y0)}" role="img" aria-label="Fußstellung von oben">${svg}</svg>`;
   };
-  // Drehung in Worten: ¼, ½, ¾ links/rechts herum
-  SK.turnText = (deg) => `Wendung ${{ 90: '¼', 180: '½', 270: '¾' }[Math.abs(deg)] || `${Math.abs(deg)}°`} ${deg < 0 ? 'links' : 'rechts'} herum`;
+  // Drehung in Worten: ⅛ bis ¾ links/rechts herum
+  SK.turnText = (deg) => `Wendung ${{ 45: '⅛', 90: '¼', 135: '⅜', 180: '½', 225: '⅝', 270: '¾' }[Math.abs(deg)] || `${Math.abs(deg)}°`} ${deg < 0 ? 'links' : 'rechts'} herum`;
 
   // ---------- Einstellungen (nur dieses Gerät) ----------
   const PREF_KEY = 'shotokan-dojo-ansage';

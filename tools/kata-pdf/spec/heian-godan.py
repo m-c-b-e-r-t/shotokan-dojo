@@ -1,0 +1,32 @@
+# Heian Godan – Fußskizze Scan-Seiten 65–66 (Buch S. 120–123)
+PAGES = [65, 66]
+LINES = [[-1, 0, 1, 0], [0, 0, 0, 2]]
+FRAMES = [
+    ('rei', '', 'Musubi-dachi', 0, {'f': [[-0.08, 0.11, 330], [0.1, 0.11, 30]], 'h': 'Verbeugung, Fersen zusammen'}),
+    ('yoi', 'LR', 'Hachiji-dachi', 0, {'h': 'Erst linker, dann rechter Fuß nach außen'}),
+    ('1', 'LR', 'Migi Kokutsu-dachi', 270, {'h': 'Blick nach links, linker Fuß gleitet nach links'}),
+    ('2', 'LR', 'Migi Kokutsu-dachi', 270, {'h': 'Stand bleibt'}),
+    ('3', '', 'Heisoku-dachi', 0, {'f': [[-0.35, 0.14, 0], [-0.23, 0.14, 0]], 'look': 90, 'h': 'Langsam: linker Fuß bleibt, rechter Fuß schließt heran, Blick nach rechts'}),
+    ('4', 'LR', 'Hidari Kokutsu-dachi', 90, {'h': 'Linker Fuß bleibt, rechter Fuß gleitet nach rechts'}),
+    ('5', 'LR', 'Hidari Kokutsu-dachi', 90, {'h': 'Stand bleibt'}),
+    ('6', '', 'Heisoku-dachi', 0, {'f': [[0.19, 0.14, 0], [0.31, 0.14, 0]], 'h': 'Langsam: rechter Fuß bleibt, linker Fuß schließt heran, Blick nach vorne'}),
+    ('7', 'LR', 'Hidari Kokutsu-dachi', 0, {'h': 'Rechter Fuß gleitet nach vorne'}),
+    ('8', 'LR', 'Hidari Zenkutsu-dachi', 0, {'h': 'Rechtes Bein trägt, linker Fuß gleitet vor'}),
+    ('9', 'LR', 'Hidari Zenkutsu-dachi', 0, {'h': 'Stand bleibt'}),
+    ('10', 'LR', 'Hidari Zenkutsu-dachi', 0, {'h': 'Stand bleibt'}),
+    ('11', 'LR', 'Hidari Zenkutsu-dachi', 0, {'h': 'Stand bleibt'}),
+    ('12', 'LR', 'Migi Zenkutsu-dachi', 0, {'h': 'Hüfte nach vorne, rechter Fuß gleitet vor – Kiai'}),
+    ('13', 'RL', 'Kiba-dachi', 90, {'turn': -270, 'look': 180, 'h': 'Linkes Bein trägt, rechter Fuß geht Richtung Start, Drehung links herum in Kiba-dachi – Blick zum Start'}),
+    ('14', 'LR', 'Kiba-dachi', 90, {'look': 0, 'h': 'Stand bleibt, Blick nach vorne'}),
+    ('15', 'L', 'Hidari Ashi-dachi', 0, {'other': [0.15, 1.25, 0], 'h': 'Linkes Bein trägt, Hüfte dreht links herum, Mikazuki-geri in die linke Hand'}),
+    ('16', 'RL', 'Kiba-dachi', 270, {'look': 0, 'h': 'Rechter Fuß setzt nach dem Tritt vorne ab – Kiba-dachi, Blick nach vorne'}),
+    ('17', 'RL', 'Migi Ashi-mae Kosa-dachi', 270, {'look': 0, 'h': 'Rechtes Knie bleibt gebeugt, linker Fuß kreuzt hinter die rechte Ferse'}),
+    ('18', 'RL', 'Migi Renoji-dachi', 270, {'look': 180, 'w': [0.3, 0.7], 'h': 'Blick zum Start, linkes Bein streckt nach links Richtung Start aus (Renoji-dachi)'}),
+    ('19', 'LR', 'Migi Ashi-mae Kosa-dachi', 90, {'turn': -180, 'h': 'Sprung (Tobikomi) Richtung Start mit Kiai, halbe Drehung links herum, Landung im Kreuzstand'}),
+    ('20', 'RL', 'Migi Zenkutsu-dachi', 180, {'h': 'Rechter Fuß gleitet nach rechts Richtung Start'}),
+    ('21', 'LR', 'Migi Kokutsu-dachi', 0, {'turn': -180, 'h': 'Blick nach links zur Vorderseite, Gewicht nach hinten aufs rechte Bein'}),
+    ('22', '', 'Heisoku-dachi', 90, {'f': [[-0.09, 0.16, 90], [-0.09, 0.04, 90]], 'turn': 0, 'look': 0, 'h': 'Langsam: Oberkörper bleibt, linker Fuß schließt an den rechten'}),
+    ('23', 'LR', 'Hidari Kokutsu-dachi', 0, {'h': 'Linkes Bein trägt, rechter Fuß gleitet nach vorne'}),
+    ('naore', 'LR', 'Hachiji-dachi', 0, {'h': 'Linker Fuß bleibt, rechter Fuß zieht zurück in Yoi'}),
+    ('end', 'LR', 'Musubi-dachi', 0, {'h': 'Verbeugung, Ende der Kata'}),
+]

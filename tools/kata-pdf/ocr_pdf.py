@@ -1,17 +1,22 @@
-"""OCR fuer PDF-Seiten ohne Textebene (PyMuPDF + RapidOCR). Haengt Ergebnis an tools/out/ an."""
+"""OCR fuer alle Scan-Seiten des Kata-PDFs (PyMuPDF + RapidOCR). Ergebnis: tools/out/pdf_ocr.txt.
+
+Die Scans werden direkt aus dem PDF gelesen (scans.py), weil das normale Rendern Teile der Seiten abschneidet.
+"""
+import sys
 from pathlib import Path
 
-import fitz
+import cv2
 from rapidocr_onnxruntime import RapidOCR
 
-ROOT = Path(__file__).resolve().parents[2]
-PDF = ROOT / "Karate-do-kata-volume-1.pdf"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from scans import ROOT, open_pdf, page_image  # noqa: E402
+
 OUT = ROOT / "tools" / "out"
-IMG = OUT / "pages"
+IMG = OUT / "scan"
 
 
-def ocr_lines(engine: RapidOCR, png: bytes, half_width: float) -> list[str]:
-    result, _ = engine(png)
+def ocr_lines(engine: RapidOCR, img, half_width: float) -> list[str]:
+    result, _ = engine(img)
     if not result:
         return []
     boxes = []
@@ -26,16 +31,13 @@ def ocr_lines(engine: RapidOCR, png: bytes, half_width: float) -> list[str]:
 
 def main() -> None:
     IMG.mkdir(parents=True, exist_ok=True)
-    doc = fitz.open(str(PDF))
+    doc = open_pdf()
     engine = RapidOCR()
     with open(OUT / "pdf_ocr.txt", "w", encoding="utf-8") as f:
-        for i, page in enumerate(doc, start=1):
-            if len(page.get_text().strip()) > 200:
-                continue
-            pix = page.get_pixmap(dpi=200)
-            png = pix.tobytes("png")
-            (IMG / f"s{i:03d}.png").write_bytes(png)
-            lines = ocr_lines(engine, png, pix.width / 2)
+        for i in range(1, len(doc) + 1):
+            img = page_image(doc, i, gray=False)
+            cv2.imwrite(str(IMG / f"s{i:03d}.png"), img)
+            lines = ocr_lines(engine, img, img.shape[1] / 2)
             f.write(f"\n===== SEITE {i} =====\n" + "\n".join(lines) + "\n")
             f.flush()
             print(i, len(lines), flush=True)
