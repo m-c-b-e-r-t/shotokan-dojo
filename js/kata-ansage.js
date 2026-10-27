@@ -47,30 +47,157 @@
     return beat;
   }
 
-  // ---------- Ruhige Füße ----------
-  // Die Stellungen sind aus den Fußskizzen vermessen und streuen um einige Zentimeter. Ein Fuß, der laut Ablauf stehen
-  // bleibt, soll auf der Karte nicht wandern: Bei „Stand bleibt“ übernimmt er Ort und Richtung der vorigen Stellung,
-  // bei „Füße bleiben“ den Ort; sonst gilt alles unterhalb der Messstreuung (STILL) als nicht bewegt.
+  // ---------- Ruhige Füße und saubere Stände ----------
+  // Die Stellungen sind aus den Fußskizzen vermessen und streuen um einige Zentimeter. Zwei Nachbearbeitungen machen die
+  // Karte so genau wie die Skizze gemeint ist:
+  // 1. Ein Fuß, der laut Fußarbeit (h) stehen bleibt, behält exakt seinen Platz – auch wenn er sich auf der Stelle dreht.
+  //    Stehen bleibt er bei „Stand bleibt“ (auch die Richtung), „Füße bleiben“, „linker Fuß bleibt“, „linkes Bein trägt“ o. Ä.,
+  //    oder wenn nur der andere Fuß als bewegt genannt ist; ohne Angabe gilt alles unter der Messstreuung (STILL) als nicht bewegt.
+  // 2. Gleichmäßige Stände werden ausgerichtet: Musubi-, Heisoku-, Hachiji- und Kiba-dachi symmetrisch mit Fersen auf einer Linie
+  //    (bei Musubi- und Hachiji-dachi liegt die Mitte der Fersen auf der nahen Embusen-Linie, bei Heisoku- und Kiba-dachi die
+  //    Fußmitte), bei Zenkutsu- und Kokutsu-dachi zeigt der vordere Fuß genau in Körperrichtung, bei Kokutsu-dachi der hintere quer.
   const STILL = { d: 0.12, deg: 20 };
+  const PIN_MAX = 0.3; // weiter weg gemessen: die Skizze versetzt den Fuß wirklich (sonst geriete der Stand neben die Linien)
+  const SNAP = 0.1; // so nah an einer Embusen-Linie wird der Stand auf sie gesetzt
+  const HEEL = 0.068; // Fersenmitte hinter der Fußmitte (Karteneinheiten, Fußabdruck in Kartengröße)
   const angDiff = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
-  const steadyCache = new WeakMap();
-  function steadyPoses(a) {
-    if (steadyCache.has(a)) return steadyCache.get(a);
-    let prev = a.yoi;
-    const poses = a.moves.map((m) => {
-      const stand = /^(Langsam: )?Stand bleibt/.test(m.h);
-      const feet = stand || /^(Langsam: )?Füße bleiben/.test(m.h);
-      const f = m.f.map((x, i) => {
-        const p = prev.f[i];
-        const keepPos = feet || Math.hypot(x[0] - p[0], x[1] - p[1]) < STILL.d;
-        const keepDir = keepPos && (stand || angDiff(x[2], p[2]) < STILL.deg);
-        return [keepPos ? p[0] : x[0], keepPos ? p[1] : x[1], keepDir ? p[2] : x[2], x[3]];
-      });
-      prev = Object.assign({}, m, { f });
-      return prev;
+  const norm = (d) => ((Math.round(d) % 360) + 360) % 360;
+  const toe = (d) => [Math.sin((d * Math.PI) / 180), Math.cos((d * Math.PI) / 180)];
+  const r2 = (v) => Math.round(v * 100) / 100;
+  const SIDE = ['linke', 'rechte'];
+  const re = (s) => new RegExp(s, 'i');
+  const STAY = SIDE.map((s) => re(`${s}r Fuß bleibt|${s}s Bein trägt|${s}s Knie bleibt|Gewicht aufs ${s} Bein|Hüfte über den ${s}n Fuß|${s}r Fuß hebt.*wieder ab`));
+  const MOVE = SIDE.map((s) => re(`${s}r Fuß (gleitet|schwingt|tritt|setzt|zieht|rückt|stampft|schließt|kreuzt|geht)|${s}r Fuß zum`));
+  const BOTH = /beide Füße gleiten|Yori-ashi|Sprung|Tobikomi/i;
+
+  // Welche Füße behalten ihren Platz? 'stand' = alles bleibt wie vorher
+  function pins(h, prev, raw, f, move) {
+    if (/^(Langsam: )?Stand bleibt/.test(h)) return 'stand';
+    if (/^(Langsam: )?Füße bleiben/.test(h)) return [true, true];
+    const gone = (x, p) => Math.hypot(x[0] - p[0], x[1] - p[1]);
+    const d = f.map((x, i) => gone(x, prev[i]));
+    const said = [0, 1].map((i) => !BOTH.test(h) && (STAY[i].test(h) || (MOVE[1 - i].test(h) && !MOVE[i].test(h))));
+    return [0, 1].map((i) => (said[i] && d[i] < PIN_MAX && gone(f[i], raw[i]) < PIN_MAX && prev[i][3] > 0 && f[i][3] > 0) || (move && d[i] < STILL.d));
+  }
+
+  // Punkt auf nahe Embusen-Linien setzen; hit = mindestens eine Linie war nah genug
+  function snapToLines(m, lines, hit) {
+    lines.forEach(([ax, ay, bx, by]) => {
+      if (ay === by && Math.abs(m[1] - ay) < SNAP && m[0] > Math.min(ax, bx) - SNAP && m[0] < Math.max(ax, bx) + SNAP) { m[1] = ay; if (hit) hit.on = true; }
+      if (ax === bx && Math.abs(m[0] - ax) < SNAP && m[1] > Math.min(ay, by) - SNAP && m[1] < Math.max(ay, by) + SNAP) { m[0] = ax; if (hit) hit.on = true; }
     });
-    steadyCache.set(a, poses);
-    return poses;
+    return m;
+  }
+  // Gleichmäßige Stände: splay = Öffnung je Fuß, gap = fester Abstand der Bezugspunkte, heel = Bezugspunkt Ferse statt Fußmitte
+  const SYM = [
+    [/musubi/i, { splay: 30, gap: 0.06, heel: true }],
+    [/heisoku/i, { splay: 0, gap: 0.1 }],
+    [/hachiji/i, { heel: true }],
+    [/kiba/i, { splay: 0 }],
+  ];
+  // f: Füße nach dem Festhalten, pin: Fuß behält seinen Platz (dreht höchstens auf der Stelle)
+  function shape(f, stance, body, pin, lines, raw) {
+    const sym = SYM.find(([rx]) => rx.test(stance));
+    if (sym) {
+      const o = sym[1];
+      const [s0, s1] = [toe(f[0][2]), toe(f[1][2])];
+      let fwd = (Math.atan2(s0[0] + s1[0], s0[1] + s1[1]) * 180) / Math.PI;
+      const near = Math.round(fwd / 45) * 45;
+      if (angDiff(fwd, near) < 15) fwd = near;
+      const splay = o.splay != null ? o.splay : Math.round(angDiff(f[0][2], f[1][2]) / 10) * 5;
+      const dir = [norm(fwd - splay), norm(fwd + splay)];
+      const k = o.heel ? HEEL : 0;
+      const at = (x, d) => [x[0] - k * toe(d)[0], x[1] - k * toe(d)[1]]; // Bezugspunkt eines Fußes
+      const anchor = f.map((x, i) => at(x, pin[i] ? dir[i] : x[2]));
+      const right = toe(fwd + 90);
+      const gap = o.gap != null ? o.gap : Math.abs((anchor[1][0] - anchor[0][0]) * right[0] + (anchor[1][1] - anchor[0][1]) * right[1]);
+      if (!pin[0] && !pin[1]) {
+        const m = snapToLines([(anchor[0][0] + anchor[1][0]) / 2, (anchor[0][1] + anchor[1][1]) / 2], lines);
+        anchor[0] = [m[0] - (right[0] * gap) / 2, m[1] - (right[1] * gap) / 2];
+        anchor[1] = [m[0] + (right[0] * gap) / 2, m[1] + (right[1] * gap) / 2];
+      } else if (pin[0] !== pin[1]) {
+        // um den stehenden Fuß herum aufbauen; liegt der Stand dann knapp neben einer Linie, rückt er ganz darauf –
+        // den stehenden Fuß korrigiert steadyPoses dann auch in den Stellungen davor, damit er nicht springt
+        const i = pin[0] ? 0 : 1;
+        const s = i ? -1 : 1;
+        anchor[1 - i] = [anchor[i][0] + s * right[0] * gap, anchor[i][1] + s * right[1] * gap];
+        const m = [(anchor[0][0] + anchor[1][0]) / 2, (anchor[0][1] + anchor[1][1]) / 2];
+        const [mx, my] = snapToLines(m.slice(), lines);
+        // steht der Stand laut Skizze auf einer Linie, käme um den stehenden Fuß herum aber daneben: die Linie hat Vorrang
+        const rm = raw.map((x) => at(x, x[2]));
+        const rawM = [(rm[0][0] + rm[1][0]) / 2, (rm[0][1] + rm[1][1]) / 2];
+        const onLine = (q) => { const hit = {}; snapToLines(q.slice(), lines, hit); return !!hit.on; };
+        if (!onLine(m) && onLine(rawM)) return Object.assign(shape(raw, stance, body, [false, false], lines, raw), { free: true });
+        // ein stehender Fuß, der schon genau auf einer Linie steht, bleibt dort (z. B. Heisoku-dachi neben der Mittellinie)
+        const exact = lines.some(([ax, ay, bx, by]) => (ay === by && Math.abs(f[i][1] - ay) < 0.005) || (ax === bx && Math.abs(f[i][0] - ax) < 0.005));
+        if (!exact) anchor.forEach((p) => { p[0] += mx - m[0]; p[1] += my - m[1]; });
+      }
+      return f.map((x, i) => (pin[i] && pin[1 - i] ? [x[0], x[1], dir[i], x[3]] : [r2(anchor[i][0] + k * toe(dir[i])[0]), r2(anchor[i][1] + k * toe(dir[i])[1]), dir[i], x[3]]));
+    }
+    const zen = /zenkutsu/i.test(stance);
+    if (!zen && !/kokutsu/i.test(stance)) return f;
+    // vorne: bei Zenkutsu-dachi trägt der vordere Fuß mehr, bei Kokutsu-dachi der hintere
+    const front = (f[0][3] > f[1][3]) === zen ? 0 : 1;
+    return f.map((x, i) => {
+      let d = x[2];
+      if (i === front && angDiff(d, body) <= 30) d = body;
+      if (i !== front && !zen) {
+        const across = angDiff(d, body + 90) < angDiff(d, body - 90) ? body + 90 : body - 90;
+        if (angDiff(d, across) <= 30) d = across;
+      }
+      return [x[0], x[1], norm(d), x[3]];
+    });
+  }
+
+  const steadyCache = new WeakMap();
+  function steadyPoses(k) {
+    if (steadyCache.has(k)) return steadyCache.get(k);
+    const a = k.ansage;
+    const yoiStance = k.yoi.split(',')[0];
+    let prev = null;
+    const done = [];
+    let raw = null; // vorige Stellung, wie gemessen
+    // Ein festgehaltener Fuß weicht von seiner Messung ab; der bewegte Fuß rückt um dieselbe Strecke mit, damit die Länge
+    // des Standes zur Skizze passt – quer zu einer Embusen-Linie, auf der er laut Skizze steht, bleibt er aber genau dort.
+    const shift = (x, d) => {
+      const q = [x[0] + d[0], x[1] + d[1]];
+      a.lines.forEach(([ax, ay, bx, by]) => {
+        if (ay === by && Math.abs(x[1] - ay) < SNAP && x[0] > Math.min(ax, bx) - SNAP && x[0] < Math.max(ax, bx) + SNAP) q[1] = x[1];
+        if (ax === bx && Math.abs(x[0] - ax) < SNAP && x[1] > Math.min(ay, by) - SNAP && x[1] < Math.max(ay, by) + SNAP) q[0] = x[0];
+      });
+      return q.map(r2);
+    };
+    const fix = (m, stance, move) => {
+      let f = m.f.map((x) => x.slice());
+      let pin = [false, false];
+      let via = m.via;
+      const p = prev ? pins(m.h, prev.f, raw.f, f, move) : pin;
+      if (p === 'stand') f = prev.f.map((x, i) => [x[0], x[1], x[2], f[i][3]]);
+      else {
+        pin = p;
+        const held = pin.map((on, i) => on && [prev.f[i][0] - f[i][0], prev.f[i][1] - f[i][1]]).filter(Boolean);
+        const d = held.length === 1 ? held[0] : [0, 0];
+        f = f.map((x, i) => (pin[i] ? [prev.f[i][0], prev.f[i][1], angDiff(x[2], prev.f[i][2]) < STILL.deg ? prev.f[i][2] : x[2], x[3]] : shift(x, d).concat(x.slice(2))));
+        if (via) via = [via[0]].concat(shift(via.slice(1, 3), d), via[3]);
+        f = shape(f, stance, m.body, pin, a.lines, m.f);
+        pin.forEach((on, i) => {
+          if (!on || f.free) return;
+          const [ox, oy] = prev.f[i];
+          if (f[i][0] === ox && f[i][1] === oy) return;
+          for (let j = done.length - 1; j >= 0 && done[j].f[i][0] === ox && done[j].f[i][1] === oy; j--) done[j].f[i] = [f[i][0], f[i][1]].concat(done[j].f[i].slice(2));
+        });
+      }
+      prev = Object.assign({}, m, { f }, via ? { via } : {});
+      raw = m;
+      done.push(prev);
+      return prev;
+    };
+    const out = { rei: fix(a.rei, 'Musubi-dachi'), yoi: fix(a.yoi, yoiStance) };
+    out.moves = a.moves.map((m, n) => fix(m, k.seq[n][1], true));
+    out.naore = fix(a.naore, yoiStance);
+    out.end = fix(a.end, 'Musubi-dachi');
+    steadyCache.set(k, out);
+    return out;
   }
   SK.ansagePoses = steadyPoses;
 
@@ -79,31 +206,31 @@
     const steps = [];
     let t = 0;
     const a = k.ansage;
-    const poses = steadyPoses(a);
+    const poses = steadyPoses(k);
     const cmd = (key, extra) => Object.assign({ kind: 'cmd', t }, CMD[key], extra);
     if (frame) {
-      steps.push({ kind: 'name', t, kan: '', ro: k.name, kana: a.kana, stance: 'Musubi-dachi', pose: a.rei });
+      steps.push({ kind: 'name', t, kan: '', ro: k.name, kana: a.kana, stance: 'Musubi-dachi', pose: poses.rei });
       t += R.name;
-      steps.push(cmd('rei', { stance: 'Musubi-dachi', pose: a.rei }));
+      steps.push(cmd('rei', { stance: 'Musubi-dachi', pose: poses.rei }));
       t += R.rei;
-      steps.push(cmd('yoi', { stance: k.yoi.split(',')[0], note: k.yoi, pose: a.yoi }));
+      steps.push(cmd('yoi', { stance: k.yoi.split(',')[0], note: k.yoi, pose: poses.yoi }));
       t += Math.max(R.yoi, beat);
     }
     k.seq.forEach((r) => {
       const n = r[0];
       // gezählt wird wie im Dojo nur bis Ju (10), danach wieder ab Ichi
-      steps.push(Object.assign({ kind: 'move', t, n, stance: r[1], tech: r[2], note: r[4] || '', page: r[3], pose: poses[n - 1],
+      steps.push(Object.assign({ kind: 'move', t, n, stance: r[1], tech: r[2], note: r[4] || '', page: r[3], pose: poses.moves[n - 1],
         kiai: k.kiai.includes(n), slow: k.slow.includes(n), cont: k.continuous.some((g) => g.includes(n)) }, count(((n - 1) % 10) + 1)));
       t += n < k.moves ? moveGap(k, n, beat) : R.end * beat;
     });
     if (frame) {
-      steps.push(cmd('naore', { stance: k.yoi.split(',')[0], note: k.naore, pose: a.naore }));
+      steps.push(cmd('naore', { stance: k.yoi.split(',')[0], note: k.naore, pose: poses.naore }));
       t += R.naore;
-      steps.push(cmd('rei', { stance: 'Musubi-dachi', pose: a.end }));
+      steps.push(cmd('rei', { stance: 'Musubi-dachi', pose: poses.end }));
     }
     // vorherige Stellung für Drehung und Fußspuren; vor Bewegung 1 ist das Yoi
     steps.forEach((st, i) => {
-      st.prev = i ? steps[i - 1].pose : a.yoi;
+      st.prev = i ? steps[i - 1].pose : poses.yoi;
       st.say = sayText(st);
     });
     return steps;
@@ -117,8 +244,8 @@
   const P = (x, y) => [Math.round(x * U), Math.round(-y * U)];
   const rad = (d) => ((d - 90) * Math.PI) / 180;
   const pt = (x, y, d, r) => [Math.round(x + Math.cos(rad(d)) * r), Math.round(y + Math.sin(rad(d)) * r)];
-  // Spur nur, wenn der Fuß den Platz wechselt oder deutlich auf der Stelle dreht (kleines Ausdrehen der Ferse zählt nicht)
-  const moved = (a, b) => a[0] !== b[0] || a[1] !== b[1] || angDiff(a[2], b[2]) >= 45;
+  // Spur nur, wenn der Fuß den Platz wechselt – ein Fuß, der auf der Stelle dreht, steht ja noch da
+  const moved = (a, b) => a[0] !== b[0] || a[1] !== b[1];
   function arrow(x, y, d, cls) {
     const [ax, ay] = pt(x, y, d, 92);
     const [bx, by] = pt(x, y, d, 40);

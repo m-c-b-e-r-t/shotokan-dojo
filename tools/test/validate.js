@@ -45,6 +45,13 @@
       else if (p.turn && (p.turn % 45 || Math.abs(p.turn) > 315)) errors.push(`${id}: Stellung ${i} Drehung ${p.turn}`);
       else if (p.via && !(p.via.length === 4 && [0, 1].includes(p.via[0]) && p.via.every(Number.isFinite))) errors.push(`${id}: Stellung ${i} Zwischenstellung unvollständig`);
     });
+    // Saubere Stände: Kiba- und Heisoku-dachi mit parallelen Füßen, Musubi-dachi mit Spitzen ±30°
+    const sp = SK.ansagePoses(k);
+    [['Musubi-dachi', sp.rei], ['Musubi-dachi', sp.end]].concat(sp.moves.map((p, n) => [k.seq[n][1], p])).forEach(([st, p], n) => {
+      const [l, r] = p.f.map((f) => f[2]);
+      if (/kiba|heisoku/i.test(st) && l !== r) errors.push(`${id}: Stellung ${n} ${st} – Füße nicht parallel`);
+      if (/musubi/i.test(st) && (r - l + 360) % 360 !== 60) errors.push(`${id}: Stellung ${n} ${st} – Spitzen nicht ±30°`);
+    });
     [true, false].flatMap((frame) => SK.ansageBeats.map((beat) => [frame, beat])).forEach(([frame, beat]) => {
       const tl = SK.ansageTimeline(k, beat, frame);
       const moves = tl.filter((s) => s.kind === 'move');
