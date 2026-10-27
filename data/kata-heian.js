@@ -332,7 +332,7 @@
     yoi: 'Hachiji-dachi, beide Fäuste vor den Oberschenkeln',
     naore: 'Der linke Fuß bleibt, der rechte Fuß geht zurück; die Hände schließen sich zur Faust in Yoi.',
     continuous: [[5, 6, 7], [8, 9, 10], [16, 17], [20, 21]],
-    slow: [1, 2, 3, 14, 18],
+    slow: [1, 2, 14, 18],
     seq: [
       [1, 'Migi Kokutsu-dachi', 'Hidari Haiwan Hidari Sokumen Jodan Yoko-uke', 40, 'mit offenen Händen, langsam'],
       [2, 'Hidari Kokutsu-dachi', 'Migi Haiwan Migi Sokumen Jodan Yoko-uke', 41, 'mit offenen Händen, langsam'],
@@ -419,7 +419,7 @@
         { f: [[0.11, 1.07, 26, 0.7], [0.27, 0.68, 19, 0.3]], body: 0, h: 'Stand bleibt' },
         { f: [[0.02, 1.05, 345, 0.3], [0.13, 1.58, 356, 0.7]], body: 0, h: 'Hüfte nach vorne, rechter Fuß gleitet vor – Kiai' },
         { f: [[0.22, 0.92, 86, 0.5], [0.21, 0.36, 96, 0.5]], body: 90, look: 180, turn: -270, h: 'Linkes Bein trägt, rechter Fuß geht Richtung Start, Drehung links herum in Kiba-dachi – Blick zum Start' },
-        { f: [[0.24, 0.9, 83, 0.5], [0.25, 0.36, 98, 0.5]], body: 90, look: 0, h: 'Stand bleibt, Blick nach vorne' },
+        { f: [[0.24, 0.9, 83, 0.5], [0.25, 0.36, 98, 0.5]], body: 90, look: 0, h: 'Langsam: Stand bleibt, Blick nach vorne, Hände wie beim Bogenspannen zurückziehen' },
         { f: [[0.08, 1.03, 345, 1], [0.15, 1.25, 0, 0]], body: 0, turn: -90, h: 'Linkes Bein trägt, Hüfte dreht links herum, Mikazuki-geri in die linke Hand' },
         { f: [[-0.03, 0.82, 269, 0.5], [-0.04, 1.32, 270, 0.5]], body: 270, look: 0, turn: -90, h: 'Rechter Fuß setzt nach dem Tritt vorne ab – Kiba-dachi, Blick nach vorne' },
         { f: [[0.05, 1.52, 131, 0.1], [-0.02, 1.38, 278, 0.9]], body: 270, look: 0, h: 'Rechtes Knie bleibt gebeugt, linker Fuß kreuzt hinter die rechte Ferse' },
@@ -436,7 +436,7 @@
     yoi: 'Hachiji-dachi, beide Fäuste vor den Oberschenkeln',
     naore: 'Der linke Fuß bleibt, der rechte Fuß geht zurück in die Yoi-Position.',
     continuous: [[1, 2], [4, 5], [8, 9], [11, 12]],
-    slow: [3, 6, 22],
+    slow: [3, 6, 14, 22],
     seq: [
       [1, 'Migi Kokutsu-dachi', 'Hidari Sokumen Hidari Chudan Uchi-uke', 54],
       [2, 'Migi Kokutsu-dachi', 'Migi Chudan Gyaku-zuki', 54],

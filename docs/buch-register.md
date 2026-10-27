@@ -244,7 +244,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 |---|---|---|---|---|---|
 | 1 | Migi Kokutsu-dachi | Hidari Haiwan Hidari Sokumen Jodan Yoko-uke (mit offenen Händen, langsam) – langsam | Langsam: linker Fuß gleitet nach links | links, Wendung ¼ links herum | 40 |
 | 2 | Hidari Kokutsu-dachi | Migi Haiwan Migi Sokumen Jodan Yoko-uke (mit offenen Händen, langsam) – langsam | Langsam: Füße bleiben am Platz, Blick nach rechts, Gewicht aufs linke Bein, Füße drehen im Uhrzeigersinn | rechts, Wendung ½ rechts herum | 41 |
-| 3 | Hidari Zenkutsu-dachi | Gedan Kosa-uke – langsam | Rechtes Bein trägt, linker Fuß gleitet nach vorne auf die Mittellinie | vorne, Wendung ¼ links herum | 41 |
+| 3 | Hidari Zenkutsu-dachi | Gedan Kosa-uke | Rechtes Bein trägt, linker Fuß gleitet nach vorne auf die Mittellinie | vorne, Wendung ¼ links herum | 41 |
 | 4 | Hidari Kokutsu-dachi | Migi Chudan Morote-uke | Rechter Fuß gleitet vor | vorne | 42 |
 | 5 | Migi Ashi-dachi | Ryoken Migi Koshi-kamae – fließend weiter | Blick nach links, Gewicht aufs rechte Bein, linke Fußsohle an das rechte Knie | vorne, Blick links | 42 |
 | 6 | Migi Ashi-dachi | Hidari Uraken Jodan Yoko-mawashi-uchi + Hidari Yoko-geri-keage – fließend weiter | Stand bleibt: Yoko-geri-keage nach links | vorne, Blick links | 43 |
@@ -307,7 +307,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 11 | Hidari Zenkutsu-dachi | Saken Chudan-zuki – fließend weiter | Stand bleibt | vorne | 58 |
 | 12 | Migi Zenkutsu-dachi | Migi Chudan Oi-zuki – **Kiai** | Hüfte nach vorne, rechter Fuß gleitet vor – Kiai | vorne | 58 |
 | 13 | Kiba-dachi | Migi Sokumen Migi Gedan-barai | Linkes Bein trägt, rechter Fuß geht Richtung Start, Drehung links herum in Kiba-dachi – Blick zum Start | rechts, Blick Start, Wendung ¾ links herum | 59 |
-| 14 | Kiba-dachi | Hidari Tekubi Hidari Sokumen Chudan Kake-uke | Stand bleibt, Blick nach vorne | rechts, Blick vorne | 59 |
+| 14 | Kiba-dachi | Hidari Tekubi Hidari Sokumen Chudan Kake-uke – langsam | Langsam: Stand bleibt, Blick nach vorne, Hände wie beim Bogenspannen zurückziehen | rechts, Blick vorne | 59 |
 | 15 | Hidari Ashi-dachi | Sasho-ni Migi Chudan Mikazuki-geri | Linkes Bein trägt, Hüfte dreht links herum, Mikazuki-geri in die linke Hand | vorne, Wendung ¼ links herum | 60 |
 | 16 | Kiba-dachi | Sasho-ni Migi Mae-enpi | Rechter Fuß setzt nach dem Tritt vorne ab – Kiba-dachi, Blick nach vorne | links, Blick vorne, Wendung ¼ links herum | 60 |
 | 17 | Migi Ashi-mae Kosa-dachi | Migi Sokumen Chudan Morote-uke | Rechtes Knie bleibt gebeugt, linker Fuß kreuzt hinter die rechte Ferse | links, Blick vorne | 61 |
