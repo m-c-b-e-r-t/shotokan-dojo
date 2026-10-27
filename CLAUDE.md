@@ -16,3 +16,8 @@
 - Kata-Fragen nur aus „Karate-Do Kata Vol. 1“ (JKA) mit gedruckter Buchseite (`SK.bookSrc`).
 - Fragen-IDs entstehen aus Lektion, Fragetext und richtiger Antwort (`SK.qb`). `data/legacy-ids.js` ist eingefroren und wird nicht bearbeitet.
 - Das Kata-PDF und `tools/out/` niemals committen.
+
+## Buchwissen (ohne PDF)
+- Bei Fragen zum Buch oder neuen Kata-Inhalten zuerst `docs/buch-register.md` lesen: Seitenzählung, Kapitel, Zusammenfassungen der allgemeinen Kapitel, Hinweise des Buches je Bewegung und Ablauftabellen aller zehn Kata. Nur Fakten und eigene Worte ins Repo, keine Abschriften aus dem Buch.
+- Die Ablauftabellen im Register werden aus den App-Daten erzeugt: nach Änderungen an `seq` oder `ansage` in `data/kata-*.js` `node tools/register-tabellen.js` laufen lassen.
+- Fußstellungen je Bewegung (Kata-Ansage) stehen für alle Kata in `ansage` in `data/kata-*.js`, gewonnen aus den Fußskizzen mit `tools/kata-pdf/` (siehe dortige README). Liegt das PDF wieder vor, immer über `tools/kata-pdf/scans.py` lesen – im PDF sind die Scan-Bilder verschoben und werden beim normalen Rendern abgeschnitten.
