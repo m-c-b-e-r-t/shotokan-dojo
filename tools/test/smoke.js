@@ -74,7 +74,7 @@
         await wait();
         log.push(`Zufall ${scope}: vorher ${before}, nachher ${app.querySelector('.card b').textContent} ungestellt`);
       }
-      for (const h of ['#/', '#/exam', '#/wissen', '#/wissen/da-kampf', '#/wissen/heian-godan-b17', '#/ansage/heian-sandan', '#/lexikon', '#/begriffe', '#/stats']) {
+      for (const h of ['#/', '#/exam', '#/wissen', '#/wissen/da-kampf', '#/wissen/heian-godan-b17', '#/ansage', '#/ansage/heian-sandan', '#/lexikon', '#/begriffe', '#/stats']) {
         location.hash = h;
         await wait();
         log.push(`Seite ${h}: ${app.querySelector('h1') ? app.querySelector('h1').textContent : 'FEHLT'}`);

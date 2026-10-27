@@ -434,7 +434,7 @@
 
     app.innerHTML = '';
     app.append(
-      el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Wissen' }), ' › ', el('a', { href: `#/wissen/${k.id}-ueberblick`, text: k.name })),
+      el('nav', { class: 'crumbs' }, el('a', { href: '#/ansage', text: 'Zählen' }), ' › ', el('span', { text: k.name })),
       el('h1', { text: `${k.name} – Ansage` }),
       el('p', { class: 'muted', text: 'Die App zählt die Kata auf Japanisch im Rhythmus des Buches – wie im Dojo bis Ju und dann wieder ab Ichi. Die Karte zeigt von oben, wo die Füße stehen, wohin der Körper zeigt und wie gedreht wird. Handy hinlegen, Ton an, Start.' }),
       el('div', { class: 'ans-wrap' }, stage,
@@ -453,6 +453,7 @@
         voiceOut,
         el('div', { class: 'actions' }, testBtn),
         lockOut),
+      el('p', { class: 'muted small' }, 'Mehr zur Kata: ', el('a', { href: `#/wissen/${k.id}-ueberblick`, text: `${k.name} im Kata-Wissen` })),
       el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Fußstellungen nach der Embusen-Skizze, ${SK.bookPages(k.ansage.page)}; Drehrichtungen daraus abgeleitet. Das Tempo nennt das Buch nicht – es ist frei einstellbar.` })
     );
     buildTrack();

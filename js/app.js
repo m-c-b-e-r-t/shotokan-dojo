@@ -188,7 +188,6 @@
     learn.innerHTML = (/data-gfx="(mv|tc):/.test(lesson.learn) ? SK.gfxHint : '') + lesson.learn;
     const n = (qByLesson[id] || []).length;
     const open = unlocked(unit, entry.idx);
-    const ansageKata = unit.kind === 'kata' && unit.id.replace(/^kata-/, '');
     app.innerHTML = '';
     app.append(
       el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Wissen' }), ' › ', el('span', { text: unit.title })),
@@ -198,8 +197,7 @@
         'div',
         { class: 'actions' },
         n && open ? el('a', { class: 'btn primary', href: `#/quiz/${id}`, text: `Quiz zu diesem Thema (${n} Fragen)` }) : '',
-        n && !open ? el('span', { class: 'muted small', text: 'Quiz noch gesperrt – im Lernpfad zuerst die vorherige Lektion bestehen.' }) : '',
-        ansageKata && SK.kata[ansageKata] && SK.kata[ansageKata].ansage ? el('a', { class: 'btn', href: `#/ansage/${ansageKata}`, text: '🔊 Kata-Ansage (zählen)' }) : ''
+        n && !open ? el('span', { class: 'muted small', text: 'Quiz noch gesperrt – im Lernpfad zuerst die vorherige Lektion bestehen.' }) : ''
       ),
       el(
         'nav',
@@ -812,10 +810,36 @@
     finishView();
   }
 
+  // Auswahl für die Kata-Ansage (eigener Eintrag in der unteren Leiste)
+  function viewAnsageList() {
+    setNav('ansage');
+    setTitle('Kata zählen');
+    app.innerHTML = '';
+    const list = el('div', { class: 'grade-list' });
+    SK.ansageKata().forEach((id) => {
+      const k = SK.kata[id];
+      const g = SK.grades.find((x) => x.kata.includes(id));
+      list.append(
+        el(
+          'a',
+          { class: 'grade', href: `#/ansage/${id}` },
+          el('span', { class: g ? `belt ${g.cls}` : '' }),
+          el('span', {}, el('span', { class: 'grade-name', text: k.name }), el('span', { class: 'grade-sub muted small', text: `${k.moves} Bewegungen · Kiai bei ${k.kiai.join(' und ')}${g ? ` · Prüfung ${g.name}` : ''}` }))
+        )
+      );
+    });
+    app.append(
+      el('h1', { text: 'Kata zählen' }),
+      el('p', { class: 'muted', text: 'Kata auswählen – die App zählt sie auf Japanisch im Rhythmus des Buches und zeigt dazu die Fußstellungen.' }),
+      list
+    );
+    finishView();
+  }
+
   function viewAnsage(id) {
     const k = SK.kata[id];
     if (!k || !k.ansage) return viewNotFound();
-    setNav('wissen');
+    setNav('ansage');
     setTitle(`${k.name} – Ansage`);
     SK.viewAnsage(app, k);
     finishView();
@@ -843,7 +867,7 @@
     if (view === 'exam') return arg ? viewExamGrade(arg) : viewExamList();
     if (view === 'stats') return viewStats();
     if (view === 'datenschutz') return viewDatenschutz();
-    if (view === 'ansage') return viewAnsage(arg);
+    if (view === 'ansage') return arg ? viewAnsage(arg) : viewAnsageList();
     return viewNotFound();
   }
   window.addEventListener('hashchange', route);
