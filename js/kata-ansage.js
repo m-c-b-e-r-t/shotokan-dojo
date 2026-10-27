@@ -6,10 +6,9 @@
   const { util } = SK;
 
   // ---------- Zählwörter ----------
-  // Kana für die japanische Stimme, in kurzer Dojo-Aussprache: Wie im gesprochenen Japanisch verschwindet das
-  // Schluss-i bzw. -u nach stimmlosen Lauten („Ich“, „Rok“, „Shich“, „Hach“). Das kleine っ lässt die Stimme die Silbe
-  // hart abbrechen, statt den Vokal auszusprechen, wie bei geschriebenen Zählrufen (いちっ、にっ …) üblich.
-  const KANA = ['', 'いちっ', 'に', 'さん', 'し', 'ご', 'ろくっ', 'しちっ', 'はちっ', 'く'];
+  // Kana für die japanische Stimme in normaler Schreibweise. Die kurze Dojo-Aussprache („Ich“, „Shich“, „Hach“) lässt
+  // sich über die Schreibweise nicht erzwingen – Dehnungszeichen und kleines っ wurden ausprobiert und verworfen.
+  const KANA = ['', 'いち', 'に', 'さん', 'し', 'ご', 'ろく', 'しち', 'はち', 'く'];
   const RO = ['', 'Ichi', 'Ni', 'San', 'Shi', 'Go', 'Roku', 'Shichi', 'Hachi', 'Ku'];
   const KAN = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
   function count(n) {
