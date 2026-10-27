@@ -345,7 +345,8 @@
   SK.ansageKata = () => SK.kataOrder.filter((id) => SK.kata[id].ansage);
 
   // ---------- Bodenkarte (Embusen von oben) ----------
-  // Nur die Füße, die sich bewegt haben, bleiben gestrichelt an der alten Stelle – sonst wird die Karte unübersichtlich.
+  // Nur die Füße, die sich bewegt haben, bleiben blass an der alten Stelle – sonst wird die Karte unübersichtlich.
+  // Gestrichelt (rot) ist ein angehobener Fuß der aktuellen Stellung.
   const U = 250; // Karteneinheiten je halbe Grundlinie
   const P = (x, y) => [Math.round(x * U), Math.round(-y * U)];
   const rad = (d) => ((d - 90) * Math.PI) / 180;
@@ -399,15 +400,15 @@
     svg += `<text class="emb-txt" x="0" y="${Math.round(-y1 + 30)}" text-anchor="middle">▲ vorne (Shomen)</text>`;
     svg += `<text class="emb-txt" x="0" y="${Math.round(-y0 - 12)}" text-anchor="middle">Start</text>`;
     const side = (i) => (i ? 'R' : 'L');
-    if (prev) prev.f.forEach((f, i) => { if (moved(f, pose.f[i])) svg += SK.gfx.foot(...P(f[0], f[1]), f[2], 0, { side: side(i), scale: 1 }); });
+    if (prev) prev.f.forEach((f, i) => { if (moved(f, pose.f[i])) svg += SK.gfx.foot(...P(f[0], f[1]), f[2], 0, { side: side(i), scale: 1, was: true }); });
     const [cx, cy] = P((pose.f[0][0] + pose.f[1][0]) / 2, (pose.f[0][1] + pose.f[1][1]) / 2);
     if (pose.turn && prev) svg += turnArc(cx, cy, prev.body, pose.turn);
     if (pose.via) {
       const [i, vx, vy, vd] = pose.via;
       const v = P(vx, vy);
-      svg += SK.gfx.foot(...v, vd, 0, { side: side(i), scale: 1 }) + viaArrow(P(pose.f[i][0], pose.f[i][1]), v);
+      svg += SK.gfx.foot(...v, vd, 0, { side: side(i), scale: 1, was: true }) + viaArrow(P(pose.f[i][0], pose.f[i][1]), v);
     }
-    pose.f.forEach((f, i) => { svg += SK.gfx.foot(...P(f[0], f[1]), f[2], f[3], { side: side(i), scale: 1 }); });
+    pose.f.forEach((f, i) => { svg += SK.gfx.foot(...P(f[0], f[1]), f[2], f[3], { side: side(i), scale: 1, lift: '#e53935' }); });
     svg += arrow(cx, cy, pose.body, 'emb-body');
     if (pose.look != null) svg += arrow(cx, cy, pose.look, 'emb-look');
     return `<svg class="emb-map" viewBox="${Math.round(x0)} ${Math.round(-y1)} ${Math.round(x1 - x0)} ${Math.round(y1 - y0)}" role="img" aria-label="Fußstellung von oben">${svg}</svg>`;
@@ -719,7 +720,7 @@
           tempoOut),
         track,
         el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-kiai', text: 'Kiai' }), el('span', { class: 'lg-slow', text: 'langsam' }), el('span', { class: 'lg-link', text: 'fließend zur nächsten' })),
-        el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }))),
+        el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-lift', text: 'Fuß angehoben' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }))),
       ...(fsBtn ? [el('div', { class: 'actions' }, fsBtn)] : []),
       el('p', { class: 'muted small' }, 'Mehr zur Kata: ', el('a', { href: `#/wissen/${k.id}-ueberblick`, text: `${k.name} im Kata-Wissen` })),
       el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Fußstellungen nach der Embusen-Skizze, ${SK.bookPages(k.ansage.page)}; Drehrichtungen daraus abgeleitet. Das Tempo nennt das Buch nicht – voreingestellt ist das Trainingstempo von 2 s je Bewegung.` })

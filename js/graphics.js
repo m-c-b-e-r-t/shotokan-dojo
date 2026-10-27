@@ -114,7 +114,9 @@
     const opt = o || {};
     const sc = opt.scale || FS;
     const t = `translate(${x} ${y}) rotate(${r}) scale(${opt.side === 'R' ? -sc : sc} ${sc})`;
-    if (!w) return `<g transform="${t}" fill="none" stroke="${GHOST}" stroke-width="1.8" stroke-dasharray="3 2.5"><path d="${SOLE}"/>${TOES}</g>`;
+    // was = Fuß vorher (blasser Abdruck); w = 0 = angehoben (gestrichelt, Farbe lift oder grau)
+    if (opt.was) return `<g transform="${t}" fill="${GHOST}" opacity="0.4"><path d="${SOLE}"/>${TOES}</g>`;
+    if (!w) return `<g transform="${t}" fill="none" stroke="${opt.lift || GHOST}" stroke-width="1.8" stroke-dasharray="3 2.5"><path d="${SOLE}"/>${TOES}</g>`;
     const fill = w >= 0.6 ? RED : w >= 0.4 ? MID : LIGHT;
     if (opt.ball) return `<g transform="${t}"><path d="${SOLE}" fill="none" stroke="${fill}" stroke-width="1.8" stroke-dasharray="3 2.5"/><g fill="${fill}"><path d="${BALL}"/>${TOES}</g></g>`;
     return `<g transform="${t}" fill="${fill}"><path d="${SOLE}"/>${TOES}</g>`;

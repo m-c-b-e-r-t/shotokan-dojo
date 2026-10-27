@@ -1600,7 +1600,13 @@ details.unit>summary::-webkit-details-marker {
 }
 
 .ans-legend .lg-ghost::before {
-  border: 2px dashed #90a4ae;
+  background: #90a4ae;
+  border-color: #90a4ae;
+  opacity: 0.4;
+}
+
+.ans-legend .lg-lift::before {
+  border: 2px dashed #e53935;
 }
 
 .ans-legend .lg-body::before {
