@@ -4,7 +4,7 @@ Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikett
 
 - Kata-Fragen stammen ausschließlich aus „Karate-Do Kata Vol. 1“ (JKA) – mit Angabe der gedruckten Buchseiten.
 - Getrennte Bereiche: **Wissen** (alle Inhalte + Lexikon mit Grafiken), **Quiz** (Lernpfad, Zufallsmix aus dem Gesamtpool), **Begriffe-Trainer** (Stände, Techniken, Körperwaffen stumpf abfragen), **Prüfungen** (DJKB-Prüfungsprogramm je Gürtel, unterteilt in Kihon, Kata, Kumite und Theorie).
-- **Kata-Ansage** (eigener Eintrag „Zählen“ in der unteren Leiste, alle zehn Kata des Buches): zählt die Kata auf Japanisch im Rhythmus des Buches (fließend, langsam, Kiai; wie im Dojo bis 10, dann wieder ab 1), zeigt jede Stellung auf einer Bodenkarte von oben nach der Embusen-Skizze im Buch und hält den Bildschirm an.
+- **Kata-Ansage** (eigener Eintrag „Üben“ in der unteren Leiste, alle zehn Kata des Buches): zählt die Kata auf Japanisch im Rhythmus des Buches (fließend, langsam, Kiai; wie im Dojo bis 10, dann wieder ab 1), zeigt jede Stellung auf einer Bodenkarte von oben nach der Embusen-Skizze im Buch und hält den Bildschirm an.
 - Lernpfad mit allen Lektionen frei zugänglich, Wiederholung nach Karteikasten-Prinzip.
 - Fortschritt nur lokal im Browser (localStorage), Export/Import unter „Fortschritt“.
 

@@ -434,7 +434,7 @@
 
     app.innerHTML = '';
     app.append(
-      el('nav', { class: 'crumbs' }, el('a', { href: '#/ansage', text: 'Zählen' }), ' › ', el('span', { text: k.name })),
+      el('nav', { class: 'crumbs' }, el('a', { href: '#/ansage', text: 'Üben' }), ' › ', el('span', { text: k.name })),
       el('h1', { text: `${k.name} – Ansage` }),
       el('p', { class: 'muted', text: 'Die App zählt die Kata auf Japanisch im Rhythmus des Buches – wie im Dojo bis Ju und dann wieder ab Ichi. Die Karte zeigt von oben, wo die Füße stehen, wohin der Körper zeigt und wie gedreht wird. Handy hinlegen, Ton an, Start.' }),
       el('div', { class: 'ans-wrap' }, stage,
