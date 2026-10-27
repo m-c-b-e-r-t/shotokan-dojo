@@ -65,11 +65,13 @@
   const PIN_MAX = 0.6; // weiter versetzt die Skizze einen Fuß nur, wenn er sich wirklich bewegt
   const SNAP = 0.1; // so nah an einer Embusen-Linie wird der Stand auf sie gesetzt
   const ON_LINE = 0.03; // so nah an einer Linie steht ein Fuß in der Skizze „auf“ ihr
+  const NEAR = 0.2; // so nah an einer Linie steht ein gleichmäßiger Stand (Kiba-dachi …) in der Skizze auf ihr
   const HEEL = 0.068; // Fersenmitte hinter der Fußmitte (Karteneinheiten, Fußabdruck in Kartengröße)
   const angDiff = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
   const norm = (d) => ((Math.round(d) % 360) + 360) % 360;
   const toe = (d) => [Math.sin((d * Math.PI) / 180), Math.cos((d * Math.PI) / 180)];
   const r2 = (v) => Math.round(v * 100) / 100;
+  const mid = (f) => [(f[0][0] + f[1][0]) / 2, (f[0][1] + f[1][1]) / 2];
   const SIDE = ['linke', 'rechte'];
   const re = (s) => new RegExp(s, 'i');
   const STAY = SIDE.map((s) => re(`${s}r Fuß bleibt|${s}s Bein trägt|${s}s Knie bleibt|Gewicht aufs ${s} Bein|Hüfte über den ${s}n Fuß|${s}r Fuß hebt.*wieder ab`));
@@ -102,22 +104,36 @@
   // Gleichmäßige Stände: splay = Öffnung je Fuß, gap = fester Abstand der Bezugspunkte, heel = Bezugspunkt Ferse statt Fußmitte
   const SYM = [
     [/musubi/i, { splay: 30, gap: 0.06, heel: true }],
-    [/heisoku/i, { splay: 0, gap: 0.1 }],
+    [/heisoku/i, { splay: 0, gap: 0.1, either: true }],
     [/hachiji/i, { heel: true }],
-    [/kiba/i, { splay: 0 }],
+    [/kiba/i, { splay: 0, either: true }],
   ];
+  // Bezugspunkt eines gleichmäßigen Standes: Ferse (heel) oder Fußmitte; bei parallelen Füßen (either) das, was in der
+  // Skizze näher an einer Linie liegt – Tekki zeichnet die Füße mit der Mitte, Heian Sandan und Jion mit den Fersen auf der Linie
+  const symFwd = (f) => {
+    const [s0, s1] = [toe(f[0][2]), toe(f[1][2])];
+    const fwd = (Math.atan2(s0[0] + s1[0], s0[1] + s1[1]) * 180) / Math.PI;
+    const near = Math.round(fwd / 45) * 45;
+    return angDiff(fwd, near) < 15 ? near : fwd;
+  };
+  function symHeel(o, f, lines) {
+    if (!o.either) return o.heel ? HEEL : 0;
+    const c = symFwd(f) % 180 ? 0 : 1; // nur Linien quer zur Zehenrichtung zählen
+    const gap = (k) => {
+      const m = mid(f.map((x) => [x[0] - k * toe(x[2])[0], x[1] - k * toe(x[2])[1]]));
+      return Math.min(1, ...lines.map((l) => (l[c] === l[c + 2] ? Math.abs(m[c] - l[c]) : 1)));
+    };
+    return gap(HEEL) < gap(0) ? HEEL : 0;
+  }
   // f: Füße nach dem Ausgleich, pin: Fuß steht wie in der Stellung davor (dreht höchstens auf der Stelle)
-  function shape(f, stance, body, pin, lines) {
+  function shape(f, stance, body, pin, lines, heel) {
     const sym = SYM.find(([rx]) => rx.test(stance));
     if (sym) {
       const o = sym[1];
-      const [s0, s1] = [toe(f[0][2]), toe(f[1][2])];
-      let fwd = (Math.atan2(s0[0] + s1[0], s0[1] + s1[1]) * 180) / Math.PI;
-      const near = Math.round(fwd / 45) * 45;
-      if (angDiff(fwd, near) < 15) fwd = near;
+      const fwd = symFwd(f);
       const splay = o.splay != null ? o.splay : Math.round(angDiff(f[0][2], f[1][2]) / 10) * 5;
       const dir = [norm(fwd - splay), norm(fwd + splay)];
-      const k = o.heel ? HEEL : 0;
+      const k = heel != null ? heel : symHeel(o, f, lines);
       const at = (x, d) => [x[0] - k * toe(d)[0], x[1] - k * toe(d)[1]]; // Bezugspunkt eines Fußes
       const anchor = f.map((x, i) => at(x, pin[i] ? dir[i] : x[2]));
       const right = toe(fwd + 90);
@@ -135,7 +151,9 @@
         anchor[1 - i] = [anchor[i][0] + s * right[0] * gap, anchor[i][1] + s * right[1] * gap];
         const m = [(anchor[0][0] + anchor[1][0]) / 2, (anchor[0][1] + anchor[1][1]) / 2];
         const [mx, my] = snapToLines(m.slice(), lines);
-        if (!lines.some((l) => lineAt(f[i], l, 0.005))) anchor.forEach((p) => { p[0] += mx - m[0]; p[1] += my - m[1]; });
+        // (ganz kleine Versätze, etwa weil die Ferse beim Ausdrehen wandert, bleiben – sonst rückten die Stände davor mit)
+        const small = (v) => (Math.abs(v) < 0.015 ? 0 : v);
+        if (!lines.some((l) => lineAt(f[i], l, 0.005))) anchor.forEach((p) => { p[0] += small(mx - m[0]); p[1] += small(my - m[1]); });
       }
       return f.map((x, i) => (pin[i] && pin[1 - i] ? [x[0], x[1], dir[i], x[3]] : [r2(anchor[i][0] + k * toe(dir[i])[0]), r2(anchor[i][1] + k * toe(dir[i])[1]), dir[i], x[3]]));
     }
@@ -160,29 +178,28 @@
   const W_OFF = 0.3;
   const W_FRAME = 20;
   const W_LINE = 4;
-  function balance(raw, seg, nSeg, frame, lines) {
-    const pos = Array.from({ length: nSeg }, () => [0, 0]);
+  const W_SYM = 1; // gleichmäßiger Stand nahe einer Linie – schwächer als ein Fuß, der in der Skizze auf ihr steht
+  function balance(raw, seg, nSeg, frame, lines, extra) {
+    const pos = Array.from({ length: nSeg }, () => [0, 0]); // je Platz nur die Achse c genutzt, zu der er gehört
     const off = raw.map(() => [0, 0]);
-    const onL = raw.map((p) => p.f.map((x) => lines.map((l) => lineAt(x, l, ON_LINE)).filter(Boolean)));
+    const onL = raw.map((p, j) => p.f.map((x, i) => lines.map((l) => lineAt(x, l, ON_LINE)).filter(Boolean).concat(extra[j][i])));
     for (let it = 0; it < 400; it++) {
       const sum = pos.map(() => [0, 0]);
       const cnt = pos.map(() => [0, 0]);
       raw.forEach((p, j) => p.f.forEach((x, i) => {
-        const s = seg[j][i];
-        for (let c = 0; c < 2; c++) { sum[s][c] += x[c] - off[j][c]; cnt[s][c] += 1; }
-        onL[j][i].forEach(([c, v]) => { sum[s][c] += W_LINE * v; cnt[s][c] += W_LINE; });
+        for (let c = 0; c < 2; c++) { const s = seg[j][i][c]; sum[s][c] += x[c] - off[j][c]; cnt[s][c] += 1; }
+        onL[j][i].forEach(([c, v, w = W_LINE]) => { const s = seg[j][i][c]; sum[s][c] += w * v; cnt[s][c] += w; });
       }));
-      pos.forEach((q, s) => { q[0] = sum[s][0] / cnt[s][0]; q[1] = sum[s][1] / cnt[s][1]; });
+      pos.forEach((q, s) => { for (let c = 0; c < 2; c++) if (cnt[s][c]) q[c] = sum[s][c] / cnt[s][c]; });
       raw.forEach((p, j) => {
         const w = frame[j] ? W_FRAME : W_OFF;
-        for (let c = 0; c < 2; c++) off[j][c] = p.f.reduce((t, x, i) => t + x[c] - pos[seg[j][i]][c], 0) / (2 + w);
+        for (let c = 0; c < 2; c++) off[j][c] = p.f.reduce((t, x, i) => t + x[c] - pos[seg[j][i][c]][c], 0) / (2 + w);
       });
     }
     return { pos, off };
   }
 
   const steadyCache = new WeakMap();
-  const mid = (f) => [(f[0][0] + f[1][0]) / 2, (f[0][1] + f[1][1]) / 2];
   function steadyPoses(k) {
     if (steadyCache.has(k)) return steadyCache.get(k);
     const out = steadyRun(k);
@@ -195,15 +212,43 @@
     const raw = [a.rei, a.yoi].concat(a.moves, [a.naore, a.end]);
     const stances = ['Musubi-dachi', yoiStance].concat(k.seq.map((r) => r[1]), [yoiStance, 'Musubi-dachi']);
     const frame = raw.map((p, j) => j < 2 || j >= raw.length - 2);
-    // Punkt 1: wer steht? Daraus die Plätze (seg = Nummer des Platzes je Bild und Fuß)
+    // Punkt 1: wer steht? Daraus die Plätze (seg = Nummer des Platzes je Bild, Fuß und Achse x/y)
     const pin = raw.map((p, j) => (j ? pins(p.h, raw[j - 1].f, p.f, !frame[j]) : [false, false]));
+    // Yori-ashi: der Stand gleitet nur in eine Richtung – quer dazu bleiben beide Füße, wo sie waren
+    const slide = raw.map((p, j) => {
+      if (!j || !/Yori-ashi/.test(p.h) || pin[j] === 'stand') return null;
+      const d = [0, 1].map((c) => Math.abs(p.f[0][c] - raw[j - 1].f[0][c]) + Math.abs(p.f[1][c] - raw[j - 1].f[1][c]));
+      if (Math.min(...d) > 0.3 * Math.max(...d)) return null; // mit Drehung (z. B. Jion 46): kein reines Gleiten
+      return d[0] > d[1] ? 1 : 0; // Achse, die gleich bleibt
+    });
     let nSeg = 0;
     const seg = [];
     raw.forEach((p, j) => {
       const keep = pin[j] === 'stand' ? [true, true] : pin[j];
-      seg.push([0, 1].map((i) => (j && keep[i] ? seg[j - 1][i] : nSeg++)));
+      seg.push([0, 1].map((i) => [0, 1].map((c) => (j && (keep[i] || slide[j] === c) ? seg[j - 1][i][c] : nSeg++))));
     });
-    const { pos, off } = balance(raw, seg, nSeg, frame, a.lines);
+    // gleichmäßige Stände schon im Ausgleich: beide Füße gleich weit vorne (bei Kiba-dachi quer zur Linie also gleich hoch),
+    // und liegt der Stand nahe an einer Linie (bis NEAR), soll sein Bezugspunkt auf ihr liegen
+    const root = Array.from({ length: nSeg }, (v, i) => i);
+    const find = (x) => (root[x] === x ? x : (root[x] = find(root[x])));
+    const extra = raw.map(() => [[], []]);
+    const heelAt = raw.map(() => null); // Bezugspunkt je Bild, aus der Skizze bestimmt
+    raw.forEach((p, j) => {
+      const sym = SYM.find(([rx]) => rx.test(stances[j]));
+      if (!sym) return;
+      const fwd = symFwd(p.f);
+      if (fwd % 90) return;
+      const c = fwd % 180 ? 0 : 1; // Achse, auf der beide Füße gleich weit vorne stehen
+      root[find(seg[j][0][c])] = find(seg[j][1][c]);
+      const k = symHeel(sym[1], p.f, a.lines);
+      heelAt[j] = k;
+      const back = p.f.map((x) => k * toe(x[2])[c]);
+      const m = (p.f[0][c] - back[0] + p.f[1][c] - back[1]) / 2;
+      const line = a.lines.find((l) => l[c] === l[c + 2] && Math.abs(m - l[c]) < NEAR);
+      if (line) p.f.forEach((x, i) => extra[j][i].push([c, line[c] + back[i], W_SYM]));
+    });
+    seg.forEach((sj) => sj.forEach((si) => { si[0] = find(si[0]); si[1] = find(si[1]); }));
+    const { pos, off } = balance(raw, seg, nSeg, frame, a.lines, extra);
     // Punkt 3 der Reihe nach, Richtungen: ein stehender Fuß behält seine Richtung, wenn er kaum dreht
     const done = [];
     raw.forEach((m, j) => {
@@ -211,16 +256,27 @@
       const held = pin[j] === 'stand' ? [true, true] : pin[j];
       let f = m.f.map((x, i) => {
         const d = held[i] && (pin[j] === 'stand' || angDiff(x[2], prev.f[i][2]) < STILL.deg) ? prev.f[i][2] : x[2];
-        return held[i] ? [prev.f[i][0], prev.f[i][1], d, x[3]] : [r2(pos[seg[j][i]][0]), r2(pos[seg[j][i]][1]), d, x[3]];
+        return held[i] ? [prev.f[i][0], prev.f[i][1], d, x[3]] : [r2(pos[seg[j][i][0]][0]), r2(pos[seg[j][i][1]][1]), d, x[3]];
       });
       if (pin[j] !== 'stand') {
-        f = shape(f, stances[j], m.body, held, a.lines);
-        // gleichmäßiger Stand hat einen stehenden Fuß versetzt: auch in den Stellungen davor, damit er nicht springt
+        f = shape(f, stances[j], m.body, held, a.lines, heelAt[j]);
+        // gleichmäßiger Stand hat einen stehenden Fuß versetzt: auch in den Stellungen davor, damit er nicht springt.
+        // In einem gleichmäßigen Stand davor rückt der ganze Stand mit (sonst würde er schief), dann auch der andere Fuß
+        // in den Stellungen vor diesem Stand.
         held.forEach((on, i) => {
           if (!on) return;
           const [ox, oy] = prev.f[i];
-          if (f[i][0] === ox && f[i][1] === oy) return;
-          for (let q = done.length - 1; q >= 0 && done[q].f[i][0] === ox && done[q].f[i][1] === oy; q--) done[q].f[i] = [f[i][0], f[i][1]].concat(done[q].f[i].slice(2));
+          const dx = f[i][0] - ox;
+          const dy = f[i][1] - oy;
+          if (!dx && !dy) return;
+          const live = { [i]: [ox, oy] };
+          for (let q = done.length - 1; q >= 0; q--) {
+            const g = done[q].f;
+            Object.keys(live).forEach((t) => { if (g[t][0] !== live[t][0] || g[t][1] !== live[t][1]) delete live[t]; });
+            if (!Object.keys(live).length) break;
+            if (SYM.some(([rx]) => rx.test(stances[q]))) [0, 1].forEach((t) => { if (!live[t]) live[t] = g[t].slice(0, 2); });
+            done[q].f = g.map((x, t) => (live[t] ? [r2(x[0] + dx), r2(x[1] + dy)].concat(x.slice(2)) : x));
+          }
         });
       }
       const via = m.via && [m.via[0], r2(m.via[1] - off[j][0]), r2(m.via[2] - off[j][1]), m.via[3]];
@@ -304,7 +360,8 @@
     return `<path class="emb-via" d="M${sx} ${sy} L${ex} ${ey}"/><path class="emb-turn-head" d="${head(ex, ey, d)} ${head(sx, sy, d + 180)}"/>`;
   }
   // Ausschnitt fest je Kata, damit die Karte beim Zählen nicht springt
-  function bounds(a) {
+  function bounds(k) {
+    const a = steadyPoses(k);
     const pts = [a.rei, a.yoi, a.naore, a.end].concat(a.moves).flatMap((p) => p.f);
     const xs = pts.map((f) => f[0]).concat(0);
     const ys = pts.map((f) => f[1]).concat(0);
@@ -313,7 +370,7 @@
   }
   SK.embusenSvg = function (k, pose, prev) {
     const a = k.ansage;
-    const [x0, x1, y0, y1] = bounds(a);
+    const [x0, x1, y0, y1] = bounds(k);
     let g = '';
     for (let x = Math.ceil(x0 / 50) * 50; x <= x1; x += 50) g += `M${x} ${-y1} V${-y0}`;
     for (let y = Math.ceil(y0 / 50) * 50; y <= y1; y += 50) g += `M${x0} ${-y} H${x1}`;
