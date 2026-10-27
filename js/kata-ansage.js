@@ -416,13 +416,25 @@
     return `<path class="emb-via" d="M${sx} ${sy} L${ex} ${ey}"/><path class="emb-turn-head" d="${head(ex, ey, d)} ${head(sx, sy, d + 180)}"/>`;
   }
   // Ausschnitt fest je Kata, damit die Karte beim Zählen nicht springt
-  function bounds(k) {
+  function fit(k) {
     const a = steadyPoses(k);
     const pts = [a.rei, a.yoi, a.naore, a.end].concat(a.moves).flatMap((p) => p.f);
     const xs = pts.map((f) => f[0]).concat(0);
     const ys = pts.map((f) => f[1]).concat(0);
     const m = 0.62;
     return [Math.min(...xs) - m, Math.max(...xs) + m, Math.min(...ys) - 0.42, Math.max(...ys) + 0.55].map((v) => v * U);
+  }
+  // Alle Kata bekommen gleich große Karten (die größte), damit die Füße überall gleich groß erscheinen
+  let size = null;
+  function bounds(k) {
+    if (!size) {
+      const all = SK.ansageKata().map((id) => fit(SK.kata[id]));
+      size = [Math.max(...all.map((b) => b[1] - b[0])), Math.max(...all.map((b) => b[3] - b[2]))];
+    }
+    const [x0, x1, y0, y1] = fit(k);
+    const dx = (size[0] - (x1 - x0)) / 2;
+    const dy = (size[1] - (y1 - y0)) / 2;
+    return [x0 - dx, x1 + dx, y0 - dy, y1 + dy];
   }
   SK.embusenSvg = function (k, pose, prev) {
     const a = k.ansage;
