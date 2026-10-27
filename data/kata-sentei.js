@@ -495,7 +495,7 @@
       rei: { f: [[-0.03, 0.1, 330, 0.5], [0.07, 0.1, 30, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
       yoi: { f: [[-0.05, 0.14, 0, 0.5], [0.07, 0.14, 0, 0.5]], body: 0, h: 'Füße geschlossen (Heisoku-dachi)' },
       moves: [
-        { f: [[-0.37, 0.07, 269, 0.6], [0.11, 0.24, 100, 0.4]], body: 270, turn: -90, h: 'Linker Fuß tritt nach links, rechtes Knie geht zu Boden (Orishiki)' },
+        { f: [[-0.37, 0.07, 269, 0.6], [0.11, 0.24, 280, 0.4]], body: 270, turn: -90, h: 'Linker Fuß tritt nach links, rechtes Knie geht zu Boden (Orishiki)' },
         { f: [[-0.29, 0.21, 335, 0.5], [0.26, 0.22, 23, 0.5]], body: 0, look: 270, turn: 90, h: 'Aufrichten aus dem Knien – etwas breiterer Hachiji-dachi' },
         { f: [[-0.04, 0.17, 63, 0.3], [0.66, 0.13, 73, 0.7]], body: 90, turn: 90, h: 'Rechter Fuß gleitet nach rechts (Ashi-zenkutsu)' },
         { f: [[-0.11, 0.18, 355, 0.5], [0.5, 0.21, 354, 0.5]], body: 0, look: 90, turn: -90, h: 'Füße drehen nach vorne – Kiba-dachi' },
