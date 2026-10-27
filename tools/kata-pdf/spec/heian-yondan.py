@@ -16,7 +16,7 @@ FRAMES = [
     ('10', 'LR', 'Migi Zenkutsu-dachi', 90, {'h': 'Rechter Fuß setzt nach rechts ab'}),
     ('11', 'LR', 'Hidari Hizakutsu', 0, {'w': [0.6, 0.4], 'h': 'Füße bleiben am Platz, Hüfte und Blick nach vorne'}),
     ('12', 'L', 'Hidari Ashi-dachi', 0, {'other': [-0.3, 1.3, 0], 'h': 'Hüfte über den linken Fuß, rechtes Knie hoch, Mae-geri-keage nach vorne'}),
-    ('13', 'LR', 'Migi Ashi-mae Kosa-dachi', 0, {'h': 'Sprungschritt nach vorne: rechter Fuß landet und trägt, linker Fuß steht gekreuzt dahinter auf dem Ballen – Kiai'}),
+    ('13', 'RL', 'Migi Ashi-mae Kosa-dachi', 0, {'h': 'Sprungschritt nach vorne: rechter Fuß landet und trägt, linker Fuß steht gekreuzt dahinter auf dem Ballen – Kiai'}),
     ('14', 'RL', 'Migi Kokutsu-dachi', 135, {'turn': -225, 'h': 'Rechtes Bein trägt, linker Fuß gleitet von hinten schräg nach rechts hinten, Drehung links herum'}),
     ('15', 'L', 'Hidari Ashi-dachi', 135, {'other': [0.28, 1.55, 135], 'h': 'Hüfte über den linken Fuß, rechtes Knie hoch, Mae-geri-keage'}),
     ('16', 'LR', 'Migi Zenkutsu-dachi', 135, {'h': 'Rechter Fuß setzt nach dem Tritt vorne ab'}),

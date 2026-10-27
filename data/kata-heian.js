@@ -306,7 +306,7 @@
         { f: [[-0.23, 1.03, 47, 0.3], [0.44, 0.97, 83, 0.7]], body: 90, turn: 90, h: 'Rechter Fuß setzt nach rechts ab' },
         { f: [[-0.33, 1.28, 5, 0.6], [0.3, 1.22, 325, 0.4]], body: 0, turn: -90, h: 'Füße bleiben am Platz, Hüfte und Blick nach vorne' },
         { f: [[-0.42, 1.26, 6, 1], [-0.3, 1.3, 0, 0]], body: 0, h: 'Hüfte über den linken Fuß, rechtes Knie hoch, Mae-geri-keage nach vorne' },
-        { f: [[-0.07, 1.76, 332, 0.1], [0.08, 1.74, 23, 0.9]], body: 0, h: 'Sprungschritt nach vorne: rechter Fuß landet und trägt, linker Fuß steht gekreuzt dahinter auf dem Ballen – Kiai' },
+        { f: [[0.08, 1.74, 23, 0.1], [-0.07, 1.76, 332, 0.9]], body: 0, h: 'Sprungschritt nach vorne: rechter Fuß landet und trägt, linker Fuß steht gekreuzt dahinter auf dem Ballen – Kiai' },
         { f: [[0.32, 1.45, 134, 0.3], [-0.21, 1.66, 223, 0.7]], body: 135, turn: -225, h: 'Rechtes Bein trägt, linker Fuß gleitet von hinten schräg nach rechts hinten, Drehung links herum' },
         { f: [[0.38, 1.45, 133, 1], [0.28, 1.55, 135, 0]], body: 135, h: 'Hüfte über den linken Fuß, rechtes Knie hoch, Mae-geri-keage' },
         { f: [[0.43, 1.49, 119, 0.3], [0.71, 1.12, 126, 0.7]], body: 135, h: 'Rechter Fuß setzt nach dem Tritt vorne ab' },

@@ -65,6 +65,7 @@
   const PIN_MAX = 0.6; // weiter versetzt die Skizze einen Fuß nur, wenn er sich wirklich bewegt
   const SNAP = 0.1; // so nah an einer Embusen-Linie wird der Stand auf sie gesetzt
   const ON_LINE = 0.03; // so nah an einer Linie steht ein Fuß in der Skizze „auf“ ihr
+  const KOSA_BACK = 0.1; // so weit steht im Kosa-dachi der gekreuzte Fuß hinter dem tragenden
   const NEAR = 0.2; // so nah an einer Linie steht ein gleichmäßiger Stand (Kiba-dachi …) in der Skizze auf ihr
   const HEEL = 0.068; // Fersenmitte hinter der Fußmitte (Karteneinheiten, Fußabdruck in Kartengröße)
   const angDiff = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
@@ -227,10 +228,21 @@
       const keep = pin[j] === 'stand' ? [true, true] : pin[j];
       seg.push([0, 1].map((i) => [0, 1].map((c) => (j && (keep[i] || slide[j] === c) ? seg[j - 1][i][c] : nSeg++))));
     });
-    // gleichmäßige Stände schon im Ausgleich: beide Füße gleich weit vorne (bei Kiba-dachi quer zur Linie also gleich hoch),
-    // und liegt der Stand nahe an einer Linie (bis NEAR), soll sein Bezugspunkt auf ihr liegen
     const root = Array.from({ length: nSeg }, (v, i) => i);
     const find = (x) => (root[x] === x ? x : (root[x] = find(root[x])));
+    // „Fuß rückt/zieht heran“: er gleitet auf der Linie zum anderen Fuß, quer dazu bleibt er (Heian Yondan 8)
+    raw.forEach((p, j) => {
+      const hm = j && /(linke|rechte)r Fuß (rückt|zieht) (einen halben Schritt )?heran/i.exec(p.h);
+      if (!hm || pin[j] === 'stand') return;
+      const i = /^l/i.test(hm[1]) ? 0 : 1;
+      const q = raw[j - 1].f;
+      const ang = Math.abs((Math.atan2(q[1][1] - q[0][1], q[1][0] - q[0][0]) * 180) / Math.PI) % 90;
+      if (pin[j][i] || (ang > 20 && ang < 70)) return;
+      const c = Math.abs(q[1][0] - q[0][0]) > Math.abs(q[1][1] - q[0][1]) ? 1 : 0; // Achse quer zur Verbindungslinie
+      root[find(seg[j][i][c])] = find(seg[j - 1][i][c]);
+    });
+    // gleichmäßige Stände schon im Ausgleich: beide Füße gleich weit vorne (bei Kiba-dachi quer zur Linie also gleich hoch),
+    // und liegt der Stand nahe an einer Linie (bis NEAR), soll sein Bezugspunkt auf ihr liegen
     const extra = raw.map(() => [[], []]);
     const heelAt = raw.map(() => null); // Bezugspunkt je Bild, aus der Skizze bestimmt
     raw.forEach((p, j) => {
@@ -260,6 +272,14 @@
       });
       if (pin[j] !== 'stand') {
         f = shape(f, stances[j], m.body, held, a.lines, heelAt[j]);
+        // Kosa-dachi (gekreuzter Fuß dahinter; der Kreuzschritt in Tekki heißt nur „Kosa“): der Ballenfuß steht
+        // mindestens KOSA_BACK hinter dem tragenden Fuß
+        if (/kosa-dachi/i.test(stances[j])) {
+          const r = f[0][3] < f[1][3] ? 0 : 1;
+          const u = toe(m.body);
+          const ahead = (f[r][0] - f[1 - r][0]) * u[0] + (f[r][1] - f[1 - r][1]) * u[1];
+          if (!held[r] && ahead > -KOSA_BACK) f[r] = [r2(f[r][0] - u[0] * (ahead + KOSA_BACK)), r2(f[r][1] - u[1] * (ahead + KOSA_BACK))].concat(f[r].slice(2));
+        }
         // gleichmäßiger Stand hat einen stehenden Fuß versetzt: auch in den Stellungen davor, damit er nicht springt.
         // In einem gleichmäßigen Stand davor rückt der ganze Stand mit (sonst würde er schief), dann auch der andere Fuß
         // in den Stellungen vor diesem Stand.
