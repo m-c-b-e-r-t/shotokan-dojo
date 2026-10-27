@@ -415,26 +415,26 @@
     const head = (x, y, dd) => { const [h1x, h1y] = pt(x, y, dd + 150, 14); const [h2x, h2y] = pt(x, y, dd - 150, 14); return `M${h1x} ${h1y} L${x} ${y} L${h2x} ${h2y}`; };
     return `<path class="emb-via" d="M${sx} ${sy} L${ex} ${ey}"/><path class="emb-turn-head" d="${head(ex, ey, d)} ${head(sx, sy, d + 180)}"/>`;
   }
-  // Ausschnitt fest je Kata, damit die Karte beim Zählen nicht springt
-  function fit(k) {
+  // Ausschnitt fest je Kata, damit die Karte beim Zählen nicht springt. Das Embusen (Linien) steht in der Mitte;
+  // alle Kata bekommen gleich große Karten (die größte), damit Feld und Füße überall gleich groß erscheinen.
+  function reach(k) {
     const a = steadyPoses(k);
-    const pts = [a.rei, a.yoi, a.naore, a.end].concat(a.moves).flatMap((p) => p.f);
-    const xs = pts.map((f) => f[0]).concat(0);
-    const ys = pts.map((f) => f[1]).concat(0);
-    const m = 0.62;
-    return [Math.min(...xs) - m, Math.max(...xs) + m, Math.min(...ys) - 0.42, Math.max(...ys) + 0.55].map((v) => v * U);
+    const L = k.ansage.lines;
+    const lx = L.flatMap((l) => [l[0], l[2]]);
+    const ly = L.flatMap((l) => [l[1], l[3]]);
+    const cx = (Math.min(...lx) + Math.max(...lx)) / 2;
+    const cy = (Math.min(...ly) + Math.max(...ly)) / 2;
+    const pts = [a.rei, a.yoi, a.naore, a.end].concat(a.moves).flatMap((p) => p.f).concat(L.flatMap((l) => [[l[0], l[1]], [l[2], l[3]]]));
+    return [cx, cy, Math.max(...pts.map((f) => Math.abs(f[0] - cx))), Math.max(...pts.map((f) => Math.abs(f[1] - cy)))];
   }
-  // Alle Kata bekommen gleich große Karten (die größte), damit die Füße überall gleich groß erscheinen
-  let size = null;
+  let half = null;
   function bounds(k) {
-    if (!size) {
-      const all = SK.ansageKata().map((id) => fit(SK.kata[id]));
-      size = [Math.max(...all.map((b) => b[1] - b[0])), Math.max(...all.map((b) => b[3] - b[2]))];
+    if (!half) {
+      const all = SK.ansageKata().map((id) => reach(SK.kata[id]));
+      half = [Math.max(...all.map((r) => r[2])) + 0.62, Math.max(...all.map((r) => r[3])) + 0.55];
     }
-    const [x0, x1, y0, y1] = fit(k);
-    const dx = (size[0] - (x1 - x0)) / 2;
-    const dy = (size[1] - (y1 - y0)) / 2;
-    return [x0 - dx, x1 + dx, y0 - dy, y1 + dy];
+    const [cx, cy] = reach(k);
+    return [cx - half[0], cx + half[0], cy - half[1], cy + half[1]].map((v) => v * U);
   }
   SK.embusenSvg = function (k, pose, prev) {
     const a = k.ansage;
