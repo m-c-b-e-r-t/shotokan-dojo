@@ -110,35 +110,6 @@ h4 {
   text-decoration: none;
 }
 
-.stats {
-  display: flex;
-  gap: 0.8rem;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.stat {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.streak {
-  color: #e65100;
-}
-
-.xp {
-  color: #b8860b;
-}
-
-.ico-flame {
-  display: inline-block;
-  width: 0.8em;
-  height: 1em;
-  background: linear-gradient(#ffb300, #e65100);
-  border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%;
-}
-
 .bottombar {
   position: fixed;
   bottom: 0;
@@ -369,10 +340,6 @@ main {
   background: var(--ok);
   color: #fff;
   border-color: #1b5e20;
-}
-
-.node.locked {
-  opacity: 0.5;
 }
 
 .node-meta {

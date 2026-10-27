@@ -20,9 +20,9 @@
   };
   SK.bookSrc = (n) => `${SK.BOOK_SOURCE}, ${SK.bookPages(n)}`;
   // Bei jeder veröffentlichten Änderung hochzählen: node tools/version.js patch|minor|major (setzt auch ?v= in index.html)
-  SK.VERSION = '1.22.0';
+  SK.VERSION = '1.23.0';
   SK.VERSION_DATE = '27.10.2026';
-  SK.VERSION_TIME = '12:13';
+  SK.VERSION_TIME = '12:20';
 
   SK.util = {
     shuffle(arr) {
@@ -78,10 +78,6 @@
   const DATA_VERSION = 2;
   const blank = () => ({
     version: DATA_VERSION,
-    xp: 0,
-    streak: 0,
-    bestStreak: 0,
-    lastActive: null,
     lessons: {},
     srs: {},
     exams: {},
@@ -119,6 +115,9 @@
         const raw = localStorage.getItem(KEY);
         if (!raw) return;
         const d = Object.assign(blank(), JSON.parse(raw));
+        // XP, Tages-Serie und Freischalten gibt es nicht mehr.
+        ['xp', 'streak', 'bestStreak', 'lastActive'].forEach((k) => delete d[k]);
+        if (d.settings) delete d.settings.unlockAll;
         const old = d.version;
         SK.store.data = migrate(d);
         if (old !== d.version) SK.store.save();
@@ -148,35 +147,16 @@
       }
       SK.store.data = Object.assign(blank(), {
         version: obj.version,
-        xp: Number(obj.xp) || 0,
-        streak: Number(obj.streak) || 0,
-        bestStreak: Number(obj.bestStreak) || 0,
-        lastActive: typeof obj.lastActive === 'string' ? obj.lastActive : null,
         lessons: obj.lessons,
         srs: obj.srs,
         exams: typeof obj.exams === 'object' && obj.exams ? obj.exams : {},
         answered: Number(obj.answered) || 0,
         correct: Number(obj.correct) || 0,
-        settings: { unlockAll: !!(obj.settings && obj.settings.unlockAll) },
         asked: typeof obj.asked === 'object' && obj.asked ? obj.asked : {},
         read: typeof obj.read === 'object' && obj.read ? obj.read : {},
       });
       migrate(SK.store.data);
       SK.store.save();
-    },
-    touchStreak() {
-      const d = SK.store.data;
-      const t = SK.util.today();
-      if (d.lastActive === t) return;
-      d.streak = d.lastActive === SK.util.addDays(t, -1) ? d.streak + 1 : 1;
-      d.bestStreak = Math.max(d.bestStreak, d.streak);
-      d.lastActive = t;
-    },
-    currentStreak() {
-      const d = SK.store.data;
-      const t = SK.util.today();
-      if (d.lastActive === t || d.lastActive === SK.util.addDays(t, -1)) return d.streak;
-      return 0;
     },
   };
 

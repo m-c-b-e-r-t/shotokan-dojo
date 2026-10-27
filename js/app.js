@@ -24,10 +24,6 @@
   // ---------- Hilfen ----------
   const lessonState = (id) => store.data.lessons[id] || null;
   const passed = (id) => !!(lessonState(id) && lessonState(id).passed);
-  function unlocked(unit, idx) {
-    if (store.data.settings.unlockAll || idx === 0 || unit.kind === 'drill') return true;
-    return passed(unit.lessons[idx - 1].id);
-  }
   function unitProgress(u) {
     return { done: u.lessons.filter((l) => passed(l.id)).length, total: u.lessons.length };
   }
@@ -57,35 +53,17 @@
   function setTitle(t) {
     document.title = t ? `${t} – Shotokan Dojo` : 'Shotokan Dojo – Lernen & Quiz';
   }
-  function renderTopStats() {
-    const d = store.data;
-    const box = document.getElementById('topstats');
-    box.innerHTML = '';
-    box.append(
-      el('span', { class: 'stat streak', title: 'Tage in Folge' }, el('span', { class: 'ico-flame', 'aria-hidden': 'true' }), `${store.currentStreak()} Tage`),
-      el('span', { class: 'stat xp', title: 'Erfahrungspunkte' }, '★ ', `${d.xp} XP`)
-    );
-  }
   function setNav(name) {
     document.querySelectorAll('.bottombar a').forEach((a) => a.classList.toggle('active', a.dataset.nav === name));
   }
   function finishView() {
     app.focus({ preventScroll: true });
     window.scrollTo(0, 0);
-    renderTopStats();
   }
   // Gleiche Adresse löst kein hashchange aus – dann direkt neu rendern.
   function go(hash) {
     if (location.hash === hash) route();
     else location.hash = hash;
-  }
-  function award(results, bonus) {
-    const ok = results.filter((r) => r.ok).length;
-    const xp = ok * 10 + (bonus || 0);
-    store.data.xp += xp;
-    store.touchStreak();
-    store.save();
-    return { ok, xp, ratio: ok / results.length };
   }
 
   // ---------- Start ----------
@@ -103,7 +81,7 @@
         'div',
         { class: 'tiles' },
         tile('#/wissen', 'Wissen', `Alle Inhalte zum Durcharbeiten – ${read}/${allLessons.length} gelesen`),
-        tile('#/quiz', 'Quiz', 'Lernpfad mit Freischalten, Zufallsmix aus allen Fragen', 'primary'),
+        tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen', 'primary'),
         tile('#/begriffe', 'Begriffe-Trainer', 'Stände, Techniken & Begriffe – kurz abgefragt'),
         tile('#/zufall', 'Zufallsmix', `${SK.questions.length - asked} Fragen noch nie gestellt`),
         tile('#/review', 'Wiederholen', due ? `${due} Fragen fällig` : 'Heute nichts fällig'),
@@ -187,7 +165,6 @@
     // Hinweis zu den Bewegungsgrafiken einmal oben statt in jedem Bild
     learn.innerHTML = (/data-gfx="(mv|tc):/.test(lesson.learn) ? SK.gfxHint : '') + lesson.learn;
     const n = (qByLesson[id] || []).length;
-    const open = unlocked(unit, entry.idx);
     app.innerHTML = '';
     app.append(
       el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Wissen' }), ' › ', el('span', { text: unit.title })),
@@ -196,8 +173,7 @@
       el(
         'div',
         { class: 'actions' },
-        n && open ? el('a', { class: 'btn primary', href: `#/quiz/${id}`, text: `Quiz zu diesem Thema (${n} Fragen)` }) : '',
-        n && !open ? el('span', { class: 'muted small', text: 'Quiz noch gesperrt – im Lernpfad zuerst die vorherige Lektion bestehen.' }) : ''
+        n ? el('a', { class: 'btn primary', href: `#/quiz/${id}`, text: `Quiz zu diesem Thema (${n} Fragen)` }) : ''
       ),
       el(
         'nav',
@@ -308,7 +284,6 @@
     bar.firstChild.style.width = `${(p.done / p.total) * 100}%`;
     const path = el('ol', { class: 'path' });
     u.lessons.forEach((l, i) => {
-      const open = unlocked(u, i);
       const st = lessonState(l.id);
       const n = (qByLesson[l.id] || []).length;
       path.append(
@@ -316,8 +291,8 @@
           'li',
           {},
           el(
-            open ? 'a' : 'span',
-            { class: `node ${passed(l.id) ? 'done' : open ? 'open' : 'locked'}`, href: open ? `#/quiz/${l.id}` : null, 'aria-disabled': open ? null : 'true' },
+            'a',
+            { class: `node ${passed(l.id) ? 'done' : 'open'}`, href: `#/quiz/${l.id}` },
             el('span', { class: 'dot', text: passed(l.id) ? '✓' : String(i + 1) }),
             el('span', { class: 'node-title', text: l.title }),
             el('span', { class: 'node-meta', text: st ? `${Math.round(st.best * 100)} %` : `${n} Fragen` })
@@ -332,7 +307,7 @@
 
   function viewQuiz(id) {
     const entry = lessonIndex[id];
-    if (!entry || !unlocked(entry.unit, entry.idx)) return viewNotFound();
+    if (!entry) return viewNotFound();
     setNav(entry.unit.kind === 'drill' ? 'begriffe' : 'quiz');
     setTitle(`Quiz: ${entry.lesson.title}`);
     const back = entry.unit.kind === 'drill' ? '#/begriffe' : '#/quiz';
@@ -347,14 +322,12 @@
       onFinish: (results) => {
         const ratio = results.filter((r) => r.ok).length / results.length;
         const prev = lessonState(id) || { best: 0, passed: false, runs: 0 };
-        const firstPass = !prev.passed && ratio >= PASS_LESSON;
         store.data.lessons[id] = { best: Math.max(prev.best, ratio), passed: prev.passed || ratio >= PASS_LESSON, runs: prev.runs + 1 };
-        const r = award(results, (ratio === 1 ? 20 : 0) + (firstPass ? 30 : 0));
-        const next = firstPass && entry.unit.kind !== 'drill' ? entry.unit.lessons[entry.idx + 1] : null;
-        showResult({ results, ratio: r.ratio, xp: r.xp, pass: ratio >= PASS_LESSON, again: `#/quiz/${id}`, back, next: next ? { href: `#/quiz/${next.id}`, title: next.title } : null });
+        store.save();
+        const next = ratio >= PASS_LESSON && entry.unit.kind !== 'drill' ? entry.unit.lessons[entry.idx + 1] : null;
+        showResult({ results, pass: ratio >= PASS_LESSON, again: `#/quiz/${id}`, back, next: next ? { href: `#/quiz/${next.id}`, title: next.title } : null });
       },
     });
-    renderTopStats();
   }
 
   // ---------- Zufallsmix ----------
@@ -385,11 +358,9 @@
         title: `Zufallsmix · ${scope.title}`,
         onExit: () => go(`#/zufall/${scope.id}`),
         onFinish: (results) => {
-          const r = award(results);
-          showResult({ results, ratio: r.ratio, xp: r.xp, pass: r.ratio >= PASS_LESSON, again: `#/zufall/${scope.id}`, back: '#/quiz' });
+          showResult({ results, again: `#/zufall/${scope.id}`, back: '#/quiz' });
         },
       });
-      renderTopStats();
     };
     const bar = el('div', { class: 'progress' }, el('div', { class: 'progress-bar' }));
     bar.firstChild.style.width = `${pool.length ? ((pool.length - fresh.length) / pool.length) * 100 : 0}%`;
@@ -444,9 +415,11 @@
     finishView();
   }
 
-  function showResult({ results, ratio, xp, pass, again, back, next, extra }) {
+  function showResult({ results, pass, again, back, next, extra }) {
     app.innerHTML = '';
     const wrong = results.filter((r) => !r.ok);
+    const ratio = (results.length - wrong.length) / results.length;
+    if (pass === undefined) pass = ratio >= PASS_LESSON;
     const link = (cls, href, text) =>
       el('a', {
         class: cls,
@@ -463,7 +436,7 @@
         { class: `result ${pass ? 'pass' : 'fail'}` },
         el('div', { class: 'score', text: `${Math.round(ratio * 100)} %` }),
         el('h2', { text: pass ? 'Bestanden – stark!' : 'Noch nicht bestanden – weiter üben!' }),
-        el('p', { text: `${results.length - wrong.length} von ${results.length} richtig · +${xp} XP · Serie: ${store.currentStreak()} Tag(e)` }),
+        el('p', { text: `${results.length - wrong.length} von ${results.length} richtig` }),
         extra || '',
         el(
           'div',
@@ -514,8 +487,7 @@
         title,
         onExit: () => go('#/review'),
         onFinish: (results) => {
-          const r = award(results);
-          showResult({ results, ratio: r.ratio, xp: r.xp, pass: r.ratio >= PASS_LESSON, again: '#/review', back: '#/quiz' });
+          showResult({ results, again: '#/review', back: '#/quiz' });
         },
       });
     const actions = el('div', { class: 'actions' });
@@ -687,9 +659,6 @@
       'div',
       { class: 'stat-grid' },
       [
-        ['XP', d.xp],
-        ['Serie', `${store.currentStreak()} Tage`],
-        ['Längste Serie', `${d.bestStreak} Tage`],
         ['Lektionen gelesen', `${read}/${allLessons.length}`],
         ['Quiz-Lektionen bestanden', `${done}/${allLessons.length}`],
         ['Fragen gestellt', `${asked}/${SK.questions.length}`],
@@ -704,12 +673,6 @@
       unitList.append(el('li', {}, el('span', { text: `${u.title} (${p.done}/${p.total})` }), bar));
     });
 
-    const unlockBox = el('input', { type: 'checkbox', id: 'unlockAll' });
-    unlockBox.checked = !!d.settings.unlockAll;
-    unlockBox.addEventListener('change', () => {
-      d.settings.unlockAll = unlockBox.checked;
-      store.save();
-    });
     const fileInput = el('input', { type: 'file', accept: 'application/json,.json', class: 'visually-hidden', id: 'importFile' });
     fileInput.addEventListener('change', () => {
       const f = fileInput.files[0];
@@ -734,7 +697,6 @@
         'section',
         { class: 'card' },
         el('h3', { text: 'Einstellungen & Sicherung' }),
-        el('label', { class: 'switch' }, unlockBox, ' Alle Quiz-Lektionen freischalten (für Fortgeschrittene)'),
         el('p', { class: 'muted small', text: 'Der Fortschritt wird nur lokal in diesem Browser gespeichert. Mit Export/Import kannst du ihn auf ein anderes Gerät übertragen.' }),
         el(
           'div',

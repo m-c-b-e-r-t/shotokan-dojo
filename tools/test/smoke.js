@@ -47,21 +47,15 @@
         await wait();
         await answerAll(true);
         const score = app.querySelector('.result .score');
-        log.push(`Lektion ${id}: ${score ? score.textContent : 'FEHLT (gesperrt?)'}`);
+        log.push(`Lektion ${id}: ${score ? score.textContent : 'FEHLT'}`);
       }
-      // Letzte Kata-Lektion muss gesperrt sein und mit „alles freischalten“ laufen.
+      // Ohne Freischalten: auch die letzte Kata-Lektion ist sofort spielbar.
       location.hash = '#/quiz/kanku-dai-ablauf';
       await wait();
-      log.push(`Sperre kanku-dai-ablauf: ${app.querySelector('.quiz-card') ? 'FEHLER – nicht gesperrt' : 'gesperrt (erwartet)'}`);
-      SK.store.data.settings.unlockAll = true;
-      location.hash = '#/quiz/x';
-      await wait();
-      location.hash = '#/quiz/kanku-dai-ablauf';
-      await wait();
+      if (!app.querySelector('.quiz-card')) throw new Error('kanku-dai-ablauf nicht direkt spielbar');
       await answerAll(true);
-      const unlockedScore = app.querySelector('.result .score');
-      log.push(`Lektion kanku-dai-ablauf (freigeschaltet): ${unlockedScore ? unlockedScore.textContent : 'FEHLT'}`);
-      SK.store.data.settings.unlockAll = false;
+      const lastScore = app.querySelector('.result .score');
+      log.push(`Lektion kanku-dai-ablauf: ${lastScore ? lastScore.textContent : 'FEHLT'}`);
       for (const scope of ['alle', 'kata', 'begriffe']) {
         location.hash = `#/zufall/${scope}`;
         await wait();
@@ -83,7 +77,7 @@
       await wait();
       log.push(`Wiederholung fällig: ${SK.srs.due().length}`);
       const d = SK.store.data;
-      log.push(`XP ${d.xp}, Serie ${d.streak}, beantwortet ${d.answered}, richtig ${d.correct}`);
+      log.push(`Beantwortet ${d.answered}, richtig ${d.correct}`);
       // Umzug Datenversion 1 → 2: alte laufende Nummern zeigen danach auf dieselbe Frage.
       const old = { version: 1, srs: { 'et-dojo-1': { b: 3, due: '2026-01-01', w: 0 }, 'gl-zenkutsu-dachi-a': { b: 2, due: '2026-01-01', w: 0 } }, asked: { 'et-dojo-2': 1, 'heian-shodan-ueberblick-1': 1 } };
       const m = SK.store.migrate(old);
