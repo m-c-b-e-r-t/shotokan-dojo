@@ -122,8 +122,42 @@
 
   SK.kata['heian-sandan'] = {
     id: 'heian-sandan', name: 'Heian Sandan', moves: 20, kiai: [10, 20], firstPage: 30,
-    // Kata-Ansage: Name für eine japanische Stimme (Kana) und eine deutsche (Lautschrift)
-    ansage: { kana: 'へいあん さんだん', de: 'hehjan sandann' },
+    // Kata-Ansage: Name für eine japanische Stimme (Kana) und eine deutsche (Lautschrift).
+    // Bodenkarte nach der Fußskizze im Buch (Scan-Seite 39 = S. 68–69): Einheit = halbe Grundlinie, x nach rechts, y nach vorne.
+    // f = [linker Fuß, rechter Fuß] mit [x, y, Zehenrichtung (0 = vorne, im Uhrzeigersinn), Gewicht]; body = Körperrichtung,
+    // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
+    ansage: {
+      kana: 'へいあん さんだん',
+      de: 'hehjan sandann',
+      page: 39,
+      lines: [[-1, 0, 1, 0], [0, 0, 0, 2]],
+      rei: { f: [[-0.11, 0.15, 327, 0.5], [0.18, 0.15, 41, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
+      yoi: { f: [[-0.21, 0.11, 324, 0.5], [0.25, 0.13, 35, 0.5]], body: 0, h: 'Erst linker, dann rechter Fuß nach außen' },
+      moves: [
+        { f: [[-0.52, -0.02, 272, 0.3], [0.2, 0.15, 12, 0.7]], body: 270, turn: -90, h: 'Blick nach links, linker Fuß tritt nach links' },
+        { f: [[-0.47, 0.01, 272, 0.5], [-0.48, 0.14, 270, 0.5]], body: 270, h: 'Rechter Fuß wird zum linken herangezogen' },
+        { f: [[-0.47, 0.01, 272, 0.5], [-0.48, 0.14, 269, 0.5]], body: 270, h: 'Füße bleiben stehen, nur die Arme wechseln' },
+        { f: [[-0.29, 0.15, 356, 0.7], [0.44, 0.02, 85, 0.3]], body: 90, turn: 180, h: 'Linker Fuß dreht nach vorne und rückt zur Mitte, rechter Fuß tritt nach rechts' },
+        { f: [[0.45, 0.14, 86, 0.5], [0.45, 0.02, 87, 0.5]], body: 90, h: 'Linker Fuß wird zum rechten herangezogen' },
+        { f: [[0.45, 0.14, 86, 0.5], [0.45, 0.02, 87, 0.5]], body: 90, h: 'Füße bleiben stehen, nur die Arme wechseln' },
+        { f: [[0.15, 0.79, 357, 0.3], [0.4, 0.02, 83, 0.7]], body: 0, turn: -90, h: 'Linker Fuß tritt nach vorne, rechter Fuß bleibt quer stehen' },
+        { f: [[0.18, 0.79, 339, 0.3], [0.34, 1.37, 355, 0.7]], body: 0, h: 'Rechter Fuß tritt vor' },
+        { f: [[0.44, 1.6, 89, 0.5], [0.44, 1.16, 88, 0.5]], body: 90, look: 0, turn: -270, h: 'Linker Fuß tritt vor, Drehung mit dem Rücken nach vorne in Kiba-dachi – Blick nach vorne' },
+        { f: [[0.21, 1.57, 339, 0.3], [0.35, 2.07, 0, 0.7]], body: 0, turn: -90, h: 'Rechter Fuß tritt vor, Körper wieder nach vorne' },
+        { f: [[0.355, 2.23, 180, 0.5], [0.265, 2.23, 180, 0.5]], body: 180, turn: -180, h: 'Langsam: linker Fuß zum rechten, Blick zum Start' },
+        { f: [[0.28, 2.25, 88, 0.5], [0.27, 1.61, 90, 0.5]], body: 90, look: 180, turn: -90, h: 'Rechtes Knie hoch, Fumikomi Richtung Start' },
+        { f: [[0.28, 2.25, 88, 0.5], [0.27, 1.61, 90, 0.5]], body: 90, look: 180, h: 'Füße bleiben stehen' },
+        { f: [[0.37, 1.03, 263, 0.5], [0.32, 1.61, 267, 0.5]], body: 270, look: 180, turn: 180, h: 'Linkes Knie hoch, Fumikomi Richtung Start' },
+        { f: [[0.37, 1.03, 263, 0.5], [0.32, 1.61, 267, 0.5]], body: 270, look: 180, h: 'Füße bleiben stehen' },
+        { f: [[0.32, 1.03, 92, 0.5], [0.31, 0.48, 88, 0.5]], body: 90, look: 180, turn: -180, h: 'Rechtes Knie hoch, Fumikomi Richtung Start' },
+        { f: [[0.32, 1.03, 92, 0.5], [0.31, 0.48, 88, 0.5]], body: 90, look: 180, h: 'Füße bleiben stehen' },
+        { f: [[0.34, -0.13, 195, 0.7], [0.19, 0.45, 201, 0.3]], body: 180, turn: 90, h: 'Linker Fuß tritt Richtung Start vor – über die Grundlinie hinaus' },
+        { f: [[-0.47, 0.15, 3, 0.5], [0.24, 0.15, 359, 0.5]], body: 0, turn: 180, h: 'Rechter Fuß bleibt, linker Fuß schwingt nach links – Kiba-dachi zur Vorderseite' },
+        { f: [[-0.24, 0.16, 3, 0.5], [0.43, 0.14, 359, 0.5]], body: 0, h: 'Yori-ashi nach rechts: beide Füße gleiten, der Stand bleibt' },
+      ],
+      naore: { f: [[-0.23, 0.14, 334, 0.5], [0.19, 0.11, 29, 0.5]], body: 0, h: 'Linker Fuß bleibt, rechter Fuß zieht heran' },
+      end: { f: [[-0.17, 0.14, 322, 0.5], [0.11, 0.14, 34, 0.5]], body: 0, h: 'Verbeugung, Ende der Kata' },
+    },
     yoi: 'Hachiji-dachi, beide Fäuste vor den Oberschenkeln',
     naore: 'Der linke Fuß bleibt, der rechte Fuß geht leicht nach links; Knie strecken, zurück in Yoi.',
     continuous: [[2, 3], [5, 6], [9, 10]],

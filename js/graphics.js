@@ -948,7 +948,7 @@
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(s)}`;
   }
 
-  SK.gfx = { STANCES, STANCE_SIDE, stanceSvg, stanceSideSvg, stanceFor, stanceKey, stanceFigure, figure, box, byKey, animSvg, hasAnim, plainSvg, levels, WEAPONS, MOVES, targets, dataUri };
+  SK.gfx = { STANCES, STANCE_SIDE, foot, stanceSvg, stanceSideSvg, stanceFor, stanceKey, stanceFigure, figure, box, byKey, animSvg, hasAnim, plainSvg, levels, WEAPONS, MOVES, targets, dataUri };
   // Bausatz für weitere Technik-Grafiken (js/graphics-tech.js)
   SK.gfx.kit = { person, scene, frame, arm, ghost, front, FRONT, SIDE, SL, SA, sLeg, seqOf, stepLegs, STEP_SHIFT, LEG_R, LEG_L, HIKITE_R, HIKITE_L, arrow, hit, tag, foot, timeline, animEl, animTf, fadeLoop, mode, path, FONT, HL, HLF, HLS, INK, GHOST, ARR };
 })();

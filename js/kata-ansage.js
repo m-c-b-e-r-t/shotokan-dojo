@@ -1,5 +1,6 @@
-/* Kata-Ansage: zählt eine Kata auf Japanisch im Rhythmus des Buches (fließend, langsam, Kiai) und zeigt Stand und Technik groß.
-   Zeitplan und Zählwörter sind reine Funktionen (auch in der Validierung geprüft), die Ansicht nutzt Sprachausgabe und Wake Lock. */
+/* Kata-Ansage: zählt eine Kata auf Japanisch im Rhythmus des Buches (fließend, langsam, Kiai) und zeigt jede Stellung
+   auf einer Bodenkarte von oben (Embusen) nach der Fußskizze im Buch.
+   Zeitplan, Zählwörter und Karte sind reine Funktionen (auch in der Validierung geprüft), die Ansicht nutzt Sprachausgabe und Wake Lock. */
 (function () {
   'use strict';
   const { util } = SK;
@@ -49,48 +50,88 @@
   SK.ansageTimeline = function (k, beat, frame) {
     const steps = [];
     let t = 0;
+    const a = k.ansage;
     const cmd = (key, extra) => Object.assign({ kind: 'cmd', t }, CMD[key], extra);
     if (frame) {
-      steps.push({ kind: 'name', t, kan: '', ro: k.name, kana: k.ansage.kana, de: k.ansage.de, stance: 'Musubi-dachi' });
+      steps.push({ kind: 'name', t, kan: '', ro: k.name, kana: a.kana, de: a.de, stance: 'Musubi-dachi', pose: a.rei });
       t += R.name;
-      steps.push(cmd('rei', { stance: 'Musubi-dachi', note: 'Verbeugung' }));
+      steps.push(cmd('rei', { stance: 'Musubi-dachi', pose: a.rei }));
       t += R.rei;
-      steps.push(cmd('yoi', { stance: k.yoi.split(',')[0], note: k.yoi }));
+      steps.push(cmd('yoi', { stance: k.yoi.split(',')[0], note: k.yoi, pose: a.yoi }));
       t += Math.max(R.yoi, beat);
     }
     k.seq.forEach((r) => {
       const n = r[0];
-      steps.push(Object.assign({ kind: 'move', t, n, stance: r[1], tech: r[2], note: r[4] || '', page: r[3],
-        kiai: k.kiai.includes(n), slow: k.slow.includes(n), cont: k.continuous.some((g) => g.includes(n)) }, count(n)));
+      // gezählt wird wie im Dojo nur bis Ju (10), danach wieder ab Ichi
+      steps.push(Object.assign({ kind: 'move', t, n, stance: r[1], tech: r[2], note: r[4] || '', page: r[3], pose: a.moves[n - 1],
+        kiai: k.kiai.includes(n), slow: k.slow.includes(n), cont: k.continuous.some((g) => g.includes(n)) }, count(((n - 1) % 10) + 1)));
       t += n < k.moves ? moveGap(k, n, beat) : R.end * beat;
     });
     if (frame) {
-      steps.push(cmd('naore', { stance: k.yoi.split(',')[0], note: k.naore }));
+      steps.push(cmd('naore', { stance: k.yoi.split(',')[0], note: k.naore, pose: a.naore }));
       t += R.naore;
-      steps.push(cmd('rei', { stance: 'Musubi-dachi', note: 'Verbeugung, Ende der Kata' }));
+      steps.push(cmd('rei', { stance: 'Musubi-dachi', pose: a.end }));
     }
+    // vorherige Stellung für Drehung und Fußspuren; vor Bewegung 1 ist das Yoi
+    steps.forEach((st, i) => { st.prev = i ? steps[i - 1].pose : a.yoi; });
     return steps;
   };
   SK.ansageCount = count;
   SK.ansageKata = () => SK.kataOrder.filter((id) => SK.kata[id].ansage);
 
-  // ---------- Bild zur Technik ----------
-  // Nur wenn die ganze Technik einer vorhandenen Grafik entspricht; Grafiken von vorne zeigen den rechten Arm.
-  const TECH_GFX = {
-    'Uchi-uke': ['mv:uchi-uke', true], 'Soto-uke': ['mv:soto-uke', true], 'Age-uke': ['mv:age-uke', true],
-    'Gedan-barai': ['mv:gedan-barai', true], 'Oi-zuki': ['mv:oi-zuki', false], 'Gyaku-zuki': ['mv:gyaku-zuki', false],
-    'Morote-uke': ['tc:morote-uke', true], 'Furi-enpi': ['tc:furi-enpi', true], 'Shuto Chudan-uke': ['tc:shuto-uke', true],
-  };
-  function techGfx(tech) {
-    if (/\+/.test(tech)) return null;
-    const words = tech.split(' ');
-    const name = words.filter((w) => !/^(Hidari|Migi|Sokumen|Jodan|Chudan|Gedan)$/.test(w)).join(' ');
-    const hit = TECH_GFX[name];
-    if (!hit) return null;
-    // ohne Beschriftung („rechter Arm“), da das Bild für links gespiegelt wird
-    const svg = SK.gfx.plainSvg(() => SK.gfx.byKey(hit[0])).replace(/<text[\s\S]*?<\/text>/g, '');
-    return { svg, mirror: hit[1] && words[0] === 'Hidari' };
+  // ---------- Bodenkarte (Embusen von oben) ----------
+  // Nur die Füße, die sich bewegt haben, bleiben gestrichelt an der alten Stelle – sonst wird die Karte unübersichtlich.
+  const U = 250; // Karteneinheiten je halbe Grundlinie
+  const P = (x, y) => [Math.round(x * U), Math.round(-y * U)];
+  const rad = (d) => ((d - 90) * Math.PI) / 180;
+  const pt = (x, y, d, r) => [Math.round(x + Math.cos(rad(d)) * r), Math.round(y + Math.sin(rad(d)) * r)];
+  const moved = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) > 0.03 || Math.abs(((a[2] - b[2] + 540) % 360) - 180) > 10;
+  function arrow(x, y, d, cls) {
+    const [ax, ay] = pt(x, y, d, 92);
+    const [bx, by] = pt(x, y, d, 40);
+    const [l1x, l1y] = pt(ax, ay, d + 150, 15);
+    const [l2x, l2y] = pt(ax, ay, d - 150, 15);
+    return `<path class="${cls}" d="M${bx} ${by} L${ax} ${ay} M${l1x} ${l1y} L${ax} ${ay} L${l2x} ${l2y}"/>`;
   }
+  function turnArc(x, y, from, deg) {
+    const r = 108;
+    const to = from + deg;
+    const [sx, sy] = pt(x, y, from, r);
+    const [ex, ey] = pt(x, y, to, r);
+    const back = to + (deg > 0 ? -100 : 100);
+    const [h1x, h1y] = pt(ex, ey, back - 35, 14);
+    const [h2x, h2y] = pt(ex, ey, back + 35, 14);
+    return `<path class="emb-turn" d="M${sx} ${sy} A${r} ${r} 0 ${Math.abs(deg) > 180 ? 1 : 0} ${deg > 0 ? 1 : 0} ${ex} ${ey}"/><path class="emb-turn-head" d="M${h1x} ${h1y} L${ex} ${ey} L${h2x} ${h2y}"/>`;
+  }
+  // Ausschnitt fest je Kata, damit die Karte beim Zählen nicht springt
+  function bounds(a) {
+    const pts = [a.rei, a.yoi, a.naore, a.end].concat(a.moves).flatMap((p) => p.f);
+    const xs = pts.map((f) => f[0]).concat(0);
+    const ys = pts.map((f) => f[1]).concat(0);
+    const m = 0.62;
+    return [Math.min(...xs) - m, Math.max(...xs) + m, Math.min(...ys) - 0.42, Math.max(...ys) + 0.55].map((v) => v * U);
+  }
+  SK.embusenSvg = function (k, pose, prev) {
+    const a = k.ansage;
+    const [x0, x1, y0, y1] = bounds(a);
+    let g = '';
+    for (let x = Math.ceil(x0 / 50) * 50; x <= x1; x += 50) g += `M${x} ${-y1} V${-y0}`;
+    for (let y = Math.ceil(y0 / 50) * 50; y <= y1; y += 50) g += `M${x0} ${-y} H${x1}`;
+    let svg = `<path class="emb-grid" d="${g}"/>`;
+    svg += `<path class="emb-line" d="${a.lines.map(([ax, ay, bx, by]) => `M${P(ax, ay).join(' ')} L${P(bx, by).join(' ')}`).join(' ')}"/>`;
+    svg += `<text class="emb-txt" x="0" y="${Math.round(-y1 + 30)}" text-anchor="middle">▲ vorne (Shomen)</text>`;
+    svg += `<text class="emb-txt" x="0" y="${Math.round(-y0 - 12)}" text-anchor="middle">Start</text>`;
+    const side = (i) => (i ? 'R' : 'L');
+    if (prev) prev.f.forEach((f, i) => { if (moved(f, pose.f[i])) svg += SK.gfx.foot(...P(f[0], f[1]), f[2], 0, { side: side(i), scale: 1 }); });
+    const [cx, cy] = P((pose.f[0][0] + pose.f[1][0]) / 2, (pose.f[0][1] + pose.f[1][1]) / 2);
+    if (pose.turn && prev) svg += turnArc(cx, cy, prev.body, pose.turn);
+    pose.f.forEach((f, i) => { svg += SK.gfx.foot(...P(f[0], f[1]), f[2], f[3], { side: side(i), scale: 1 }); });
+    svg += arrow(cx, cy, pose.body, 'emb-body');
+    if (pose.look != null) svg += arrow(cx, cy, pose.look, 'emb-look');
+    return `<svg class="emb-map" viewBox="${Math.round(x0)} ${Math.round(-y1)} ${Math.round(x1 - x0)} ${Math.round(y1 - y0)}" role="img" aria-label="Fußstellung von oben">${svg}</svg>`;
+  };
+  // Drehung in Worten: ¼, ½, ¾ links/rechts herum
+  SK.turnText = (deg) => `Wendung ${{ 90: '¼', 180: '½', 270: '¾' }[Math.abs(deg)] || `${Math.abs(deg)}°`} ${deg < 0 ? 'links' : 'rechts'} herum`;
 
   // ---------- Einstellungen (nur dieses Gerät) ----------
   const PREF_KEY = 'shotokan-dojo-ansage';
@@ -176,16 +217,12 @@
     const cRo = el('span', { class: 'ans-ro' });
     const cPos = el('span', { class: 'ans-pos' });
     const chips = el('div', { class: 'ans-chips' });
-    const picA = el('div', { class: 'ans-pic' });
-    const picB = el('div', { class: 'ans-pic' });
-    const cStance = el('div', { class: 'ans-stance' });
-    const cTech = el('div', { class: 'ans-tech' });
-    const cNote = el('div', { class: 'ans-note muted' });
-    const cNext = el('div', { class: 'ans-next muted small' });
+    const map = el('div', { class: 'ans-map' });
+    const cHint = el('div', { class: 'ans-hint' });
+    const cTech = el('div', { class: 'ans-tech muted' });
     const stage = el('section', { class: 'ans-stage', 'aria-live': 'polite' },
       el('div', { class: 'ans-head' }, cKan, el('div', { class: 'ans-head-txt' }, cRo, cPos), chips),
-      el('div', { class: 'ans-pics' }, picA, picB),
-      cStance, cTech, cNote, cNext);
+      map, cHint, cTech);
     const track = el('div', { class: 'ans-track', role: 'group', 'aria-label': 'Bewegungen' });
     const playBtn = el('button', { class: 'btn primary ans-play', type: 'button' });
     const prevBtn = el('button', { class: 'btn', type: 'button', 'aria-label': 'Eine Ansage zurück', text: '◀' });
@@ -231,23 +268,16 @@
       cKan.textContent = s.kan;
       cKan.hidden = !s.kan;
       cRo.textContent = s.ro;
-      cPos.textContent = s.kind === 'move' ? `Bewegung ${s.n} von ${k.moves}` : k.name;
+      cPos.textContent = s.kind === 'move' ? `Bewegung ${s.n} von ${k.moves} · ${s.stance}` : `${k.name} · ${s.stance}`;
       chips.innerHTML = '';
+      if (s.pose.turn) chips.append(el('span', { class: 'ans-chip turn', text: SK.turnText(s.pose.turn) }));
       if (s.kiai) chips.append(el('span', { class: 'ans-chip kiai', text: 'Kiai' }));
       if (s.slow) chips.append(el('span', { class: 'ans-chip slow', text: 'langsam' }));
       if (s.cont) chips.append(el('span', { class: 'ans-chip cont', text: 'fließend' }));
       stage.classList.toggle('kiai', !!s.kiai);
-      const key = SK.gfx.stanceKey(s.stance);
-      // groß: Technik-Grafik, sonst der Stand als Figur; daneben das Fußbild
-      const tg = s.kind === 'move' ? techGfx(s.tech) : null;
-      picA.innerHTML = tg ? tg.svg : key ? SK.gfx.stanceSideSvg(key.key, key.mirrored, { title: s.stance }) : '';
-      picA.classList.toggle('mirror', !!(tg && tg.mirror));
-      picB.innerHTML = key ? SK.gfx.stanceSvg(key.key, key.mirrored, { title: s.stance }) : '';
-      cStance.textContent = s.stance;
-      cTech.textContent = s.kind === 'move' ? s.tech : s.kind === 'name' ? k.name : s.ro;
-      cNote.textContent = s.note || '';
-      const nx = steps.slice(i + 1).find((x) => x.kind === 'move');
-      cNext.textContent = nx ? `Als Nächstes: ${nx.n} · ${nx.stance} – ${nx.tech}` : '';
+      map.innerHTML = SK.embusenSvg(k, s.pose, i ? s.prev : null);
+      cHint.textContent = s.pose.h;
+      cTech.textContent = s.kind === 'move' ? s.tech + (s.note ? ` · ${s.note}` : '') : s.note || '';
       const firstMove = steps.findIndex((x) => x.kind === 'move');
       const cur = s.kind === 'move' ? s.n : i < firstMove ? 0 : Infinity;
       track.querySelectorAll('.ans-dot').forEach((d) => {
@@ -406,11 +436,12 @@
     app.append(
       el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Wissen' }), ' › ', el('a', { href: `#/wissen/${k.id}-ueberblick`, text: k.name })),
       el('h1', { text: `${k.name} – Ansage` }),
-      el('p', { class: 'muted', text: 'Die App zählt die Kata auf Japanisch im Rhythmus des Buches: fließende Bewegungen schnell hintereinander, langsame mit langer Pause. Handy hinlegen, Ton an, Start.' }),
+      el('p', { class: 'muted', text: 'Die App zählt die Kata auf Japanisch im Rhythmus des Buches – wie im Dojo bis Ju und dann wieder ab Ichi. Die Karte zeigt von oben, wo die Füße stehen, wohin der Körper zeigt und wie gedreht wird. Handy hinlegen, Ton an, Start.' }),
       el('div', { class: 'ans-wrap' }, stage,
         el('div', { class: 'ans-controls' }, prevBtn, playBtn, nextBtn),
         track,
-        el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-kiai', text: 'Kiai' }), el('span', { class: 'lg-slow', text: 'langsam' }), el('span', { class: 'lg-link', text: 'fließend zur nächsten' }))),
+        el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-kiai', text: 'Kiai' }), el('span', { class: 'lg-slow', text: 'langsam' }), el('span', { class: 'lg-link', text: 'fließend zur nächsten' })),
+        el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }))),
       el('div', { class: 'actions' }, resetBtn, fsBtn),
       el('section', { class: 'card ans-settings' },
         el('h2', { text: 'Einstellungen' }),
@@ -422,7 +453,7 @@
         voiceOut,
         el('div', { class: 'actions' }, testBtn),
         lockOut),
-      el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Das Tempo selbst nennt das Buch nicht – es ist frei einstellbar.` })
+      el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Fußstellungen nach der Embusen-Skizze, ${SK.bookPages(k.ansage.page)}; Drehrichtungen daraus abgeleitet. Das Tempo nennt das Buch nicht – es ist frei einstellbar.` })
     );
     buildTrack();
     voiceInfo();
