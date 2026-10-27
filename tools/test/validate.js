@@ -34,7 +34,7 @@
   // Kata-Ansage: Zeitplan mit allen Bewegungen, Zeiten steigend, Zählwörter vorhanden
   SK.ansageKata().forEach((id) => {
     const k = SK.kata[id];
-    if (!k.ansage.kana || !k.ansage.de) errors.push(`${id}: Ansage ohne Namen (Kana/Lautschrift)`);
+    if (!k.ansage.kana) errors.push(`${id}: Ansage ohne Namen (Kana)`);
     // Bodenkarte: je Bewegung zwei Füße mit Zahlen, Richtungen in Grad, Drehungen in Achteln (Diagonalen)
     const a = k.ansage;
     if (!a.page || !Array.isArray(a.lines)) errors.push(`${id}: Bodenkarte ohne Buchseite oder Linien`);
@@ -51,7 +51,7 @@
       if (moves.length !== k.moves) errors.push(`${id}: Ansage hat ${moves.length} statt ${k.moves} Bewegungen`);
       tl.forEach((s, i) => {
         if (i && !(s.t > tl[i - 1].t)) errors.push(`${id}: Ansage-Zeit ${i} nicht steigend`);
-        if (!s.kana || !s.de || !s.ro) errors.push(`${id}: Ansage ${i} ohne Zählwort`);
+        if (!s.kana || !s.say || !s.ro) errors.push(`${id}: Ansage ${i} ohne Zählwort`);
         if (s.kind === 'move' && s.ro !== SK.ansageCount(((s.n - 1) % 10) + 1).ro) errors.push(`${id}: Bewegung ${s.n} nicht bis 10 gezählt`);
         // „Stand bleibt“: kein Fuß darf auf der Karte wandern
         if (s.kind === 'move' && /^(Langsam: )?Stand bleibt/.test(s.pose.h) && s.pose.f.some((f, j) => f.slice(0, 3).some((v, m) => v !== s.prev.f[j][m]))) errors.push(`${id}: Bewegung ${s.n} – Stand bleibt, Füße wandern`);
@@ -60,7 +60,7 @@
   });
   for (let n = 1; n <= 65; n++) {
     const c = SK.ansageCount(n);
-    if (!c.kana || !c.de || !c.kan || /undefined/.test(Object.values(c).join())) errors.push(`Zählwort ${n} fehlerhaft`);
+    if (!c.kana || !c.kan || /undefined/.test(Object.values(c).join())) errors.push(`Zählwort ${n} fehlerhaft`);
   }
 
   const ids = new Set();

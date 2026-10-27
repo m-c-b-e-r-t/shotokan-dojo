@@ -6,32 +6,34 @@
   const { util } = SK;
 
   // ---------- Zählwörter ----------
-  // Kana für eine japanische Stimme, Lautschrift für eine deutsche (falls keine japanische vorhanden ist).
-  const KANA = ['', 'いち', 'に', 'さん', 'し', 'ご', 'ろく', 'しち', 'はち', 'く'];
+  // Kana für die japanische Stimme. Das Dehnungszeichen ー hält den letzten Vokal hörbar: Ohne es verschluckt die
+  // Stimme das i bzw. u nach stimmlosen Lauten, wie im Japanischen üblich (Ichi klingt wie „itsch“, Ku wie „k“).
+  // Ni und Go werden zum gleichmäßigen Zählrhythmus ebenso gedehnt.
+  const KANA = ['', 'いちー', 'にー', 'さん', 'しー', 'ごー', 'ろくー', 'しちー', 'はちー', 'くー'];
   const RO = ['', 'Ichi', 'Ni', 'San', 'Shi', 'Go', 'Roku', 'Shichi', 'Hachi', 'Ku'];
-  const DE = ['', 'itschi', 'ni', 'sann', 'schi', 'go', 'roku', 'schitschi', 'hatschi', 'ku'];
   const KAN = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
   function count(n) {
-    if (n < 10) return { kana: KANA[n], ro: RO[n], de: DE[n], kan: KAN[n] };
+    if (n < 10) return { kana: KANA[n], ro: RO[n], kan: KAN[n] };
     const t = Math.floor(n / 10);
     const u = n % 10;
     const tens = {
       kana: t === 1 ? 'じゅう' : `${t === 4 ? 'よん' : KANA[t]}じゅう`,
       ro: t === 1 ? 'Ju' : `${t === 4 ? 'Yon' : RO[t]}-ju`,
-      de: t === 1 ? 'dschuu' : `${t === 4 ? 'jonn' : DE[t]} dschuu`,
     };
     return {
       kana: tens.kana + KANA[u],
       ro: tens.ro + (u ? `-${RO[u].toLowerCase()}` : ''),
-      de: tens.de + (u ? ` ${DE[u]}` : ''),
       kan: `${t > 1 ? KAN[t] : ''}十${KAN[u]}`,
     };
   }
   const CMD = {
-    rei: { kan: '礼', ro: 'Rei', kana: 'れい', de: 'reh' },
-    yoi: { kan: '用意', ro: 'Yoi', kana: 'ようい', de: 'jooi' },
-    naore: { kan: '直れ', ro: 'Naore', kana: 'なおれ', de: 'na ore' },
+    rei: { kan: '礼', ro: 'Rei', kana: 'れい' },
+    yoi: { kan: '用意', ro: 'Yoi', kana: 'ようい' },
+    naore: { kan: '直れ', ro: 'Naore', kana: 'なおれ' },
   };
+  // Gesprochener Text: Kommandos und Zahlen mit Ausrufezeichen (straffere Betonung), beim Kiai folgt „Kiai!“.
+  const KIAI = 'きあい！';
+  const sayText = (st) => (st.kind === 'name' || (st.kind === 'cmd' && st.ro === 'Rei') ? st.kana : `${st.kana}！`);
 
   // ---------- Rhythmus ----------
   // beat = Abstand zwischen zwei normalen Bewegungen (Sekunden). Laut Buch fließend verbundene Bewegungen folgen
@@ -81,7 +83,7 @@
     const poses = steadyPoses(a);
     const cmd = (key, extra) => Object.assign({ kind: 'cmd', t }, CMD[key], extra);
     if (frame) {
-      steps.push({ kind: 'name', t, kan: '', ro: k.name, kana: a.kana, de: a.de, stance: 'Musubi-dachi', pose: a.rei });
+      steps.push({ kind: 'name', t, kan: '', ro: k.name, kana: a.kana, stance: 'Musubi-dachi', pose: a.rei });
       t += R.name;
       steps.push(cmd('rei', { stance: 'Musubi-dachi', pose: a.rei }));
       t += R.rei;
@@ -101,7 +103,10 @@
       steps.push(cmd('rei', { stance: 'Musubi-dachi', pose: a.end }));
     }
     // vorherige Stellung für Drehung und Fußspuren; vor Bewegung 1 ist das Yoi
-    steps.forEach((st, i) => { st.prev = i ? steps[i - 1].pose : a.yoi; });
+    steps.forEach((st, i) => {
+      st.prev = i ? steps[i - 1].pose : a.yoi;
+      st.say = sayText(st);
+    });
     return steps;
   };
   SK.ansageCount = count;
@@ -177,47 +182,33 @@
   // Drehung in Worten: ⅛ bis ¾ links/rechts herum
   SK.turnText = (deg) => `Wendung ${{ 45: '⅛', 90: '¼', 135: '⅜', 180: '½', 225: '⅝', 270: '¾' }[Math.abs(deg)] || `${Math.abs(deg)}°`} ${deg < 0 ? 'links' : 'rechts'} herum`;
 
-  // ---------- Einstellungen (nur dieses Gerät) ----------
-  const PREF_KEY = 'shotokan-dojo-ansage';
-  const TEMPI = [['lernen', 'Lernen', 3], ['training', 'Training', 2], ['pruefung', 'Prüfung', 1.5]];
-  function loadPrefs() {
-    const p = { beat: 2, frame: true, voice: 'auto' };
-    try {
-      Object.assign(p, JSON.parse(localStorage.getItem(PREF_KEY) || '{}'));
-    } catch (e) { /* ohne gespeicherte Einstellungen */ }
-    p.beat = Math.min(4, Math.max(1, Number(p.beat) || 2));
-    return p;
-  }
-  function savePrefs(p) {
-    try {
-      localStorage.setItem(PREF_KEY, JSON.stringify(p));
-    } catch (e) { /* privates Fenster */ }
-  }
+  // ---------- Takt ----------
+  // Fest im Trainingstempo: 2 s je Bewegung (das Buch nennt kein Tempo), immer mit Name, Rei und Yoi vorab.
+  const BEAT = 2;
 
   // ---------- Sprachausgabe ----------
+  // Nur mit japanischer Stimme; fehlt sie, läuft die Ansage stumm (Anzeige und Karte im Takt).
   const tts = typeof window !== 'undefined' && 'speechSynthesis' in window ? window.speechSynthesis : null;
-  const voices = { ja: null, de: null };
-  function pickVoices() {
+  let voice = null;
+  function pickVoice() {
     if (!tts) return;
-    const all = tts.getVoices();
     // lokale Stimmen zuerst: sie sprechen ohne Netz-Verzögerung und halten den Takt
-    const best = (re) => all.filter((v) => re.test(v.lang)).sort((a, b) => Number(b.localService) - Number(a.localService))[0] || null;
-    voices.ja = best(/^ja/i);
-    voices.de = best(/^de/i);
+    voice = tts.getVoices().filter((v) => /^ja/i.test(v.lang)).sort((a, b) => Number(b.localService) - Number(a.localService))[0] || null;
   }
+  // Etwas schneller und höher als normal klingt wacher; der Kiai-Ruf noch höher. Mehr lässt die Sprachausgabe nicht zu.
+  const TONE = { rate: 1.15, pitch: 1.15 };
+  const TONE_KIAI = { rate: 1.1, pitch: 1.35 };
   // Verzögerung zwischen speak() und hörbarem Beginn – wird gemessen und bei den nächsten Ansagen vorgezogen.
   let latency = 0.15;
   const live = new Set(); // Chrome verliert sonst Äußerungen samt onstart durch die Speicherbereinigung
-  function speak(word, prefs, rate) {
-    if (!tts) return click();
-    const ja = prefs.voice !== 'de' && voices.ja;
-    const u = new SpeechSynthesisUtterance(ja ? word.kana : word.de);
-    u.lang = ja ? 'ja-JP' : 'de-DE';
-    const v = ja ? voices.ja : voices.de;
-    if (v) u.voice = v;
-    u.rate = rate || 1.1;
+  function utter(text, tone, measure) {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ja-JP';
+    u.voice = voice;
+    u.rate = tone.rate;
+    u.pitch = tone.pitch;
     const t0 = performance.now();
-    u.onstart = () => {
+    if (measure) u.onstart = () => {
       const l = (performance.now() - t0) / 1000;
       if (l < 1.5) latency = Math.min(0.8, latency * 0.6 + l * 0.4);
     };
@@ -225,27 +216,17 @@
     live.add(u);
     tts.speak(u);
   }
-  // Ersatz ohne Sprachausgabe: kurzer Holzton im Takt
-  let audio = null;
-  function click() {
-    try {
-      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-      const o = audio.createOscillator();
-      const g = audio.createGain();
-      o.frequency.value = 880;
-      g.gain.setValueAtTime(0.4, audio.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 0.12);
-      o.connect(g).connect(audio.destination);
-      o.start();
-      o.stop(audio.currentTime + 0.13);
-    } catch (e) { /* kein Ton möglich */ }
+  function speak(st) {
+    if (!tts || !voice) return;
+    utter(st.say, TONE, true);
+    // Kiai als eigene Äußerung direkt nach der Zahl, damit der Ruf eigene Betonung bekommt
+    if (st.kiai) utter(KIAI, TONE_KIAI, false);
   }
 
   // ---------- Ansicht ----------
   SK.viewAnsage = function (app, k) {
     const { el } = util;
-    const prefs = loadPrefs();
-    let steps = SK.ansageTimeline(k, prefs.beat, prefs.frame);
+    const steps = SK.ansageTimeline(k, BEAT, true);
     let idx = 0;
     let running = false;
     let base = 0; // performance.now() in ms, zu dem t = 0 gehört
@@ -253,8 +234,8 @@
     let lock = null;
     let lockState = 'aus';
 
-    pickVoices();
-    if (tts) tts.onvoiceschanged = () => { pickVoices(); voiceInfo(); };
+    pickVoice();
+    if (tts) tts.onvoiceschanged = () => { pickVoice(); info(); };
 
     // Anzeige
     const cKan = el('span', { class: 'ans-kan' });
@@ -274,36 +255,14 @@
     const resetBtn = el('button', { class: 'btn', type: 'button', text: 'Von vorn' });
     const fsBtn = document.fullscreenEnabled ? el('button', { class: 'btn', type: 'button', text: 'Vollbild' }) : null;
 
-    // Einstellungen
-    const tempoBtns = TEMPI.map(([id, label, beat]) => el('button', { class: 'chip ans-tempo', type: 'button', 'data-beat': beat, text: label }));
-    const beatIn = el('input', { type: 'range', id: 'ans-beat', min: '1', max: '4', step: '0.1', value: String(prefs.beat) });
-    const beatOut = el('span', { class: 'ans-beat-out' });
-    const frameIn = el('input', { type: 'checkbox', id: 'ans-frame' });
-    frameIn.checked = prefs.frame;
-    const voiceSel = el('select', { id: 'ans-voice' },
-      el('option', { value: 'auto', text: 'Japanische Stimme (wenn vorhanden)' }),
-      el('option', { value: 'de', text: 'Deutsche Stimme mit Lautschrift' }));
-    voiceSel.value = prefs.voice === 'de' ? 'de' : 'auto';
-    const voiceOut = el('p', { class: 'muted small' });
-    const lockOut = el('p', { class: 'muted small' });
-    const testBtn = el('button', { class: 'btn', type: 'button', text: 'Stimme testen: Ichi, Ni, San' });
-
-    function voiceInfo() {
-      if (!tts) voiceOut.textContent = 'Dieser Browser hat keine Sprachausgabe – statt der Zahlen ertönt ein Klick im Takt.';
-      else if (voiceSel.value === 'de' || !voices.ja) {
-        voiceOut.textContent = `${voices.ja || voiceSel.value === 'de' ? '' : 'Keine japanische Stimme auf diesem Gerät. '}Gezählt wird mit ${voices.de ? voices.de.name : 'der deutschen Standardstimme'} in Lautschrift („itschi, ni, sann“). Eine japanische Stimme lässt sich in den Geräteeinstellungen unter Sprachausgabe nachladen.`;
-      } else voiceOut.textContent = `Gezählt wird mit ${voices.ja.name} (Japanisch).`;
-    }
-    function lockInfo() {
-      lockOut.textContent = {
-        aus: 'Bildschirm: bleibt während der Ansage an (wird beim Start eingeschaltet).',
-        an: 'Bildschirm bleibt an ✓',
-        nein: 'Dieser Browser kann die Bildschirmsperre nicht verhindern – bitte die automatische Sperre in den Geräteeinstellungen verlängern.',
-      }[lockState];
-    }
-    function tempoInfo() {
-      beatOut.textContent = `${prefs.beat.toFixed(1).replace('.', ',')} s pro Bewegung · ganze Kata etwa ${Math.round(steps[steps.length - 1].t)} s`;
-      tempoBtns.forEach((b) => b.classList.toggle('placed', Number(b.dataset.beat) === prefs.beat));
+    // Hinweis nur, wenn etwas fehlt: japanische Stimme oder Bildschirm-an
+    const infoOut = el('p', { class: 'muted small ans-info' });
+    function info() {
+      const msg = [];
+      if (!tts || !voice) msg.push(`Keine japanische Stimme ${tts ? 'auf diesem Gerät' : 'in diesem Browser'} – die Ansage läuft stumm. Eine japanische Stimme lässt sich in den Geräteeinstellungen unter Sprachausgabe nachladen.`);
+      if (lockState === 'nein') msg.push('Dieser Browser kann die Bildschirmsperre nicht verhindern – bitte die automatische Sperre in den Geräteeinstellungen verlängern.');
+      infoOut.textContent = msg.join(' ');
+      infoOut.hidden = !msg.length;
     }
 
     function render(i) {
@@ -351,7 +310,7 @@
       const now = performance.now();
       for (let i = from; i < steps.length; i++) {
         const at = base + steps[i].t * 1000;
-        timers.push(setTimeout(() => speak(steps[i], prefs), Math.max(0, at - latency * 1000 - now)));
+        timers.push(setTimeout(() => speak(steps[i]), Math.max(0, at - latency * 1000 - now)));
         timers.push(setTimeout(() => { idx = i; render(i); }, Math.max(0, at - now)));
       }
       const end = base + (steps[steps.length - 1].t + 1.5) * 1000;
@@ -365,7 +324,7 @@
       }
       // erste Ansage sofort im Klick (iOS gibt die Sprachausgabe nur nach einer Berührung frei)
       base = performance.now() - steps[from].t * 1000;
-      speak(steps[from], prefs);
+      speak(steps[from]);
       render(from);
       // nach einem Sprung folgt die nächste Ansage mit dem normalen Abstand
       if (from + 1 < steps.length) schedule(from + 1);
@@ -402,7 +361,6 @@
         if (lock) lock.release().catch(() => {});
         lock = null;
         lockState = 'aus';
-        lockInfo();
         return;
       }
       if (lock) return;
@@ -413,7 +371,7 @@
       } catch (e) {
         lockState = 'nein';
       }
-      lockInfo();
+      info();
     }
     // Beim Wechsel in eine andere App erlischt der Wake Lock – Ansage anhalten, damit der Takt nicht davonläuft.
     function onVisibility() {
@@ -436,18 +394,6 @@
       SK.ansageCleanup = null;
     };
 
-    function rebuild() {
-      const was = running;
-      pause();
-      steps = SK.ansageTimeline(k, prefs.beat, prefs.frame);
-      idx = 0;
-      savePrefs(prefs);
-      tempoInfo();
-      render(0);
-      if (was) wake(false);
-      ui();
-    }
-
     playBtn.addEventListener('click', () => {
       if (running) pause();
       else start(idx >= steps.length - 1 ? 0 : idx);
@@ -463,47 +409,23 @@
       if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
       else stage.parentNode.requestFullscreen().catch(() => {});
     });
-    tempoBtns.forEach((b) => b.addEventListener('click', () => {
-      prefs.beat = Number(b.dataset.beat);
-      beatIn.value = String(prefs.beat);
-      rebuild();
-    }));
-    beatIn.addEventListener('input', () => { prefs.beat = Number(beatIn.value); rebuild(); });
-    frameIn.addEventListener('change', () => { prefs.frame = frameIn.checked; rebuild(); });
-    voiceSel.addEventListener('change', () => { prefs.voice = voiceSel.value; savePrefs(prefs); voiceInfo(); });
-    testBtn.addEventListener('click', () => {
-      if (tts) tts.cancel();
-      [1, 2, 3].forEach((n, i) => setTimeout(() => speak(count(n), prefs), i * prefs.beat * 1000));
-    });
-
     app.innerHTML = '';
     app.append(
       el('nav', { class: 'crumbs' }, el('a', { href: '#/ansage', text: 'Üben' }), ' › ', el('span', { text: k.name })),
       el('h1', { text: `${k.name} – Ansage` }),
       el('p', { class: 'muted', text: 'Die App zählt die Kata auf Japanisch im Rhythmus des Buches – wie im Dojo bis Ju und dann wieder ab Ichi. Die Karte zeigt von oben, wo die Füße stehen, wohin der Körper zeigt und wie gedreht wird. Handy hinlegen, Ton an, Start.' }),
+      infoOut,
       el('div', { class: 'ans-wrap' }, stage,
         el('div', { class: 'ans-controls' }, prevBtn, playBtn, nextBtn),
         track,
         el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-kiai', text: 'Kiai' }), el('span', { class: 'lg-slow', text: 'langsam' }), el('span', { class: 'lg-link', text: 'fließend zur nächsten' })),
         el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }))),
       el('div', { class: 'actions' }, resetBtn, fsBtn),
-      el('section', { class: 'card ans-settings' },
-        el('h2', { text: 'Einstellungen' }),
-        el('div', { class: 'ans-row' }, el('span', { class: 'ans-lbl', text: 'Tempo' }), el('div', { class: 'ans-tempi' }, tempoBtns)),
-        el('label', { class: 'ans-row', for: 'ans-beat' }, el('span', { class: 'ans-lbl', text: 'Feinregler' }), beatIn),
-        beatOut,
-        el('label', { class: 'ans-check' }, frameIn, ' Name, Rei und Yoi vorab, Naore und Rei am Ende ansagen'),
-        el('label', { class: 'ans-row', for: 'ans-voice' }, el('span', { class: 'ans-lbl', text: 'Stimme' }), voiceSel),
-        voiceOut,
-        el('div', { class: 'actions' }, testBtn),
-        lockOut),
       el('p', { class: 'muted small' }, 'Mehr zur Kata: ', el('a', { href: `#/wissen/${k.id}-ueberblick`, text: `${k.name} im Kata-Wissen` })),
-      el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Fußstellungen nach der Embusen-Skizze, ${SK.bookPages(k.ansage.page)}; Drehrichtungen daraus abgeleitet. Das Tempo nennt das Buch nicht – es ist frei einstellbar.` })
+      el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Fußstellungen nach der Embusen-Skizze, ${SK.bookPages(k.ansage.page)}; Drehrichtungen daraus abgeleitet. Das Tempo nennt das Buch nicht – die App zählt im Trainingstempo von ${BEAT} s je Bewegung.` })
     );
     buildTrack();
-    voiceInfo();
-    lockInfo();
-    tempoInfo();
+    info();
     render(0);
     ui();
   };

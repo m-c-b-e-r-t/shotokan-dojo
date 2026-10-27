@@ -11,7 +11,6 @@
     // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
     ansage: {
       kana: 'へいあん しょだん',
-      de: 'hehjan schodann',
       page: 16,
       lines: [[-1, 0, 1, 0], [-1, 2, 1, 2], [0, 0, 0, 2]],
       rei: { f: [[-0.08, 0.12, 330, 0.5], [0.1, 0.12, 30, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
@@ -104,7 +103,6 @@
     // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
     ansage: {
       kana: 'へいあん にだん',
-      de: 'hehjan nidann',
       page: 29,
       lines: [[-1, 0, 1, 0], [-1, 1.6, 1, 1.6], [0, -0.4, 0, 1.6]],
       rei: { f: [[-0.06, 0.12, 330, 0.5], [0.11, 0.12, 30, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
@@ -201,11 +199,10 @@
     id: 'heian-sandan', name: 'Heian Sandan', moves: 20, kiai: [10, 20], firstPage: 30,
     // Kata-Ansage: Name für eine japanische Stimme (Kana) und eine deutsche (Lautschrift).
     // Bodenkarte nach der Fußskizze im Buch (Scan-Seite 39 = S. 68–69): Einheit = halbe Grundlinie, x nach rechts, y nach vorne.
-    // f = [linker Fuß, rechter Fuß] mit [x, y, Zehenrichtung (0 = vorne, im Uhrzeigersinn), Gewicht]; body = Körperrichtung,
+    // Kata-Ansage: Name in Kana für die japanische Stimme.
     // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
     ansage: {
       kana: 'へいあん さんだん',
-      de: 'hehjan sandann',
       page: 39,
       lines: [[-1, 0, 1, 0], [0, 0, 0, 2]],
       rei: { f: [[-0.11, 0.15, 327, 0.5], [0.18, 0.15, 41, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
@@ -292,7 +289,6 @@
     // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
     ansage: {
       kana: 'へいあん よんだん',
-      de: 'hehjan jonndann',
       page: 53,
       lines: [[-1, 0, 1, 0], [-1, 1.6, 1, 1.6], [0, -0.4, 0, 1.6]],
       rei: { f: [[-0.08, 0.12, 330, 0.5], [0.1, 0.12, 30, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
@@ -400,7 +396,6 @@
     // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
     ansage: {
       kana: 'へいあん ごだん',
-      de: 'hehjan godann',
       page: 65,
       lines: [[-1, 0, 1, 0], [0, 0, 0, 2]],
       rei: { f: [[-0.08, 0.11, 330, 0.5], [0.1, 0.11, 30, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },

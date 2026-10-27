@@ -10,7 +10,6 @@
     // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
     ansage: {
       kana: 'てっき しょだん',
-      de: 'tecki schodann',
       page: 77,
       lines: [[-1, 0, 1, 0]],
       rei: { f: [[-0.13, 0, 320, 0.5], [0.11, 0, 36, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },

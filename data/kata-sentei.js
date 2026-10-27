@@ -10,7 +10,6 @@
     // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
     ansage: {
       kana: 'ばっさい だい',
-      de: 'bassai dai',
       page: 99,
       lines: [[-1, 0, 1, 0], [0, 0, 0, 2]],
       rei: { f: [[-0.08, 0.11, 330, 0.5], [0.07, 0.11, 30, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
@@ -156,7 +155,6 @@
     // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
     ansage: {
       kana: 'かんくう だい',
-      de: 'kanku dai',
       page: 130,
       lines: [[-1, 0, 1, 0], [-1, 1.6, 1, 1.6], [0, -0.4, 0, 1.6]],
       rei: { f: [[-0.08, 0.08, 330, 0.5], [0.07, 0.08, 30, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
@@ -345,7 +343,6 @@
     // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
     ansage: {
       kana: 'じおん',
-      de: 'dschi-on',
       page: 154,
       lines: [[-1, 0, 1, 0], [-1, 2, 1, 2], [0, 0, 0, 2]],
       rei: { f: [[-0.06, 0.11, 330, 0.5], [0.09, 0.11, 30, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
@@ -493,7 +490,6 @@
     // look = Blick, falls zur Seite; turn = Drehung in Grad (negativ = links herum); h = Fußarbeit.
     ansage: {
       kana: 'えんぴ',
-      de: 'emmpi',
       page: 173,
       lines: [[-1, 0, 1, 0], [-1, 2, 1, 2], [0, 0, 0, 2]],
       rei: { f: [[-0.05, 0.1, 330, 0.5], [0.09, 0.1, 30, 0.5]], body: 0, h: 'Verbeugung, Fersen zusammen' },
