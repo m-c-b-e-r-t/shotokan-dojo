@@ -357,15 +357,46 @@
   const pt = (x, y, d, r) => [Math.round(x + Math.cos(rad(d)) * r), Math.round(y + Math.sin(rad(d)) * r)];
   // Spur nur, wenn der Fuß den Platz wechselt – ein Fuß, der auf der Stelle dreht, steht ja noch da
   const moved = (a, b) => a[0] !== b[0] || a[1] !== b[1];
-  function arrow(x, y, d, cls) {
-    const [ax, ay] = pt(x, y, d, 92);
-    const [bx, by] = pt(x, y, d, 40);
+  // Füße als je drei Kreise (Ferse, Mitte, Zehen) – daran weichen Pfeile und Drehbogen aus
+  const CLEAR = 20;
+  const footDots = (feet) => feet.flatMap(([x, y, r]) => [-26, -6, 14].map((ly) => [x - ly * Math.sin((r * Math.PI) / 180), y + ly * Math.cos((r * Math.PI) / 180), CLEAR]));
+  // Pfeil beginnt hinter den Füßen, die in seiner Richtung liegen, damit er sie nicht übermalt
+  function arrowStart(x, y, d, dots) {
+    const ux = Math.cos(rad(d));
+    const uy = Math.sin(rad(d));
+    const hits = dots
+      .map(([px, py, c]) => [(px - x) * ux + (py - y) * uy, Math.abs((px - x) * uy - (py - y) * ux), c])
+      .filter(([, s, c]) => s < c + 8)
+      .sort((a, b) => a[0] - b[0]);
+    let r0 = 40;
+    hits.forEach(([t, , c]) => { if (t + c > r0 && t - c < r0 + 52) r0 = Math.round(t + c); });
+    return r0;
+  }
+  function arrow(x, y, d, cls, r0) {
+    const [ax, ay] = pt(x, y, d, r0 + 52);
+    const [bx, by] = pt(x, y, d, r0);
     const [l1x, l1y] = pt(ax, ay, d + 150, 15);
     const [l2x, l2y] = pt(ax, ay, d - 150, 15);
     return `<path class="${cls}" d="M${bx} ${by} L${ax} ${ay} M${l1x} ${l1y} L${ax} ${ay} L${l2x} ${l2y}"/>`;
   }
-  function turnArc(x, y, from, deg) {
-    const r = 108;
+  const arrowDots = (x, y, d, r0) => Array.from({ length: 7 }, (_, j) => [...pt(x, y, d, r0 + j * 9), 12]);
+  // Radius des Drehbogens so wählen, dass er an Füßen und Pfeilen vorbei und innerhalb der Karte bleibt (sonst der mit den wenigsten Treffern)
+  function arcRadius(x, y, from, deg, dots, box) {
+    let best = 108;
+    let least = Infinity;
+    [108, 92, 125, 78, 145, 64, 165].some((r) => {
+      let n = 0;
+      for (let a = 0; a <= Math.abs(deg); a += 5) {
+        const [qx, qy] = pt(x, y, from + Math.sign(deg) * a, r);
+        n += dots.filter(([px, py, c]) => Math.hypot(px - qx, py - qy) < c + 4).length;
+        if (qx < box[0] + 10 || qx > box[1] - 10 || qy < -box[3] + 10 || qy > -box[2] - 10) n += 3;
+      }
+      if (n < least) [best, least] = [r, n];
+      return !n;
+    });
+    return best;
+  }
+  function turnArc(x, y, from, deg, r) {
     const to = from + deg;
     const [sx, sy] = pt(x, y, from, r);
     const [ex, ey] = pt(x, y, to, r);
@@ -406,15 +437,21 @@
     const side = (i) => (i ? 'R' : 'L');
     if (prev) prev.f.forEach((f, i) => { if (moved(f, pose.f[i])) svg += SK.gfx.foot(...P(f[0], f[1]), f[2], 0, { side: side(i), scale: 1, was: true }); });
     const [cx, cy] = P((pose.f[0][0] + pose.f[1][0]) / 2, (pose.f[0][1] + pose.f[1][1]) / 2);
-    if (pose.turn && prev) svg += turnArc(cx, cy, prev.body, pose.turn);
+    const dots = footDots(pose.f.map((f) => [...P(f[0], f[1]), f[2]]).concat(pose.via ? [[...P(pose.via[1], pose.via[2]), pose.via[3]]] : []));
+    const bodyR = arrowStart(cx, cy, pose.body, dots);
+    const lookR = pose.look != null ? arrowStart(cx, cy, pose.look, dots) : 0;
+    if (pose.turn && prev) {
+      const busy = dots.concat(arrowDots(cx, cy, pose.body, bodyR), pose.look != null ? arrowDots(cx, cy, pose.look, lookR) : []);
+      svg += turnArc(cx, cy, prev.body, pose.turn, arcRadius(cx, cy, prev.body, pose.turn, busy, [x0, x1, y0, y1]));
+    }
     if (pose.via) {
       const [i, vx, vy, vd] = pose.via;
       const v = P(vx, vy);
       svg += SK.gfx.foot(...v, vd, 0, { side: side(i), scale: 1, was: true }) + viaArrow(P(pose.f[i][0], pose.f[i][1]), v);
     }
     pose.f.forEach((f, i) => { svg += SK.gfx.foot(...P(f[0], f[1]), f[2], f[3], { side: side(i), scale: 1, lift: '#e53935' }); });
-    svg += arrow(cx, cy, pose.body, 'emb-body');
-    if (pose.look != null) svg += arrow(cx, cy, pose.look, 'emb-look');
+    svg += arrow(cx, cy, pose.body, 'emb-body', bodyR);
+    if (pose.look != null) svg += arrow(cx, cy, pose.look, 'emb-look', lookR);
     return `<svg class="emb-map" viewBox="${Math.round(x0)} ${Math.round(-y1)} ${Math.round(x1 - x0)} ${Math.round(y1 - y0)}" role="img" aria-label="Fußstellung von oben">${svg}</svg>`;
   };
   // Drehung in Worten: ⅛ bis ¾ links/rechts herum
