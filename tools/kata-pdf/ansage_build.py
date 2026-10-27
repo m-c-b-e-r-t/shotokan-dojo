@@ -5,7 +5,8 @@ Die Spezifikation ist eine Python-Datei mit:
   PAGES  = [Seite, ...]            Skizzenseiten in Lesereihenfolge
   SKIP   = {(Seite, Bild), ...}     Bilder, die nicht gebraucht werden (z. B. Zwischenbilder)
   FRAMES = [(Name, Zuordnung, Stand, Körper, Extras), ...]  in Reihenfolge rei, yoi, 1 … n, naore, end
-     Zuordnung: 'LR' / 'RL' (erkannte Abdrücke von links nach rechts) oder 'L' / 'R' bei nur einem Abdruck
+     Zuordnung: 'LR' / 'RL' (erkannte Abdrücke von links nach rechts) oder 'L' / 'R' bei nur einem Abdruck;
+     'manual', wenn embusen.py das Bild nicht erkannt hat (dann Extras['f'] von Hand vermessen)
      (der andere kommt dann aus Extras['other'] oder bleibt wie im Bild davor).
      Extras: f = [[x, y, Richtung], [x, y, Richtung]] ersetzt die Messung (z. B. bei zusammenliegenden Füßen),
      look, turn, h (Fußarbeit), w = [Gewicht links, Gewicht rechts].
@@ -43,9 +44,12 @@ def main(spec_path):
         for b in json.loads((OUT / f"embusen_{p:03d}.json").read_text()):
             if (p, b["i"]) not in skip:
                 frames.append((p, b))
-    names = [f[0] for f in spec["FRAMES"]]
-    if len(frames) != len(names):
-        sys.exit(f"{len(frames)} Bilder gefunden, {len(names)} beschrieben")
+    # Zuordnung 'manual': Bild wurde nicht erkannt, Füße stehen in Extras['f'] (verbraucht kein erkanntes Bild)
+    measured = [f for f in spec["FRAMES"] if f[1] != "manual"]
+    if len(frames) != len(measured):
+        sys.exit(f"{len(frames)} Bilder gefunden, {len(measured)} beschrieben")
+    it = iter(frames)
+    frames = [(None, {"i": None, "feet": []}) if f[1] == "manual" else next(it) for f in spec["FRAMES"]]
     poses = []
     prev = None
     for (p, b), (name, assign, stance, body, ex) in zip(frames, spec["FRAMES"]):
