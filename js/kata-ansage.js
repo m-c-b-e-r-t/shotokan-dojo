@@ -57,18 +57,23 @@
   //    Platz – auch wenn er sich auf der Stelle dreht.
   // 2. Ausgleich: Jedes Bild darf als Ganzes etwas verrutscht sein. Die Plätze aller Füße und der Versatz jedes Bildes werden
   //    so bestimmt, dass sie insgesamt am besten zu den Skizzen passen (kleinste Fehlerquadrate). Ein Fuß, der in der Skizze
-  //    genau auf einer Embusen-Linie steht, bleibt auf ihr; Rei, Yoi, Naore und das Ende liegen fest am Start.
-  // 3. Gleichmäßige Stände werden ausgerichtet: Musubi-, Heisoku-, Hachiji- und Kiba-dachi symmetrisch mit Fersen auf einer Linie
-  //    (bei Musubi- und Hachiji-dachi liegt die Mitte der Fersen auf der nahen Embusen-Linie, bei Heisoku- und Kiba-dachi die
-  //    Fußmitte), bei Zenkutsu- und Kokutsu-dachi zeigt der vordere Fuß genau in Körperrichtung, bei Kokutsu-dachi der hintere quer.
+  //    genau auf einer Embusen-Linie steht, bleibt auf ihr; Rei, Yoi, Naore und das Ende liegen fest am Start. Im Bild, in dem
+  //    ein Fuß ankommt, zählt zusätzlich seine Lage zum stehenden Fuß (W_STANCE), damit der Stand Breite und Länge behält.
+  // 3. Gleichmäßige Stände werden ausgerichtet: Musubi-, Heisoku-, Hachiji- und Kiba-dachi symmetrisch mit Fersen auf einer
+  //    Linie (bei Musubi- und Hachiji-dachi liegt die Mitte der Fersen auf der nahen Embusen-Linie, bei Heisoku- und
+  //    Kiba-dachi die Fußmitte). Bei Zenkutsu-dachi zeigt der vordere Fuß ZEN_IN nach innen, der hintere mindestens
+  //    ZEN_OUT_MIN nach außen; bei Kokutsu-dachi zeigt der vordere Fuß genau in Körperrichtung und der hintere quer (wie in
+  //    den Einzelskizzen des Buches, docs/fussskizzen.md).
   const STILL = { d: 0.12, deg: 20 };
   const PIN_MAX = 0.6; // weiter versetzt die Skizze einen Fuß nur, wenn er sich wirklich bewegt
   const SNAP = 0.1; // so nah an einer Embusen-Linie wird der Stand auf sie gesetzt
   const ON_LINE = 0.03; // so nah an einer Linie steht ein Fuß in der Skizze „auf“ ihr
   const KOSA_BACK = 0.1; // so weit steht im Kosa-dachi der gekreuzte Fuß hinter dem tragenden
   const KOSA_TURN = 25; // so weit darf er gegen die Körperrichtung verdreht sein
-  const KOSA_SIDE = 0.14; // so weit steht beim Kreuzschritt in Tekki („Ashi-mae Kosa“) der kreuzende Fuß seitlich am anderen vorbei
-  const KOSA_FRONT = 0.08; // … und so weit steht er vor ihm (nur im Bild des Kreuzschritts, s. steadyRun)
+  const KOSA_SIDE = 0.14; // so weit steht beim Kreuzschritt in Tekki („Ashi-mae Kosa“) der kreuzende Fuß neben dem anderen
+  const ZEN_IN = 15; // so weit zeigt im Zenkutsu-dachi der vordere Fuß nach innen (Einzelskizzen: 4–27°, im Mittel 15°)
+  const ZEN_OUT = 25; // … und der hintere nach außen (Einzelskizzen: 14–39°, im Mittel 24°), falls er weniger als ZEN_OUT_MIN zeigt
+  const ZEN_OUT_MIN = 10;
   const NEAR = 0.2; // so nah an einer Linie steht ein gleichmäßiger Stand (Kiba-dachi …) in der Skizze auf ihr
   const HEEL = 0.068; // Fersenmitte hinter der Fußmitte (Karteneinheiten, Fußabdruck in Kartengröße)
   const angDiff = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
@@ -167,7 +172,11 @@
     const front = (f[0][3] > f[1][3]) === zen ? 0 : 1;
     return f.map((x, i) => {
       let d = x[2];
-      if (i === front && angDiff(d, body) <= 30) d = body;
+      // der vordere Fuß: bei Zenkutsu-dachi leicht nach innen (links im Uhrzeigersinn, rechts dagegen), sonst gerade
+      if (i === front && angDiff(d, body) <= 30) d = zen ? body + (i ? -ZEN_IN : ZEN_IN) : body;
+      // der hintere Fuß zeigt bei Zenkutsu-dachi nach außen – auch wenn er vorher als vorderer Fuß eingedreht stand
+      const out = (((d - body + 540) % 360) - 180) * (i ? 1 : -1); // nach außen positiv
+      if (i !== front && zen && out < ZEN_OUT_MIN && out > -90) d = body + (i ? ZEN_OUT : -ZEN_OUT);
       if (i !== front && !zen) {
         const across = angDiff(d, body + 90) < angDiff(d, body - 90) ? body + 90 : body - 90;
         if (angDiff(d, across) <= 30) d = across;
@@ -183,7 +192,18 @@
   const W_FRAME = 20;
   const W_LINE = 4;
   const W_SYM = 1; // gleichmäßiger Stand nahe einer Linie – schwächer als ein Fuß, der in der Skizze auf ihr steht
+  // Ein Fuß, der stehen bleibt, hat in allen diesen Bildern einen Platz; die Übersichtsskizze zeichnet ihn aber von Bild zu
+  // Bild leicht verschieden. Damit der Stand des Bildes, in dem der andere Fuß ankommt, dabei nicht Breite oder Länge
+  // verliert, gilt dort zusätzlich: ankommender Fuß − stehender Fuß ≈ wie in der Skizze (Gewicht W_STANCE). Zu stark
+  // gewichtet, würden sich die kleinen Zeichenfehler über die Kata aufsummieren und sie endete nicht am Startpunkt.
+  const W_STANCE = 3;
   function balance(raw, seg, nSeg, frame, lines, extra) {
+    // je Bild und Achse: [ankommender Fuß, stehender Fuß], wenn genau einer ankommt
+    const stance = raw.map((p, j) => [0, 1].map((c) => {
+      if (!j || frame[j]) return null;
+      const arr = [0, 1].filter((i) => seg[j][i][c] !== seg[j - 1][i][c]);
+      return arr.length === 1 ? [arr[0], 1 - arr[0]] : null;
+    }));
     const pos = Array.from({ length: nSeg }, () => [0, 0]); // je Platz nur die Achse c genutzt, zu der er gehört
     const off = raw.map(() => [0, 0]);
     const onL = raw.map((p, j) => p.f.map((x, i) => lines.map((l) => lineAt(x, l, ON_LINE)).filter(Boolean).concat(extra[j][i])));
@@ -193,6 +213,13 @@
       raw.forEach((p, j) => p.f.forEach((x, i) => {
         for (let c = 0; c < 2; c++) { const s = seg[j][i][c]; sum[s][c] += x[c] - off[j][c]; cnt[s][c] += 1; }
         onL[j][i].forEach(([c, v, w = W_LINE]) => { const s = seg[j][i][c]; sum[s][c] += w * v; cnt[s][c] += w; });
+      }));
+      raw.forEach((p, j) => stance[j].forEach((st, c) => {
+        if (!st) return;
+        const [m, t] = st.map((i) => seg[j][i][c]);
+        const rel = p.f[st[0]][c] - p.f[st[1]][c];
+        sum[m][c] += W_STANCE * (pos[t][c] + rel); cnt[m][c] += W_STANCE;
+        sum[t][c] += W_STANCE * (pos[m][c] - rel); cnt[t][c] += W_STANCE;
       }));
       pos.forEach((q, s) => { for (let c = 0; c < 2; c++) if (cnt[s][c]) q[c] = sum[s][c] / cnt[s][c]; });
       raw.forEach((p, j) => {
@@ -286,7 +313,8 @@
           const turn = ((f[r][2] - m.body + 540) % 360) - 180;
           if (Math.abs(turn) > KOSA_TURN) f[r] = f[r].slice(0, 2).concat(norm(m.body + Math.sign(turn) * KOSA_TURN), f[r][3]);
         }
-        // Kreuzschritt in Tekki: der genannte Fuß kreuzt vor dem anderen auf dessen andere Seite, mindestens KOSA_SIDE weit
+        // Kreuzschritt in Tekki: der genannte Fuß kreuzt vor dem anderen auf dessen andere Seite und steht auf dem Ballen
+        // direkt daneben, mindestens KOSA_SIDE weit
         const cross = /^(hidari|migi) ashi-mae kosa$/i.exec(stances[j]);
         if (cross) {
           const c = /^h/i.test(cross[1]) ? 0 : 1;
@@ -316,18 +344,6 @@
       }
       const via = m.via && [m.via[0], r2(m.via[1] - off[j][0]), r2(m.via[2] - off[j][1]), m.via[3]];
       done.push(Object.assign({}, m, { f }, via ? { via } : {}));
-    });
-    // Kreuzschritt in Tekki: der kreuzende Fuß steht vor dem anderen. Erst hier versetzt, damit der folgende Kiba-dachi
-    // auf der Linie bleibt; cross merkt den Fuß, damit die Karte im nächsten Bild keinen Schritt zurück zeigt.
-    done.forEach((p, j) => {
-      const cross = /^(hidari|migi) ashi-mae kosa$/i.exec(stances[j]);
-      if (!cross) return;
-      const c = /^h/i.test(cross[1]) ? 0 : 1;
-      const v = toe(p.body);
-      const ahead = (p.f[c][0] - p.f[1 - c][0]) * v[0] + (p.f[c][1] - p.f[1 - c][1]) * v[1];
-      const da = Math.max(0, KOSA_FRONT - ahead);
-      p.f = p.f.map((x, i) => (i === c ? [r2(x[0] + v[0] * da), r2(x[1] + v[1] * da)].concat(x.slice(2)) : x));
-      p.cross = c;
     });
     const n = done.length;
     return { rei: done[0], yoi: done[1], moves: done.slice(2, n - 2), naore: done[n - 2], end: done[n - 1] };
@@ -487,7 +503,7 @@
     svg += `<text class="emb-txt" x="0" y="${Math.round(-y1 + 30)}" text-anchor="middle">▲ vorne (Shomen)</text>`;
     svg += `<text class="emb-txt" x="0" y="${Math.round(-y0 - 12)}" text-anchor="middle">Start</text>`;
     const side = (i) => (i ? 'R' : 'L');
-    if (prev) prev.f.forEach((f, i) => { if (moved(f, pose.f[i]) && prev.cross !== i) svg += SK.gfx.foot(...P(f[0], f[1]), f[2], 0, { side: side(i), scale: 1, was: true }); });
+    if (prev) prev.f.forEach((f, i) => { if (moved(f, pose.f[i])) svg += SK.gfx.foot(...P(f[0], f[1]), f[2], 0, { side: side(i), scale: 1, was: true }); });
     const [cx, cy] = P((pose.f[0][0] + pose.f[1][0]) / 2, (pose.f[0][1] + pose.f[1][1]) / 2);
     const dots = footDots(pose.f.map((f) => [...P(f[0], f[1]), f[2]]).concat(pose.via ? [[...P(pose.via[1], pose.via[2]), pose.via[3]]] : []));
     const box = [x0, x1, y0, y1];

@@ -13,6 +13,7 @@
 
 ## Kata-Ansage (Bodenkarte) ändern
 - Korrekturen an einer bestimmten Stelle einer Kata möglichst in den Daten dieser Kata (`ansage` in `data/kata-*.js`) machen, nicht in den allgemeinen Regeln in `js/kata-ansage.js` (Stände, Ausgleich, Gewichte). Muss doch eine allgemeine Regel geändert werden, vorher sagen, welche Kata und Stände sie betrifft.
+- Vor jedem Commit, der `data/kata-*.js` oder `js/kata-ansage.js` ändert, auch `node tools/skizzen-vergleich.js` laufen lassen (Abgleich mit den Einzelskizzen des Buches, `docs/fussskizzen.md`) – neue Abweichungen über 25° melden.
 - Vor jedem Commit, der `data/kata-*.js` oder `js/kata-ansage.js` ändert, `node tools/ansage-vergleich.js` laufen lassen und dem Nutzer melden, welche Kata und Bewegungen sich gegenüber dem letzten Stand verändert haben – auch Folgeänderungen (ein stehender Fuß wandert in allen Bewegungen mit, in denen er steht).
 
 ## Inhalte

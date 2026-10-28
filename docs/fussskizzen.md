@@ -22,10 +22,47 @@ keine Abschriften.
 - Manche Bewegungen haben zwei Skizzen (erst Drehen, dann Fußarbeit), z. B. Heian Godan 21 und 23 und Bassai Dai 25, 26 und 28.
   Die Tabellen messen jeweils die letzte Skizze.
 
+## Umsetzung in der App (v1.32.0)
+
+Die Befunde unten (Stand v1.31.10) sind in die Kata-Ansage übernommen. Danach meldet `node tools/skizzen-vergleich.js`
+nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
+
+**Regeln in `js/kata-ansage.js`**
+- **Standgeometrie (C):** Im Bild, in dem ein Fuß ankommt, zählt seine Lage zum stehenden Fuß zusätzlich (`W_STANCE`).
+  Spurbreite und Standlänge gehen beim Ausgleich nicht mehr verloren. Die Lage auf der Ablauflinie bleibt gewahrt, und
+  jede Kata endet weiter am Startpunkt.
+- **Zenkutsu-dachi (D):** Der vordere Fuß zeigt 15° nach innen (`ZEN_IN`, im Buch im Mittel 15°). Der hintere zeigt
+  mindestens 10° nach außen, sonst 25° (`ZEN_OUT`). Damit erscheint auch die Drehung des hinteren Fußes beim nächsten
+  Schritt.
+- **Kreuzschritt in Tekki (E):** Der kreuzende Fuß steht auf gleicher Höhe direkt neben dem anderen. Das frühere Versetzen
+  nach vorne (`KOSA_FRONT`) ist entfallen.
+
+**Daten in `data/kata-*.js`** (Rohwerte und Fußarbeit-Texte, je Bewegung nach Einzelskizze und Buchtext)
+- Zehenrichtungen bei allen Befunden oben: Hizakutsu, hintere Füße, Gyaku-hanmi in Kanku Dai, Kosa-dachi nach dem Sprung,
+  Renoji, Bassai Dai 23/24 und 41, Jion 4, 7, 9 und 39.
+- Lage und Länge: Heian Shodan 3, 6, 13; Heian Sandan 7, 9; Heian Yondan 1, 10, 18, 24, 26; Kanku Dai 3–9 (breiterer
+  Hachiji-dachi), 16, 46, 53; Jion 1, 4, 7, 17, 22, 25, 40, 45; Enpi 1, 24, 28; Tekki 1, 7, 21.
+- Fußarbeit-Texte: Heian Sandan 19, Kanku Dai 5, 29 und 51, Enpi 2, 22, 31 und 34.
+- Yori-ashi mit beiden Füßen: Kanku Dai 56, Jion 19, Enpi 34 und 35. Enpi 15: Der rechte Fuß kommt hinter das linke Knie.
+- **Angleichung ganzer Abschnitte:** In Kanku Dai bleibt der linke Fuß von 46 bis 54 stehen, so sagen es Text und
+  Einzelskizzen. Die Übersichtsskizze rückt den Stand ab 48 zur Mittellinie. Die Rohbilder 47–64 sind deshalb Bild für
+  Bild an den stehenden Fuß angeglichen, der Sprung in 65 nimmt den Versatz auf. Ebenso in Jion 18–30 nach dem
+  verlängerten Kiai-Schritt 17, der Sprung in 31 nimmt den Versatz auf.
+
+**Bewusst offen gelassen**
+- **Jion 2:** Im Buch ist der vordere Fuß etwa 41° eingedreht, die App setzt wie überall 15°.
+- **Jion 42:** Der linke Fuß steht nicht ganz vor dem rechten (Abweichung etwa 30°). Die Übersichtsskizze ist von 42 bis
+  46 in sich stimmig, und eine Korrektur hätte 46/47 verzerrt.
+- **Heian Yondan 24:** Der Kokutsu-dachi bleibt mit 0,40 etwas kurz. Die Übersichtsskizze widerspricht sich bei 23/24 beim
+  stehenden rechten Fuß, und die Kata muss am Startpunkt enden.
+- **Kiba-dachi in Tekki:** Die Zehen bleiben parallel (im Buch leicht nach innen).
+- **Kanku Dai 46–64:** Der Abschnitt liegt etwas neben der Mittellinie der Übersichtsskizze, weil der linke Fuß dort laut
+  Buch durchgehend stehen bleibt.
+
 ## Abgleich mit der Kata-Ansage (Stand App v1.31.10)
 
-Geprüft wurde jede Einzelskizze neben der Stellung der App und der Buchtext je Bewegung. Noch ist nichts davon in die
-App übernommen. Wo nichts steht, passen Fußarbeit (welcher Fuß wandert, dreht oder bleibt) und Endstellung. Gemeint ist
+Geprüft wurde jede Einzelskizze neben der Stellung der App und der Buchtext je Bewegung. Die Befunde sind seit v1.32.0
+umgesetzt (siehe oben). Wo nichts steht, passen Fußarbeit (welcher Fuß wandert, dreht oder bleibt) und Endstellung. Gemeint ist
 immer die App-Stellung nach dem Ausgleich (`SK.ansagePoses`).
 
 ### Allgemein (Regeln in `js/kata-ansage.js`)
