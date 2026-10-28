@@ -67,6 +67,7 @@
   const ON_LINE = 0.03; // so nah an einer Linie steht ein Fuß in der Skizze „auf“ ihr
   const KOSA_BACK = 0.1; // so weit steht im Kosa-dachi der gekreuzte Fuß hinter dem tragenden
   const KOSA_TURN = 25; // so weit darf er gegen die Körperrichtung verdreht sein
+  const KOSA_SIDE = 0.14; // so weit steht beim Kreuzschritt in Tekki („Ashi-mae Kosa“) der kreuzende Fuß seitlich am anderen vorbei
   const NEAR = 0.2; // so nah an einer Linie steht ein gleichmäßiger Stand (Kiba-dachi …) in der Skizze auf ihr
   const HEEL = 0.068; // Fersenmitte hinter der Fußmitte (Karteneinheiten, Fußabdruck in Kartengröße)
   const angDiff = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
@@ -283,6 +284,15 @@
           // und zeigt ungefähr nach vorne: höchstens KOSA_TURN gegen die Körperrichtung verdreht
           const turn = ((f[r][2] - m.body + 540) % 360) - 180;
           if (Math.abs(turn) > KOSA_TURN) f[r] = f[r].slice(0, 2).concat(norm(m.body + Math.sign(turn) * KOSA_TURN), f[r][3]);
+        }
+        // Kreuzschritt in Tekki: der genannte Fuß kreuzt vor dem anderen auf dessen andere Seite, mindestens KOSA_SIDE weit
+        const cross = /^(hidari|migi) ashi-mae kosa$/i.exec(stances[j]);
+        if (cross) {
+          const c = /^h/i.test(cross[1]) ? 0 : 1;
+          const s = c ? -1 : 1; // der linke Fuß kreuzt nach rechts, der rechte nach links
+          const u = toe(m.body + 90);
+          const side = s * ((f[c][0] - f[1 - c][0]) * u[0] + (f[c][1] - f[1 - c][1]) * u[1]);
+          if (!held[c] && side < KOSA_SIDE) f[c] = [r2(f[c][0] + s * u[0] * (KOSA_SIDE - side)), r2(f[c][1] + s * u[1] * (KOSA_SIDE - side))].concat(f[c].slice(2));
         }
         // gleichmäßiger Stand hat einen stehenden Fuß versetzt: auch in den Stellungen davor, damit er nicht springt.
         // In einem gleichmäßigen Stand davor rückt der ganze Stand mit (sonst würde er schief), dann auch der andere Fuß
