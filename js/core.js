@@ -20,9 +20,9 @@
   };
   SK.bookSrc = (n) => `${SK.BOOK_SOURCE}, ${SK.bookPages(n)}`;
   // Bei jeder veröffentlichten Änderung hochzählen: node tools/version.js patch|minor|major (setzt auch ?v= in index.html)
-  SK.VERSION = '1.26.11';
+  SK.VERSION = '1.27.0';
   SK.VERSION_DATE = '28.10.2026';
-  SK.VERSION_TIME = '00:35';
+  SK.VERSION_TIME = '10:45';
 
   SK.util = {
     shuffle(arr) {
@@ -74,7 +74,7 @@
   };
 
   // Schlüssel bleibt trotz neuer Datenversion gleich, damit bestehende Speicherstände gefunden werden.
-  const KEY = 'shotokan-dojo-v1';
+  const KEY = 'shotokan-sensai-v1';
   const DATA_VERSION = 2;
   const blank = () => ({
     version: DATA_VERSION,

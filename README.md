@@ -1,4 +1,4 @@
-# Shotokan Dojo – Lernen & Quiz
+# Shotokan SensAI
 
 Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikette, Geschichte, Begriffe, Stände, Kihon, Kumite, detailliertes Kata-Wissen und das DJKB-Prüfungsprogramm (9. Kyu bis 5. Dan).
 

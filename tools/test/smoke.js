@@ -93,7 +93,7 @@
       log.push(`FEHLER: ${e.message}\n${e.stack}`);
     }
     document.getElementById('log').textContent = log.join('\n');
-    localStorage.removeItem('shotokan-dojo-v1');
+    localStorage.removeItem('shotokan-sensai-v1');
   }
   if (!window.SMOKE_LOCAL) {
     document.getElementById('log').textContent = 'Abgebrochen: Der Smoke-Test läuft nur lokal (file:// oder localhost), weil er den gespeicherten Fortschritt löscht.';

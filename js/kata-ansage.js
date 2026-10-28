@@ -487,7 +487,7 @@
   SK.ansageBeats = BEATS;
   const fmtNum = (x) => String(Math.round(x * 10) / 10).replace('.', ',');
   const tempoName = (beat) => (beat === 2 ? 'Training' : beat > 2 ? `${fmtNum(beat / 2)}× langsamer` : `${fmtNum(2 / beat)}× schneller`);
-  const TEMPO_KEY = 'shotokan-dojo-ansage-tempo';
+  const TEMPO_KEY = 'shotokan-sensai-ansage-tempo';
   function loadTempo() {
     try {
       const i = Number(localStorage.getItem(TEMPO_KEY));

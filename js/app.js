@@ -51,7 +51,7 @@
     return util.shuffle(distinct(scored.map((s) => s.q), n));
   }
   function setTitle(t) {
-    document.title = t ? `${t} – Shotokan Dojo` : 'Shotokan Dojo – Lernen & Quiz';
+    document.title = t ? `${t} – Shotokan SensAI` : 'Shotokan SensAI';
   }
   function setNav(name) {
     document.querySelectorAll('.bottombar a').forEach((a) => a.classList.toggle('active', a.dataset.nav === name));
@@ -706,7 +706,7 @@
             text: 'Exportieren',
             onclick: () => {
               const blob = new Blob([store.exportJson()], { type: 'application/json' });
-              const a = el('a', { href: URL.createObjectURL(blob), download: `shotokan-dojo-${util.today()}.json` });
+              const a = el('a', { href: URL.createObjectURL(blob), download: `shotokan-sensai-${util.today()}.json` });
               document.body.append(a);
               a.click();
               setTimeout(() => {
