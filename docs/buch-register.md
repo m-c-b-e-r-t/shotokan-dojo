@@ -523,7 +523,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 29 | Hidari Ashi-dachi | Ryoken Hidari Koshi-kamae – fließend weiter | Blick nach rechts, linker Fuß rückt einen halben Schritt heran, rechte Fußsohle an das linke Knie | Start, Blick links, Wendung ¼ rechts herum | 114 |
 | 30 | Hidari Ashi-dachi | Migi Uraken Jodan Yoko-mawashi-uchi + Migi Yoko-geri-keage – fließend weiter | Stand bleibt: Yoko-geri-keage nach rechts | Start, Blick links | 114 |
 | 31 | Migi Zenkutsu-dachi | Usho-ni Hidari Mae-enpi | Rechter Fuß setzt nach rechts ab | links, Wendung ¼ rechts herum | 114 |
-| 32 | Migi Kokutsu-dachi | Hidari Shuto Chudan-uke | Rechtes Bein trägt, Hüfte dreht links herum, linker Fuß vorne | rechts, Wendung ½ links herum | 115 |
+| 32 | Migi Kokutsu-dachi | Hidari Shuto Chudan-uke | Füße bleiben am Platz und drehen sich, Hüfte dreht links herum, linker Fuß vorne | rechts, Wendung ½ links herum | 115 |
 | 33 | Hidari Kokutsu-dachi | Migi Shuto Chudan-uke | Linkes Bein trägt, rechter Fuß gleitet schräg nach rechts (Richtung Start) | rechts hinten, Wendung ⅛ rechts herum | 115 |
 | 34 | Hidari Kokutsu-dachi | Migi Shuto Chudan-uke | Linkes Knie bleibt gebeugt, rechter Fuß schwingt nach links, Drehung rechts herum | links, Wendung ⅜ rechts herum | 116 |
 | 35 | Migi Kokutsu-dachi | Hidari Shuto Chudan-uke | Rechtes Bein trägt, linker Fuß gleitet schräg nach links (Richtung Start) | links hinten, Wendung ⅛ links herum | 116 |
