@@ -411,6 +411,14 @@
     const [l2x, l2y] = pt(ax, ay, d - 150, 15);
     return `<path class="${cls}" d="M${bx} ${by} L${ax} ${ay} M${l1x} ${l1y} L${ax} ${ay} L${l2x} ${l2y}"/>`;
   }
+  // Blick als Sichtkegel: schmaler Fächer vom Kopf weg, mit Punkt am Ansatz – kein Pfeil, damit er nicht nach Bewegung aussieht
+  function gaze(x, y, d, r0) {
+    const [bx, by] = pt(x, y, d, r0);
+    const [ax, ay] = pt(x, y, d, r0 + 84);
+    const [l1x, l1y] = pt(bx, by, d - 26, 88);
+    const [l2x, l2y] = pt(bx, by, d + 26, 88);
+    return `<path class="emb-gaze" d="M${bx} ${by} L${l1x} ${l1y} Q${ax} ${ay} ${l2x} ${l2y} Z"/><circle class="emb-eye" cx="${bx}" cy="${by}" r="5"/>`;
+  }
   const arrowDots = (x, y, d, r0) => Array.from({ length: 7 }, (_, j) => [...pt(x, y, d, r0 + j * 9), 12]);
   // Radius des Drehbogens so wählen, dass er an Füßen und Pfeilen vorbei und innerhalb der Karte bleibt (sonst der mit den wenigsten Treffern)
   function arcRadius(x, y, from, deg, dots, box) {
@@ -445,7 +453,7 @@
     const [sx, sy] = pt(ox, oy, d, 4);
     const [ex, ey] = pt(ox, oy, d, len - 4);
     const head = (x, y, dd) => { const [h1x, h1y] = pt(x, y, dd + 150, 14); const [h2x, h2y] = pt(x, y, dd - 150, 14); return `M${h1x} ${h1y} L${x} ${y} L${h2x} ${h2y}`; };
-    return `<path class="emb-via" d="M${sx} ${sy} L${ex} ${ey}"/><path class="emb-turn-head" d="${head(ex, ey, d)} ${head(sx, sy, d + 180)}"/>`;
+    return `<path class="emb-via" d="M${sx} ${sy} L${ex} ${ey}"/><path class="emb-via-head" d="${head(ex, ey, d)} ${head(sx, sy, d + 180)}"/>`;
   }
   // Ausschnitt fest je Kata, damit die Karte beim Zählen nicht springt. Das Embusen (Linien) steht in der Mitte;
   // alle Kata bekommen gleich große Karten (die größte), damit Feld und Füße überall gleich groß erscheinen.
@@ -496,7 +504,7 @@
     }
     pose.f.forEach((f, i) => { svg += SK.gfx.foot(...P(f[0], f[1]), f[2], f[3], { side: side(i), scale: 1, lift: '#e53935' }); });
     svg += arrow(body[0], body[1], pose.body, 'emb-body', body[2]);
-    if (look) svg += arrow(look[0], look[1], pose.look, 'emb-look', look[2]);
+    if (look) svg += gaze(look[0], look[1], pose.look, look[2]);
     return `<svg class="emb-map" viewBox="${Math.round(x0)} ${Math.round(-y1)} ${Math.round(x1 - x0)} ${Math.round(y1 - y0)}" role="img" aria-label="Fußstellung von oben">${svg}</svg>`;
   };
   // Drehung in Worten: ⅛ bis ¾ links/rechts herum
@@ -806,7 +814,7 @@
           tempoOut),
         track,
         el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-kiai', text: 'Kiai' }), el('span', { class: 'lg-slow', text: 'langsam' }), el('span', { class: 'lg-link', text: 'fließend zur nächsten' })),
-        el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-lift', text: 'Fuß angehoben' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }))),
+        el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-lift', text: 'Fuß angehoben' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }), el('span', { class: 'lg-turn', text: 'Wendung' }), el('span', { class: 'lg-via', text: 'Fuß zieht heran und zurück' }))),
       ...(fsBtn ? [el('div', { class: 'actions' }, fsBtn)] : []),
       el('p', { class: 'muted small' }, 'Mehr zur Kata: ', el('a', { href: `#/wissen/${k.id}-ueberblick`, text: `${k.name} im Kata-Wissen` })),
       el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Fußstellungen nach der Embusen-Skizze, ${SK.bookPages(k.ansage.page)}; Drehrichtungen daraus abgeleitet. Das Tempo nennt das Buch nicht – voreingestellt ist das Trainingstempo von 2 s je Bewegung.` })
