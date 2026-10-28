@@ -436,7 +436,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 25 | Heisoku-dachi | Migi Sokumen Jodan Uchi-uke + Hidari Sokumen Gedan-uke (Teil 1: Hidari Ashi-zenkutsu, Sasho Jodan Nagashi-uke + Migi Shuto Gedan-uchikomi) | Linkes Bein trägt, rechtes Knie hoch, Drehung links herum zur Vorderseite, dann Füße schließen (Heisoku-dachi) | rechts, Blick vorne, Wendung ¼ links herum | 91 |
 | 26 | Kiba-dachi | Migi Sokumen Migi Gedan-barai | Rechter Fuß stampft zur Vorderseite – Kiba-dachi | links, Blick vorne, Wendung ½ links herum | 91 |
 | 27 | Kiba-dachi | Hidari Tekubi Hidari Sokumen Chudan Kake-uke – langsam | Langsam: Stand bleibt, Blick nach links | links, Blick Start | 92 |
-| 28 | Kiba-dachi | Sasho-ni Migi Mae-enpi (Teil 1: Hidari Ashi-dachi, Sasho-ni Migi Chudan Mikazuki-geri) | Mikazuki-geri mit rechts in die linke Hand, rechter Fuß setzt ab – Kiba-dachi | rechts, Blick Start, Wendung ½ links herum | 92 |
+| 28 | Kiba-dachi | Sasho-ni Migi Mae-enpi (Teil 1: Hidari Ashi-dachi, Sasho-ni Migi Chudan Mikazuki-geri) | Mikazuki-geri mit rechts in die linke Hand, rechter Fuß setzt ab – Kiba-dachi | rechts, Wendung ½ links herum | 92 |
 | 29 | Kiba-dachi | Migi Gedan-uke + Hidari Zenwan Mune-mae-kamae | Stand bleibt | rechts | 93 |
 | 30 | Kiba-dachi | Hidari Gedan-uke + Migi Zenwan Mune-mae-kamae | Stand bleibt | rechts | 93 |
 | 31 | Kiba-dachi | Migi Gedan-uke + Hidari Zenwan Mune-mae-kamae | Stand bleibt | rechts | 93 |

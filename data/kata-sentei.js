@@ -42,7 +42,7 @@
         { f: [[0.22, 0.35, 81, 0.5], [0.21, 0.23, 93, 0.5]], body: 90, look: 0, turn: -90, h: 'Linkes Bein trägt, rechtes Knie hoch, Drehung links herum zur Vorderseite, dann Füße schließen (Heisoku-dachi)' },
         { f: [[0, 0.49, 270, 0.5], [0.02, 1.1, 264, 0.5]], body: 270, look: 0, turn: -180, h: 'Rechter Fuß stampft zur Vorderseite – Kiba-dachi' },
         { f: [[0.01, 0.46, 265, 0.5], [0.03, 1.08, 268, 0.5]], body: 270, look: 180, h: 'Langsam: Stand bleibt, Blick nach links' },
-        { f: [[0.14, 0.56, 80, 0.5], [0.15, -0.05, 95, 0.5]], body: 90, look: 180, turn: -180, h: 'Mikazuki-geri mit rechts in die linke Hand, rechter Fuß setzt ab – Kiba-dachi' },
+        { f: [[0.14, 0.56, 80, 0.5], [0.15, -0.05, 95, 0.5]], body: 90, turn: -180, h: 'Mikazuki-geri mit rechts in die linke Hand, rechter Fuß setzt ab – Kiba-dachi' },
         { f: [[0.15, 0.56, 87, 0.5], [0.15, -0.11, 92, 0.5]], body: 90, h: 'Stand bleibt' },
         { f: [[0.16, 0.58, 80, 0.5], [0.13, -0.13, 95, 0.5]], body: 90, h: 'Stand bleibt' },
         { f: [[0.17, 0.6, 86, 0.5], [0.13, -0.11, 93, 0.5]], body: 90, h: 'Stand bleibt' },

@@ -32,7 +32,7 @@ FRAMES = [
     ('25', 'RL', 'Heisoku-dachi', 90, {'look': 0, 'h': 'Linkes Bein trägt, rechtes Knie hoch, Drehung links herum zur Vorderseite, dann Füße schließen (Heisoku-dachi)'}),
     ('26', 'LR', 'Kiba-dachi', 270, {'turn': -180, 'look': 0, 'h': 'Rechter Fuß stampft zur Vorderseite – Kiba-dachi'}),
     ('27', 'LR', 'Kiba-dachi', 270, {'look': 180, 'h': 'Langsam: Stand bleibt, Blick nach links'}),
-    ('28', 'LR', 'Kiba-dachi', 90, {'turn': -180, 'look': 180, 'h': 'Mikazuki-geri mit rechts in die linke Hand, rechter Fuß setzt ab – Kiba-dachi'}),
+    ('28', 'LR', 'Kiba-dachi', 90, {'turn': -180, 'h': 'Mikazuki-geri mit rechts in die linke Hand, rechter Fuß setzt ab – Kiba-dachi'}),
     ('29', 'LR', 'Kiba-dachi', 90, {'h': 'Stand bleibt'}),
     ('30', 'RL', 'Kiba-dachi', 90, {'h': 'Stand bleibt'}),
     ('31', 'RL', 'Kiba-dachi', 90, {'h': 'Stand bleibt'}),
