@@ -185,7 +185,7 @@
         { f: [[0.14, 1.05, 181, 0.3], [-0.11, 1.53, 260, 0.7]], body: 180, turn: -180, h: 'Rechter Fuß setzt nach dem Tritt ab und bleibt, linker Fuß zieht zurück – Blick zum Start' },
         { f: [[0.02, 0.99, 211, 0.7], [-0.02, 1.44, 199, 0.3]], body: 180, h: 'Gewicht nach vorne (Ashi-zenkutsu)' },
         { f: [[0.13, 1.04, 192, 0.4], [-0.05, 1.43, 198, 0.6]], body: 180, h: 'Langsam: Renoji-dachi' },
-        { f: [[0.12, 1.4, 180, 0], [0.01, 1.41, 183, 1]], body: 180, look: 90, h: 'Blick nach links, Gewicht aufs rechte Bein, linke Fußsohle an das rechte Knie' },
+        { f: [[0.12, 1.4, 180, 0], [0.01, 1.41, 177, 1]], body: 180, look: 90, h: 'Blick nach links, Gewicht aufs rechte Bein, linke Fußsohle an das rechte Knie' },
         { f: [[0.12, 1.4, 180, 0], [0.01, 1.41, 178, 1]], body: 180, look: 90, h: 'Stand bleibt: Yoko-geri-keage nach links' },
         { f: [[0.64, 1.53, 120, 0.7], [0.14, 1.51, 108, 0.3]], body: 90, turn: -90, h: 'Linker Fuß setzt nach links ab' },
         { f: [[0.4, 1.46, 181, 1], [0.28, 1.47, 180, 0]], body: 180, look: 270, turn: 90, h: 'Blick nach rechts, linker Fuß rückt einen halben Schritt heran, rechte Fußsohle an das linke Knie' },
