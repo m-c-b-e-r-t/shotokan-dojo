@@ -11,6 +11,10 @@
 - Bei jeder veröffentlichten Änderung die Version mit `node tools/version.js patch|minor|major` hochzählen (setzt Version, Datum, Uhrzeit und `?v=` in `index.html`). Die Version steht im Commit-Titel, z. B. „… (v1.11.1)“.
 - Neue Skripte in `index.html`, `tools/test/validate.html` und `tools/test/smoke.html` gleichermaßen eintragen.
 
+## Kata-Ansage (Bodenkarte) ändern
+- Korrekturen an einer bestimmten Stelle einer Kata möglichst in den Daten dieser Kata (`ansage` in `data/kata-*.js`) machen, nicht in den allgemeinen Regeln in `js/kata-ansage.js` (Stände, Ausgleich, Gewichte). Muss doch eine allgemeine Regel geändert werden, vorher sagen, welche Kata und Stände sie betrifft.
+- Vor jedem Commit, der `data/kata-*.js` oder `js/kata-ansage.js` ändert, `node tools/ansage-vergleich.js` laufen lassen und dem Nutzer melden, welche Kata und Bewegungen sich gegenüber dem letzten Stand verändert haben – auch Folgeänderungen (ein stehender Fuß wandert in allen Bewegungen mit, in denen er steht).
+
 ## Inhalte
 - App, Texte und Commit-Nachrichten auf Deutsch.
 - Kata-Fragen nur aus „Karate-Do Kata Vol. 1“ (JKA) mit gedruckter Buchseite (`SK.bookSrc`).
