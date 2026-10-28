@@ -163,7 +163,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 4 | Hidari Kokutsu-dachi | Migi Haiwan Migi Sokumen Jodan Yoko-uke | Füße bleiben am Platz: Blick nach rechts, Gewicht aufs linke Bein, beide Füße drehen im Uhrzeigersinn | rechts, Wendung ½ rechts herum | 18 |
 | 5 | Hidari Kokutsu-dachi | Migi Jodan Soto-nagashi-uke + Hidari Kentsui Soto-mawashi-uchi – fließend weiter | Stand bleibt, nur die Arme wechseln | rechts | 18 |
 | 6 | Hidari Kokutsu-dachi | Uken Migi Sokumen Chudan-zuki | Stand bleibt | rechts | 19 |
-| 7 | Hidari Ashi-dachi | Migi Uraken Jodan Yoko-mawashi-uchi + Migi Yoko-geri-keage | Linker Fuß rückt einen halben Schritt heran, Zehen nach rechts; rechter Fuß tritt Yoko-geri-keage nach rechts | vorne, Blick rechts, Wendung ¼ links herum | 19 |
+| 7 | Hidari Ashi-dachi | Migi Uraken Jodan Yoko-mawashi-uchi + Migi Yoko-geri-keage | Linker Fuß rückt einen halben Schritt heran unter den Körper, beide Füße zeigen nach vorne, Blick nach rechts; rechter Fuß tritt Yoko-geri-keage nach rechts | vorne, Blick rechts, Wendung ¼ links herum | 19 |
 | 8 | Migi Kokutsu-dachi | Hidari Shuto Chudan-uke | Blick nach links zur Vorderseite, rechter Fuß setzt hinten ab, linker Fuß vorne auf der Mittellinie | vorne | 20 |
 | 9 | Hidari Kokutsu-dachi | Migi Shuto Chudan-uke | Rechter Fuß gleitet vor | vorne | 20 |
 | 10 | Migi Kokutsu-dachi | Hidari Shuto Chudan-uke | Linker Fuß gleitet vor | vorne | 21 |
@@ -542,7 +542,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 48 | Migi Zenkutsu-dachi | Migi Chudan Uchi-uke | Linkes Bein trägt, Hüfte dreht rechts herum, rechter Fuß nach rechts | rechts, Wendung ½ rechts herum | 122 |
 | 49 | Migi Zenkutsu-dachi | Hidari Chudan Gyaku-zuki – fließend weiter | Stand bleibt | rechts | 122 |
 | 50 | Migi Zenkutsu-dachi | Uken Chudan-zuki | Stand bleibt | rechts | 122 |
-| 51 | Hidari Ashi-dachi | Ryoken Hidari Koshi-kamae | Linker Fuß rückt heran, Zehen nach rechts, rechte Fußsohle an das linke Knie | vorne, Blick rechts, Wendung ¼ links herum | 123 |
+| 51 | Hidari Ashi-dachi | Ryoken Hidari Koshi-kamae | Linker Fuß rückt heran unter den Körper, beide Füße zeigen nach vorne, Blick nach rechts, rechte Fußsohle an das linke Knie | vorne, Blick rechts, Wendung ¼ links herum | 123 |
 | 52 | Hidari Ashi-dachi | Migi Uraken Jodan Yoko-mawashi-uchi + Migi Yoko-geri-keage | Stand bleibt: Yoko-geri-keage nach rechts | vorne, Blick rechts | 123 |
 | 53 | Migi Kokutsu-dachi | Hidari Shuto Chudan-uke | Blick nach links zur Vorderseite, rechter Fuß setzt hinten ab | vorne | 123 |
 | 54 | Migi Zenkutsu-dachi | Sasho Chudan Osae-uke + Migi Chudan Shihon-nukite | Hüfte nach vorne, rechter Fuß gleitet vor | vorne | 124 |

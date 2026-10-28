@@ -114,7 +114,7 @@
         { f: [[-0.32, 0.13, 358, 0.7], [0.32, 0.02, 78, 0.3]], body: 90, turn: 180, h: 'Füße bleiben am Platz: Blick nach rechts, Gewicht aufs linke Bein, beide Füße drehen im Uhrzeigersinn' },
         { f: [[-0.22, 0.15, 357, 0.7], [0.44, 0.01, 78, 0.3]], body: 90, h: 'Stand bleibt, nur die Arme wechseln' },
         { f: [[-0.26, 0.15, 358, 0.7], [0.44, 0.02, 78, 0.3]], body: 90, h: 'Stand bleibt' },
-        { f: [[0.15, 0.02, 88, 1.0], [0.26, 0.03, 0, 0.0]], body: 0, look: 90, turn: -90, h: 'Linker Fuß rückt einen halben Schritt heran, Zehen nach rechts; rechter Fuß tritt Yoko-geri-keage nach rechts' },
+        { f: [[0.15, 0.02, 0, 1.0], [0.26, 0.03, 0, 0.0]], body: 0, look: 90, turn: -90, h: 'Linker Fuß rückt einen halben Schritt heran unter den Körper, beide Füße zeigen nach vorne, Blick nach rechts; rechter Fuß tritt Yoko-geri-keage nach rechts' },
         { f: [[0.0, 0.14, 357, 0.3], [0.19, -0.36, 80, 0.7]], body: 0, h: 'Blick nach links zur Vorderseite, rechter Fuß setzt hinten ab, linker Fuß vorne auf der Mittellinie' },
         { f: [[-0.13, 0.05, 279, 0.7], [-0.01, 0.75, 351, 0.3]], body: 0, h: 'Rechter Fuß gleitet vor' },
         { f: [[-0.02, 1.14, 359, 0.3], [0.16, 0.43, 91, 0.7]], body: 0, h: 'Linker Fuß gleitet vor' },
