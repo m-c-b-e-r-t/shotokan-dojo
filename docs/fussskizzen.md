@@ -137,6 +137,43 @@ immer die App-Stellung nach dem Ausgleich (`SK.ansagePoses`).
 - 34: Laut Text und Skizze gleiten beide Füße nach vorne (Richtung Shomen). Der App-Text sagt „Leichtes Yori-ashi
   zurück“, und die Füße rücken nach rechts.
 
+## Ursachen der Abweichungen
+
+Prüfen ohne PDF: `node tools/skizzen-vergleich.js` vergleicht die angezeigten Stellungen mit den Tabellen unten,
+`--roh` die Rohdaten in `data/kata-*.js` (vor dem Ausgleich). Für jeden Befund oben wurden Buch, Rohdaten und angezeigte
+Stellung nebeneinandergelegt. Fünf Ursachen:
+
+- **A – Rohdaten:** Die Werte in `ansage` (gemessen an der Übersichtsskizze) weichen schon von der Einzelskizze ab.
+  Korrektur in den Daten der Kata.
+- **B – Fußarbeit-Text:** Der Text `h` sagt, welcher Fuß stehen bleibt. Danach richtet sich der Ausgleich. Ein falscher
+  Text hält einen Fuß fest, der sich bewegt, oder umgekehrt. Korrektur des Textes in den Daten der Kata.
+- **C – Mittelung über Nachbarbilder:** Ein Fuß, der laut Text stehen bleibt, bekommt in allen Bildern, in denen er
+  steht, einen einzigen Platz. Die Übersichtsskizze zeichnet ihn aber von Bild zu Bild leicht verschieden. Dann wird
+  gemittelt, und der Stand des Bildes, in dem der Fuß ankommt, verliert Spurbreite oder Länge. Belegt durch einen Versuch
+  ohne diese Kopplung: Dann kommen genau die Rohwerte heraus. Korrigierbar in den Daten (Nachbarbilder angleichen) oder
+  über eine Regel in `js/kata-ansage.js`.
+- **D – Regel „vorderer Fuß im Zenkutsu-dachi“:** `shape()` setzt den vorderen Fuß bis 30° Abweichung auf die
+  Körperrichtung, obwohl die Rohdaten (wie das Buch) ihn leicht eingedreht haben. Ein stehender Fuß behält seine Richtung,
+  solange er weniger als 20° dreht (`STILL.deg`). Darum fehlt beim nächsten Schritt die Drehung des hinteren Fußes.
+- **E – Regeln zum Kreuzschritt in Tekki:** `KOSA_FRONT` und `KOSA_SIDE` versetzen den kreuzenden Fuß vor den anderen und
+  dabei auch den Stand.
+
+| Kata | A Rohdaten | B Text | C Mittelung | D vorderer Fuß | E Kreuzschritt |
+|---|---|---|---|---|---|
+| Heian Shodan | 3, 6, 13 (zu lang), 12 (Zehen links) | – | 12 (Spurbreite, Länge) | 9, 15–17 | – |
+| Heian Nidan | 20, 21 (Drehung), 23 (Zehen rechts) | – | 23 (Spurbreite), 25 (Länge) | – | – |
+| Heian Sandan | 7, 9 | 19 | 18 | – | – |
+| Heian Yondan | 1, 2, 10 (zu lang), 13, 16, 18, 26 | – | 24 | 16 | – |
+| Heian Godan | 19 | – | – | 12 | – |
+| Tekki Shodan | 1 (Zehen), Kiba-Zehen | – | – | – | 1, 7, 21, dazu 2, 8, 22 |
+| Bassai Dai | 1, 6 (Zehen), 11, 23, 41 | – | 6 (Spurbreite), 24 | 35 | – |
+| Kanku Dai | 7, 9, 16, 24, 36, 51, 53, 56 | 29, 51 | 3, 45, 54, 43 (Spurbreite) | 16, 43, 48 | – |
+| Jion | 1, 4, 7, 9, 14, 17, 19, 25, 31, 39, 40, 42, 45, 46 | – | 7, 17, 22 | 14 | – |
+| Enpi | 15, 22, 24, 28, 29, 34 | 2, 22, 31, 34 | – | – | – |
+
+Bei einigen Stellen wirken zwei Ursachen zusammen. Jion 17 zum Beispiel ist schon in den Rohdaten zu breit (A), und die
+Mittelung zieht den rechten Fuß dann fast neben den linken (C).
+
 ## Tabellen
 
 Erzeugt mit `python3 tools/kata-pdf/einzel_register.py` (braucht das PDF, siehe `tools/kata-pdf/README.md`).
