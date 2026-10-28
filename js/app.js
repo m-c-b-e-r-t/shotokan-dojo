@@ -76,7 +76,7 @@
     const asked = Object.keys(store.data.asked).filter((id) => qById[id]).length;
     const tile = (href, title, text, cls) => el('a', { class: `tile ${cls || ''}`, href }, el('h3', { text: title }), el('p', { text }));
     app.append(
-      el('section', { class: 'hero' }, el('h1', { text: 'Osu! Bereit fürs Training?' }), el('p', { class: 'muted', text: `${SK.questions.length} Fragen · ${allLessons.length} Lektionen · DJKB 9. Kyu bis 3. Dan` })),
+      el('section', { class: 'hero' }, el('h1', null, 'Ichi-go ichi-e ', el('span', { class: 'hero-kanji', lang: 'ja', text: '一期一会' })), el('p', { class: 'muted', text: `${SK.questions.length} Fragen · ${allLessons.length} Lektionen · DJKB 9. Kyu bis 3. Dan` })),
       el(
         'div',
         { class: 'tiles' },

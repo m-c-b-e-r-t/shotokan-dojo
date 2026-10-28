@@ -232,6 +232,13 @@ main {
   margin-top: 0.2em;
 }
 
+.hero-kanji {
+  margin-left: 0.3em;
+  font-weight: 400;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
 .unit-section h2 {
   margin-top: 1.6rem;
 }
