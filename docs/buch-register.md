@@ -535,7 +535,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 41 | Migi Zenkutsu-dachi | Uken Chudan-zuki | Stand bleibt | Start | 119 |
 | 42 | Hidari Ashi-dachi | Sasho Soede Migi Jodan Ura-zuki + Migi Hiza-zuchi | Wendung links herum zur Vorderseite: linkes Bein trägt, rechtes Knie hoch | vorne, Wendung ½ links herum | 119 |
 | 43 | Migi Ashi-zenkutsu | Ude-tate (Hände auf dem Boden) | Rechter Fuß landet vorne, Fingerspitzen beider Hände auf den Boden (Ashi-zenkutsu) | vorne | 120 |
-| 44 | Migi Kokutsu-dachi | Hidari Shuto Gedan-uke + Migi Shuto Mune-mae-kamae (tiefer als üblich) | Wendung links herum zum Start, tiefer Kokutsu-dachi | Start, Wendung ½ links herum | 120 |
+| 44 | Migi Kokutsu-dachi | Hidari Shuto Gedan-uke + Migi Shuto Mune-mae-kamae (tiefer als üblich) | Füße bleiben am Platz und drehen sich, Wendung links herum zum Start, tiefer Kokutsu-dachi | Start, Wendung ½ links herum | 120 |
 | 45 | Hidari Kokutsu-dachi | Migi Shuto Chudan-uke | Rechter Fuß gleitet vor | Start | 121 |
 | 46 | Hidari Zenkutsu-dachi | Hidari Chudan Uchi-uke | Rechtes Bein trägt, linker Fuß schwingt nach rechts, ¾ Drehung links herum | links, Wendung ¾ links herum | 121 |
 | 47 | Hidari Zenkutsu-dachi | Migi Chudan Gyaku-zuki | Stand bleibt | links | 122 |

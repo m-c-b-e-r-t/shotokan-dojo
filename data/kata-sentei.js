@@ -203,7 +203,7 @@
         { f: [[0.17, 1.21, 171, 0.3], [0.18, 0.63, 160, 0.7]], body: 180, h: 'Stand bleibt' },
         { f: [[0.19, 1.47, 1, 1], [0.3, 1.6, 0, 0]], body: 0, turn: -180, h: 'Wendung links herum zur Vorderseite: linkes Bein trägt, rechtes Knie hoch' },
         { f: [[0.08, 1.47, 345, 0.3], [0.24, 1.87, 353, 0.7]], body: 0, h: 'Rechter Fuß landet vorne, Fingerspitzen beider Hände auf den Boden (Ashi-zenkutsu)' },
-        { f: [[0.39, 1.1, 180, 0.3], [0.15, 1.73, 274, 0.7]], body: 180, turn: -180, h: 'Wendung links herum zum Start, tiefer Kokutsu-dachi' },
+        { f: [[0.39, 1.1, 180, 0.3], [0.15, 1.73, 274, 0.7]], body: 180, turn: -180, h: 'Füße bleiben am Platz und drehen sich, Wendung links herum zum Start, tiefer Kokutsu-dachi' },
         { f: [[0.39, 1.24, 84, 0.7], [0.26, 0.8, 178, 0.3]], body: 180, h: 'Rechter Fuß gleitet vor' },
         { f: [[-0.7, 0.89, 278, 0.7], [0.12, 1.03, 282, 0.3]], body: 270, turn: -270, h: 'Rechtes Bein trägt, linker Fuß schwingt nach rechts, ¾ Drehung links herum' },
         { f: [[-0.48, 0.92, 290, 0.7], [0.13, 1.08, 293, 0.3]], body: 270, h: 'Stand bleibt' },
