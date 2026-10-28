@@ -68,7 +68,7 @@
 
   // ---------- Start ----------
   // Tuschefilter für den Leitspruch und rote Spritzer oben rechts.
-  const HERO_DEKO = `<svg width="0" height="0" style="position:absolute">
+  const HERO_DEKO = `<svg class="hero-filter" width="0" height="0">
       <filter id="hero-tusche"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="7" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="5" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.35" result="m"/><feComposite in="d" in2="m" operator="in"/></filter>
       <filter id="hero-pinsel"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="2"/><feDisplacementMap in="SourceGraphic" scale="2.5"/></filter>
     </svg>

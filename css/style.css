@@ -12,6 +12,7 @@
   --bad-bg: #fdecea;
   --radius: 14px;
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  --papier: radial-gradient(ellipse at 100% 0%, rgba(198, 40, 40, 0.14), transparent 45%), linear-gradient(170deg, #fffaf2, #efe4d2);
   font-size: 16px;
 }
 
@@ -23,13 +24,25 @@
   display: none !important;
 }
 
+html {
+  background: var(--bg);
+}
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: var(--bg);
   color: var(--ink);
   line-height: 1.5;
   padding-bottom: 76px;
+}
+
+/* Washi-Hintergrund für die ganze Seite; fest stehend, auch auf iOS */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--papier);
 }
 
 a {
@@ -235,14 +248,12 @@ main {
 .hero {
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at 100% 0%, rgba(198, 40, 40, 0.16), transparent 50%),
-    linear-gradient(170deg, #fffaf2, #efe4d2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1rem 1.2rem;
+  padding: 1rem 0;
   margin: 1rem 0;
-  box-shadow: var(--shadow);
+}
+
+.hero-filter {
+  position: absolute;
 }
 
 .hero h1,
@@ -1684,16 +1695,11 @@ details.unit>summary::-webkit-details-marker {
     --ink: #ececec;
     --muted: #a0a0a6;
     --bg: #151515;
+    --papier: radial-gradient(ellipse at 100% 0%, rgba(198, 40, 40, 0.2), transparent 45%), linear-gradient(170deg, #26221f, #1b1816);
     --card: #222;
     --line: #383838;
     --ok-bg: #16301a;
     --bad-bg: #3a1716;
-  }
-
-  .hero {
-    background:
-      radial-gradient(ellipse at 100% 0%, rgba(198, 40, 40, 0.22), transparent 50%),
-      linear-gradient(170deg, #26221f, #1b1816);
   }
 
   .hero-kanji {
