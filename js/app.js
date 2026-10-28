@@ -67,6 +67,13 @@
   }
 
   // ---------- Start ----------
+  // Tuschefilter für den Leitspruch und rote Spritzer oben rechts.
+  const HERO_DEKO = `<svg width="0" height="0" style="position:absolute">
+      <filter id="hero-tusche"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="7" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="5" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.35" result="m"/><feComposite in="d" in2="m" operator="in"/></filter>
+      <filter id="hero-pinsel"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="2"/><feDisplacementMap in="SourceGraphic" scale="2.5"/></filter>
+    </svg>
+    <svg class="hero-spritzer" viewBox="0 0 120 80"><circle cx="86" cy="30" r="20"/><circle cx="64" cy="20" r="4"/><circle cx="58" cy="44" r="2.5"/><circle cx="108" cy="54" r="3.2"/><circle cx="100" cy="10" r="2"/></svg>`;
+
   function viewStart() {
     setNav('');
     setTitle('');
@@ -76,7 +83,13 @@
     const asked = Object.keys(store.data.asked).filter((id) => qById[id]).length;
     const tile = (href, title, text, cls) => el('a', { class: `tile ${cls || ''}`, href }, el('h3', { text: title }), el('p', { text }));
     app.append(
-      el('section', { class: 'hero' }, el('h1', null, 'Ichi-go ichi-e ', el('span', { class: 'hero-kanji', lang: 'ja', text: '一期一会' })), el('p', { class: 'muted', text: `${SK.questions.length} Fragen · ${allLessons.length} Lektionen · DJKB 9. Kyu bis 3. Dan` })),
+      el(
+        'section',
+        { class: 'hero' },
+        el('div', { class: 'hero-deko', 'aria-hidden': 'true', html: HERO_DEKO }),
+        el('h1', null, el('span', { class: 'hero-kanji', lang: 'ja', text: '一期一会' }), el('span', { class: 'hero-romaji', text: 'Ichi-go ichi-e' })),
+        el('p', { class: 'muted', text: `${SK.questions.length} Fragen · ${allLessons.length} Lektionen · DJKB 9. Kyu bis 3. Dan` }),
+      ),
       el(
         'div',
         { class: 'tiles' },

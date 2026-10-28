@@ -219,8 +219,25 @@ main {
 }
 
 /* ---------- Startseite ---------- */
+/* Schriften nur mit den Zeichen des Leitspruchs (SIL OFL, siehe assets/fonts) */
+@font-face {
+  font-family: "SK Kanji";
+  src: url("../assets/fonts/yuji-syuku.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SK Pinsel";
+  src: url("../assets/fonts/kaushan-script.woff2") format("woff2");
+  font-display: swap;
+}
+
 .hero {
-  background: linear-gradient(135deg, #fff, #fbeaea);
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(198, 40, 40, 0.16), transparent 50%),
+    linear-gradient(170deg, #fffaf2, #efe4d2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 1rem 1.2rem;
@@ -228,15 +245,41 @@ main {
   box-shadow: var(--shadow);
 }
 
+.hero h1,
+.hero p {
+  position: relative;
+}
+
 .hero h1 {
-  margin-top: 0.2em;
+  margin: 0.1em 0 0;
+  font-weight: 400;
+  line-height: 1.15;
 }
 
 .hero-kanji {
-  margin-left: 0.3em;
-  font-weight: 400;
-  color: var(--muted);
-  white-space: nowrap;
+  display: block;
+  font-family: "SK Kanji", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 3rem;
+  letter-spacing: 0.02em;
+  color: #141210;
+  filter: url(#hero-tusche);
+}
+
+.hero-romaji {
+  display: block;
+  font-family: "SK Pinsel", cursive;
+  font-size: 1.3rem;
+  color: #9a1f17;
+  filter: url(#hero-pinsel);
+}
+
+.hero-spritzer {
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  width: 120px;
+  fill: #b3261e;
+  opacity: 0.65;
 }
 
 .unit-section h2 {
@@ -1648,7 +1691,17 @@ details.unit>summary::-webkit-details-marker {
   }
 
   .hero {
-    background: linear-gradient(135deg, #222, #3a1d1d);
+    background:
+      radial-gradient(ellipse at 100% 0%, rgba(198, 40, 40, 0.22), transparent 50%),
+      linear-gradient(170deg, #26221f, #1b1816);
+  }
+
+  .hero-kanji {
+    color: #f3ede4;
+  }
+
+  .hero-romaji {
+    color: #e06b5f;
   }
 
   .option,
