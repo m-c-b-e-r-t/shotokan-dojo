@@ -22,7 +22,7 @@ keine Abschriften.
 - Manche Bewegungen haben zwei Skizzen (erst Drehen, dann Fußarbeit), z. B. Heian Godan 21 und 23 und Bassai Dai 25, 26 und 28.
   Die Tabellen messen jeweils die letzte Skizze.
 
-## Umsetzung in der App (v1.32.0)
+## Umsetzung in der App (v1.32.0, ergänzt in v1.32.1)
 
 Die Befunde unten (Stand v1.31.10) sind in die Kata-Ansage übernommen. Danach meldet `node tools/skizzen-vergleich.js`
 nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
@@ -42,7 +42,9 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   Renoji, Bassai Dai 23/24 und 41, Jion 4, 7, 9 und 39.
 - Lage und Länge: Heian Shodan 3, 6, 13; Heian Sandan 7, 9; Heian Yondan 1, 10, 18, 24, 26; Kanku Dai 3–9 (breiterer
   Hachiji-dachi), 16, 46, 53; Jion 1, 4, 7, 17, 22, 25, 40, 45; Enpi 1, 24, 28; Tekki 1, 7, 21.
-- Fußarbeit-Texte: Heian Sandan 19, Kanku Dai 5, 29 und 51, Enpi 2, 22, 31 und 34.
+- Fußarbeit-Texte: Heian Sandan 19, Heian Godan 21, Kanku Dai 5, 29 und 51, Jion 20, Enpi 2, 22, 31 und 34. Heian
+  Godan 22 hat jetzt die Drehung nach rechts (Füße zeigen danach nach rechts).
+- Standlängen nachgezogen (v1.32.1): Heian Sandan 20, Heian Yondan 23 und 24, Kanku Dai 31 und 65, Jion 23, 26 und 33.
 - Yori-ashi mit beiden Füßen: Kanku Dai 56, Jion 19, Enpi 34 und 35. Enpi 15: Der rechte Fuß kommt hinter das linke Knie.
 - **Angleichung ganzer Abschnitte:** In Kanku Dai bleibt der linke Fuß von 46 bis 54 stehen, so sagen es Text und
   Einzelskizzen. Die Übersichtsskizze rückt den Stand ab 48 zur Mittellinie. Die Rohbilder 47–64 sind deshalb Bild für
@@ -53,8 +55,10 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
 - **Jion 2:** Im Buch ist der vordere Fuß etwa 41° eingedreht, die App setzt wie überall 15°.
 - **Jion 42:** Der linke Fuß steht nicht ganz vor dem rechten (Abweichung etwa 30°). Die Übersichtsskizze ist von 42 bis
   46 in sich stimmig, und eine Korrektur hätte 46/47 verzerrt.
-- **Heian Yondan 24:** Der Kokutsu-dachi bleibt mit 0,40 etwas kurz. Die Übersichtsskizze widerspricht sich bei 23/24 beim
+- **Heian Yondan 24:** Der Kokutsu-dachi bleibt mit 0,46 etwas kurz. Die Übersichtsskizze widerspricht sich bei 23/24 beim
   stehenden rechten Fuß, und die Kata muss am Startpunkt enden.
+- **Heian Shodan 20, Heian Nidan 25, Enpi 1/2:** Die Stände sind etwas länger (Shodan 20, Nidan 25) bzw. schmaler
+  (Enpi 1/2) als im Buch. Eine Korrektur würde das Ende der Kata 0,15–0,2 vom Startpunkt wegschieben.
 - **Kiba-dachi in Tekki:** Die Zehen bleiben parallel (im Buch leicht nach innen).
 - **Kanku Dai 46–64:** Der Abschnitt liegt etwas neben der Mittellinie der Übersichtsskizze, weil der linke Fuß dort laut
   Buch durchgehend stehen bleibt.

@@ -316,8 +316,8 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 18 | Hidari Ashi-mae Renoji-dachi | Uken Uho-tsukiage | Blick zum Start, linkes Bein streckt nach links Richtung Start aus (Renoji-dachi) | links, Blick Start | 61 |
 | 19 | Migi Ashi-mae Kosa-dachi | Gedan Kosa-uke (Tobikomi (Sprung)) – **Kiai** | Sprung (Tobikomi) Richtung Start mit Kiai, halbe Drehung links herum, Landung im Kreuzstand | rechts, Wendung ½ links herum | 62 |
 | 20 | Migi Zenkutsu-dachi | Migi Chudan Morote-uke (Zenkutsu-dachi ohne Breite) | Rechter Fuß gleitet nach rechts Richtung Start | Start, Wendung ¼ rechts herum | 62 |
-| 21 | Migi Kokutsu-dachi | Migi Sokumen Jodan Uchi-uke + Hidari Sokumen Gedan-uke (Teil 1: Hidari Ashi-zenkutsu, Sasho Jodan Nagashi-uke + Migi Shuto Gedan-uchikomi) | Blick nach links zur Vorderseite, Gewicht nach hinten aufs rechte Bein | vorne, Wendung ½ links herum | 63 |
-| 22 | Heisoku-dachi | Jotai sonomama (Oberkörper unverändert) – langsam | Langsam: Oberkörper bleibt, linker Fuß schließt an den rechten | rechts, Blick vorne | 63 |
+| 21 | Migi Kokutsu-dachi | Migi Sokumen Jodan Uchi-uke + Hidari Sokumen Gedan-uke (Teil 1: Hidari Ashi-zenkutsu, Sasho Jodan Nagashi-uke + Migi Shuto Gedan-uchikomi) | Füße drehen auf der Stelle, Blick nach links zur Vorderseite, linker Fuß rückt etwas zurück, Gewicht nach hinten aufs rechte Bein | vorne, Wendung ½ links herum | 63 |
+| 22 | Heisoku-dachi | Jotai sonomama (Oberkörper unverändert) – langsam | Langsam: Oberkörper bleibt, linker Fuß schließt an den rechten, Füße zeigen nach rechts | rechts, Blick vorne, Wendung ¼ rechts herum | 63 |
 | 23 | Hidari Kokutsu-dachi | Hidari Sokumen Jodan Uchi-uke + Migi Sokumen Gedan-uke (Teil 1: Migi Ashi-zenkutsu, Usho Jodan Nagashi-uke + Hidari Shuto Gedan-uchikomi) | Linkes Bein trägt, rechter Fuß gleitet nach vorne | vorne, Wendung ¼ links herum | 64 |
 <!-- /ablauf -->
 
@@ -604,7 +604,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 17 | Migi Zenkutsu-dachi | Migi Chudan Oi-zuki – **Kiai** | Hüfte nach vorne, rechter Fuß gleitet vor – Kiai | vorne | 139 |
 | 18 | Migi Kokutsu-dachi | Migi Sokumen Jodan Uchi-uke + Hidari Sokumen Gedan-uke | Rechtes Knie bleibt gebeugt, linker Fuß schwingt nach rechts, ¾ Drehung links herum | rechts, Wendung ¾ links herum | 140 |
 | 19 | Kiba-dachi | Uken Kagi-zuki (Hidari-e Yori-ashi) | Yori-ashi nach links: beide Füße gleiten, Kiba-dachi | Start, Blick rechts, Wendung ¼ rechts herum | 140 |
-| 20 | Hidari Kokutsu-dachi | Hidari Sokumen Jodan Uchi-uke + Migi Sokumen Gedan-uke | Füße drehen, Blick nach rechts – Kokutsu-dachi | links, Wendung ¼ rechts herum | 141 |
+| 20 | Hidari Kokutsu-dachi | Hidari Sokumen Jodan Uchi-uke + Migi Sokumen Gedan-uke | Füße bleiben am Platz und drehen, Blick nach rechts – Kokutsu-dachi | links, Wendung ¼ rechts herum | 141 |
 | 21 | Kiba-dachi | Saken Kagi-zuki (Migi-e Yori-ashi) | Yori-ashi nach rechts: beide Füße gleiten, Kiba-dachi | Start, Blick links, Wendung ¼ links herum | 141 |
 | 22 | Hidari Zenkutsu-dachi | Hidari Gedan-barai | Linker Fuß gleitet Richtung Start | Start | 141 |
 | 23 | Kiba-dachi | Migi Teisho Migi Sokumen Chudan Yoko-uke | Rechter Fuß tritt vor Richtung Start – Kiba-dachi, Blick zum Start | rechts, Blick Start, Wendung ¼ links herum | 142 |
