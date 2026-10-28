@@ -68,6 +68,7 @@
   const KOSA_BACK = 0.1; // so weit steht im Kosa-dachi der gekreuzte Fuß hinter dem tragenden
   const KOSA_TURN = 25; // so weit darf er gegen die Körperrichtung verdreht sein
   const KOSA_SIDE = 0.14; // so weit steht beim Kreuzschritt in Tekki („Ashi-mae Kosa“) der kreuzende Fuß seitlich am anderen vorbei
+  const KOSA_FRONT = 0.08; // … und so weit steht er vor ihm (nur im Bild des Kreuzschritts, s. steadyRun)
   const NEAR = 0.2; // so nah an einer Linie steht ein gleichmäßiger Stand (Kiba-dachi …) in der Skizze auf ihr
   const HEEL = 0.068; // Fersenmitte hinter der Fußmitte (Karteneinheiten, Fußabdruck in Kartengröße)
   const angDiff = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
@@ -316,6 +317,18 @@
       const via = m.via && [m.via[0], r2(m.via[1] - off[j][0]), r2(m.via[2] - off[j][1]), m.via[3]];
       done.push(Object.assign({}, m, { f }, via ? { via } : {}));
     });
+    // Kreuzschritt in Tekki: der kreuzende Fuß steht vor dem anderen. Erst hier versetzt, damit der folgende Kiba-dachi
+    // auf der Linie bleibt; cross merkt den Fuß, damit die Karte im nächsten Bild keinen Schritt zurück zeigt.
+    done.forEach((p, j) => {
+      const cross = /^(hidari|migi) ashi-mae kosa$/i.exec(stances[j]);
+      if (!cross) return;
+      const c = /^h/i.test(cross[1]) ? 0 : 1;
+      const v = toe(p.body);
+      const ahead = (p.f[c][0] - p.f[1 - c][0]) * v[0] + (p.f[c][1] - p.f[1 - c][1]) * v[1];
+      const da = Math.max(0, KOSA_FRONT - ahead);
+      p.f = p.f.map((x, i) => (i === c ? [r2(x[0] + v[0] * da), r2(x[1] + v[1] * da)].concat(x.slice(2)) : x));
+      p.cross = c;
+    });
     const n = done.length;
     return { rei: done[0], yoi: done[1], moves: done.slice(2, n - 2), naore: done[n - 2], end: done[n - 1] };
   }
@@ -466,7 +479,7 @@
     svg += `<text class="emb-txt" x="0" y="${Math.round(-y1 + 30)}" text-anchor="middle">▲ vorne (Shomen)</text>`;
     svg += `<text class="emb-txt" x="0" y="${Math.round(-y0 - 12)}" text-anchor="middle">Start</text>`;
     const side = (i) => (i ? 'R' : 'L');
-    if (prev) prev.f.forEach((f, i) => { if (moved(f, pose.f[i])) svg += SK.gfx.foot(...P(f[0], f[1]), f[2], 0, { side: side(i), scale: 1, was: true }); });
+    if (prev) prev.f.forEach((f, i) => { if (moved(f, pose.f[i]) && prev.cross !== i) svg += SK.gfx.foot(...P(f[0], f[1]), f[2], 0, { side: side(i), scale: 1, was: true }); });
     const [cx, cy] = P((pose.f[0][0] + pose.f[1][0]) / 2, (pose.f[0][1] + pose.f[1][1]) / 2);
     const dots = footDots(pose.f.map((f) => [...P(f[0], f[1]), f[2]]).concat(pose.via ? [[...P(pose.via[1], pose.via[2]), pose.via[3]]] : []));
     const box = [x0, x1, y0, y1];
