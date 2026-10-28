@@ -309,7 +309,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 13 | Kiba-dachi | Migi Sokumen Migi Gedan-barai | Linkes Bein trägt, rechter Fuß geht Richtung Start, Drehung links herum in Kiba-dachi – Blick zum Start | rechts, Blick Start, Wendung ¾ links herum | 59 |
 | 14 | Kiba-dachi | Hidari Tekubi Hidari Sokumen Chudan Kake-uke – langsam | Langsam: Stand bleibt, Blick nach vorne, Hände wie beim Bogenspannen zurückziehen | rechts, Blick vorne | 59 |
 | 15 | Hidari Ashi-dachi | Sasho-ni Migi Chudan Mikazuki-geri | Linkes Bein trägt, Hüfte dreht links herum, Mikazuki-geri in die linke Hand | vorne, Wendung ¼ links herum | 60 |
-| 16 | Kiba-dachi | Sasho-ni Migi Mae-enpi | Rechter Fuß setzt nach dem Tritt vorne ab – Kiba-dachi, Blick nach vorne | links, Blick vorne, Wendung ¼ links herum | 60 |
+| 16 | Kiba-dachi | Sasho-ni Migi Mae-enpi | Rechter Fuß setzt nach dem Tritt vorne ab – Kiba-dachi | links, Wendung ¼ links herum | 60 |
 | 17 | Migi Ashi-mae Kosa-dachi | Migi Sokumen Chudan Morote-uke | Rechtes Knie bleibt gebeugt, linker Fuß kreuzt hinter die rechte Ferse | links, Blick vorne | 61 |
 | 18 | Hidari Ashi-mae Renoji-dachi | Uken Uho-tsukiage | Blick zum Start, linkes Bein streckt nach links Richtung Start aus (Renoji-dachi) | links, Blick Start | 61 |
 | 19 | Migi Ashi-mae Kosa-dachi | Gedan Kosa-uke (Tobikomi (Sprung)) – **Kiai** | Sprung (Tobikomi) Richtung Start mit Kiai, halbe Drehung links herum, Landung im Kreuzstand | rechts, Wendung ½ links herum | 62 |
