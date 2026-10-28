@@ -10,6 +10,8 @@ braucht es weiterhin das PDF.
   das Skript erneut laufen lassen.
 - **Fußstellungen als Koordinaten** (Lage, Zehenrichtung, Gewicht jedes Fußes nach den Fußskizzen des Buches):
   `ansage` in `data/kata-*.js`. Die Zuordnung je Bild steht in `tools/kata-pdf/spec/*.py`.
+- **Fußskizzen unter den einzelnen Bewegungen** (Zehenrichtungen, Lage der Füße zueinander, Fußarbeit laut Text) und
+  der Abgleich mit der Kata-Ansage der App: `docs/fussskizzen.md`.
 - **Begriffe** mit Buchseite: `data/glossary.js`.
 - **Fragen** zum Buch: `data/kata-*.js` (Feld `questions`), jeweils mit gedruckter Buchseite (`SK.bookSrc`).
 
