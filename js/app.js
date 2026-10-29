@@ -94,7 +94,7 @@
         tile('#/wissen', 'Wissen', `Alle Inhalte zum Durcharbeiten – ${read}/${allLessons.length} gelesen`),
         tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen'),
         tile('#/begriffe', 'Begriffe-Trainer', 'Stände, Techniken & Begriffe – kurz abgefragt'),
-        tile('#/ansage', 'Kata-Trainer', 'Kata im Rhythmus mitzählen, mit Fußstellungen'),
+        tile('#/ansage', 'Kata-Trainer', 'Alle Kata – Embusen und Schrittfolgen'),
         tile('#/exam', 'Prüfungen', 'DJKB-Prüfungsprogramm je Gürtel: Kihon, Kata, Kumite')
       ),
       versionLine()
