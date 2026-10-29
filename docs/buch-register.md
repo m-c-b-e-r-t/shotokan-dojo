@@ -672,7 +672,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 10 | Hidari Zenkutsu-dachi | Migi Jodan Age-zuki | Stand bleibt | Start | 160 |
 | 11 | Migi Ashi-mae Kosa-dachi | Saken Gedan-zuki (Uken Hidari Kata-mae-ue) | Sprungschritt Richtung Start: rechter Fuß landet und trägt, linker Fuß kreuzt dahinter | Start | 160 |
 | 12 | Hidari Hizakutsu | Migi Gedan-barai | Blick zur Vorderseite, rechtes Bein trägt, linker Fuß gleitet nach vorne (Hizakutsu) | vorne, Wendung ½ links herum | 161 |
-| 13 | Hidari Zenkutsu-dachi | Hidari Gedan-barai | Füße bleiben, Gewicht nach vorne – Zenkutsu-dachi | vorne | 161 |
+| 13 | Hidari Zenkutsu-dachi | Hidari Gedan-barai | Rechtes Bein trägt, linker Fuß rückt etwas heran, Gewicht nach vorne – Zenkutsu-dachi | vorne | 161 |
 | 14 | Kiba-dachi | Sasho Hidari Naname-mae-ue – langsam | Langsam: rechter Fuß bleibt, linker Fuß zieht nach links zurück – Kiba-dachi | vorne | 162 |
 | 15 | Hidari Ashi-dachi | Migi Tekubi Sasho-uchi – **Kiai** | Linkes Bein trägt, rechtes Knie hoch – Kiai | vorne | 162 |
 | 16 | Kiba-dachi | Hidari Tate-shuto Chudan-uke – langsam | Langsam: rechter Fuß setzt ab – Kiba-dachi | vorne | 163 |

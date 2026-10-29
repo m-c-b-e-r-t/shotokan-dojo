@@ -507,7 +507,7 @@
         { f: [[0.33, 0.55, 196, 0.7], [0.15, 1.11, 197, 0.3]], body: 180, h: 'Stand bleibt' },
         { f: [[-0.09, 0.04, 190, 0.1], [0.15, -0.01, 170, 0.9]], body: 180, h: 'Sprungschritt Richtung Start: rechter Fuß landet und trägt, linker Fuß kreuzt dahinter' },
         { f: [[0.11, 0.99, 9, 0.6], [0.15, 0.14, 18, 0.4]], body: 0, turn: -180, h: 'Blick zur Vorderseite, rechtes Bein trägt, linker Fuß gleitet nach vorne (Hizakutsu)' },
-        { f: [[-0.03, 0.87, 9, 0.7], [0.11, 0.13, 19, 0.3]], body: 0, h: 'Füße bleiben, Gewicht nach vorne – Zenkutsu-dachi' },
+        { f: [[-0.03, 0.87, 9, 0.7], [0.11, 0.13, 19, 0.3]], body: 0, h: 'Rechtes Bein trägt, linker Fuß rückt etwas heran, Gewicht nach vorne – Zenkutsu-dachi' },
         { f: [[-0.46, 0.13, 0, 0.5], [0.07, 0.14, 358, 0.5]], body: 0, h: 'Langsam: rechter Fuß bleibt, linker Fuß zieht nach links zurück – Kiba-dachi' },
         { f: [[-0.5, 0.17, 5, 1], [-0.38, 0.17, 0, 0]], body: 0, h: 'Linkes Bein trägt, rechtes Knie hoch – Kiai' },
         { f: [[-0.59, 0.18, 352, 0.5], [0.07, 0.17, 9, 0.5]], body: 0, h: 'Langsam: rechter Fuß setzt ab – Kiba-dachi' },
