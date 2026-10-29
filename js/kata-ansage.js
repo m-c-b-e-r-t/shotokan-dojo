@@ -360,7 +360,7 @@
     const poses = steadyPoses(k);
     const cmd = (key, extra) => Object.assign({ kind: 'cmd', t }, CMD[key], extra);
     if (frame) {
-      steps.push({ kind: 'name', t, kan: '', ro: k.name, kana: a.kana, stance: 'Musubi-dachi', pose: poses.rei });
+      steps.push({ kind: 'name', t, kan: '型', ro: k.name, kana: a.kana, stance: 'Musubi-dachi', pose: poses.rei });
       t += R.name;
       steps.push(cmd('rei', { stance: 'Musubi-dachi', pose: poses.rei }));
       t += R.rei;
@@ -687,9 +687,9 @@
     function fill(s) {
       cKan.textContent = s.kan;
       cKan.hidden = !s.kan;
-      // beim Zählen steht der Kata-Name vor der Zahl: „Heian Shodan – Ichi“
-      cRo.textContent = s.kind === 'move' ? `${k.name} – ${s.ro}` : s.ro;
-      cPos.textContent = s.kind === 'move' ? `${s.n}/${k.moves} · ${s.stance}` : s.kind === 'name' ? s.stance : `${k.name} · ${s.stance}`;
+      // beim Zählen und bei Rei, Yoi, Naore steht der Kata-Name davor: „Heian Shodan – Ichi“
+      cRo.textContent = s.kind === 'name' ? s.ro : `${k.name} – ${s.ro}`;
+      cPos.textContent = s.kind === 'move' ? `${s.n}/${k.moves} · ${s.stance}` : s.stance;
       chips.innerHTML = '';
       if (s.kiai) chips.append(el('span', { class: 'ans-chip kiai', text: 'Kiai' }));
       if (s.slow) chips.append(el('span', { class: 'ans-chip slow', text: 'langsam' }));
