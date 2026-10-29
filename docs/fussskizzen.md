@@ -93,10 +93,10 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   Nidan-geri-Sprung in 65 ist rund 1,1 lang.
 - **Kanku Dai 48:** Der rechte Fuß steht seit v1.36.2 wie in der Einzelskizze fast genau rechts vom linken (Buch 102°,
   vorher 120°, also zu breit).
-- **Kanku Dai 54:** Der rechte Fuß gleitet etwa 29° schräg nach vorne (Buch 9°). Der linke Fuß steht von 46 bis 54 eine
-  Standlänge links der Mittellinie (er bleibt laut Buch stehen), der Kiba-dachi in 55 liegt auf ihr, und der rechte Fuß
-  dreht in 55 auf der Stelle – so muss er in 54 zur Mittellinie hin gleiten. Abhilfe ginge nur, wenn der linke Fuß in
-  51 oder 53 zur Mitte rückt (so zeichnet es die Übersichtsskizze, gegen den Buchtext) oder 55–64 neben der Linie lägen.
+- **Kanku Dai 53/54:** Seit v1.36.4 rückt der linke Fuß in 53 beim Absetzen des rechten zur Mittellinie (so zeichnet es
+  die Übersichtsskizze; laut Buchtext bleibt er stehen). Dadurch steht der rechte Fuß in 53 direkt hinter dem linken
+  und gleitet in 54 wie in der Einzelskizze fast gerade vor (9°, vorher 29°) – der Kiba-dachi in 55 liegt auf der
+  Mittellinie, der rechte Fuß dreht dort auf der Stelle.
 - **Kanku Dai 62:** Die Füße bleiben stehen, nur die Fußspitzen drehen nach außen; der Hachiji-dachi ist so breit wie der
   Kiba-dachi davor.
 
