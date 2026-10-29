@@ -89,18 +89,16 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   22 / 23 / 24), daher unverändert.
 - **Kanku Dai 38–54:** Der Abschnitt liegt etwas neben der Übersichtsskizze, weil der linke Fuß in 46–54 laut Buch
   durchgehend stehen bleibt; der längere Sprungschritt in 38 gleicht das aus (siehe oben). 55–59 liegen wie in der
-  Übersichtsskizze an der oberen Linie (der linke Fuß in 55 auf ihr, das Yori-ashi in 56 gleitet nur 0,16), der
+  Übersichtsskizze an der oberen Linie (der linke Fuß in 55 auf ihr, das Yori-ashi in 56 gleitet nur 0,1), der
   Nidan-geri-Sprung in 65 ist rund 1,1 lang.
 - **Kanku Dai 48:** Der rechte Fuß steht seit v1.36.2 wie in der Einzelskizze fast genau rechts vom linken (Buch 102°,
   vorher 120°, also zu breit).
-- **Kanku Dai 53/54:** Seit v1.36.4 rückt der linke Fuß in 53 beim Absetzen des rechten zur Mittellinie (so zeichnet es
-  die Übersichtsskizze; laut Buchtext bleibt er stehen). Dadurch steht der rechte Fuß in 53 direkt hinter dem linken
-  und gleitet in 54 wie in der Einzelskizze fast gerade vor (9°, vorher 29°) – der Kiba-dachi in 55 liegt auf der
-  Mittellinie, der rechte Fuß dreht dort auf der Stelle.
-- **Kanku Dai 34–45 (v1.36.5):** 34 und 35 haben die Länge der Einzelskizzen (vorher etwa ein Viertel länger), 36 ist
-  der kurze, schmale Gyaku-hanmi des Buches (346°) und steht auf der Mittellinie. In 43/44 steht der rechte Fuß genau vor
-  dem linken (vorher 14° schräg). 38–45 liegen auf der Mittellinie, der Sprungschritt 38 geht gerade zum Start; in 46
-  setzt der linke Fuß eine Standlänge links davon ab und rückt in 53 zurück zur Mitte.
+- **Kanku Dai 34–56 (v1.36.6):** 34 und 35 haben die Länge der Einzelskizzen (vorher etwa ein Viertel länger), 36 ist
+  der kurze, schmale Gyaku-hanmi des Buches (346°) und steht auf der Mittellinie. 38–43 liegen wie in der
+  Übersichtsskizze etwas rechts der Mittellinie, in 43 steht der rechte Fuß genau vor dem linken. In 44 dreht das rechte
+  Bein, der linke Fuß rückt wie in der Übersichtsskizze deutlich nach rechts (Kokutsu-dachi daher etwa 336° statt 359°).
+  46 hat die Länge der Einzelskizze, damit steht der linke Fuß in 46–54 nahe der Mittellinie und bleibt laut Buch bis 54
+  stehen; der rechte Fuß gleitet in 54 fast gerade vor. Das Yori-ashi in 56 gleitet nur 0,1.
 - **Kanku Dai 62:** Die Füße bleiben stehen, nur die Fußspitzen drehen nach außen; der Hachiji-dachi ist so breit wie der
   Kiba-dachi davor.
 
