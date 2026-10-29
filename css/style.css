@@ -37,6 +37,9 @@ body {
   color: var(--ink);
   line-height: 1.5;
   padding-bottom: 76px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
 }
 
 /* Washi-Hintergrund für die ganze Seite; fest stehend, auch auf iOS */
@@ -79,7 +82,11 @@ h4 {
 }
 
 .version {
-  margin: 1rem 0 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.5rem;
+  margin: 0;
   text-align: center;
   font-size: 0.75rem;
   color: var(--muted);
@@ -180,10 +187,17 @@ h4 {
 }
 
 main {
+  flex: 1 0 auto;
+  width: 100%;
   max-width: 760px;
   margin: 0 auto;
   padding: 0.5rem 1rem 2rem;
   outline: none;
+}
+/* Seiten mit Versionszeile: sie sitzt immer am unteren Rand. */
+main:has(> .version) {
+  position: relative;
+  padding-bottom: 2.5rem;
 }
 
 /* ---------- Buttons ---------- */
