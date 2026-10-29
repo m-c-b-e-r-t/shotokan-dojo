@@ -100,8 +100,8 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   46 hat die Länge der Einzelskizze, damit steht der linke Fuß in 46–54 nahe der Mittellinie und bleibt laut Buch bis 54
   stehen; der rechte Fuß gleitet in 54 fast gerade vor.
 - **Kanku Dai 53–64 (v1.36.7):** In 53 setzt der rechte Fuß weiter rechts ab, der linke rückt dabei etwas nach rechts
-  (0,18). Ab 55 steht der Kiba-dachi wie in der Übersichtsskizze rechts direkt an der Mittellinie (Fußmitte 0,07); der
-  Sprung in 65 geht dadurch fast gerade zum Start. Diese Stellungen tragen `free: true` und rasten nicht auf der Linie ein
+  (0,18). Seit v1.36.8 ist der Zenkutsu-dachi in 54 etwas breiter (rechter Fuß 0,12 rechts vom linken), ab 55 steht der
+  Kiba-dachi damit knapp rechts neben der Mittellinie (Fußmitte 0,15); der Sprung in 65 geht fast gerade zum Start. Diese Stellungen tragen `free: true` und rasten nicht auf der Linie ein
   (neue Möglichkeit in `js/kata-ansage.js`, sonst von keiner Kata genutzt). Das Yori-ashi in 56 gleitet 0,08.
 - **Kanku Dai 62:** Die Füße bleiben stehen, nur die Fußspitzen drehen nach außen; der Hachiji-dachi ist so breit wie der
   Kiba-dachi davor.
