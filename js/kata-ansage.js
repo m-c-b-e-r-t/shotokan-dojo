@@ -689,7 +689,7 @@
       cKan.hidden = !s.kan;
       // beim Zählen steht der Kata-Name vor der Zahl: „Heian Shodan – Ichi“
       cRo.textContent = s.kind === 'move' ? `${k.name} – ${s.ro}` : s.ro;
-      cPos.textContent = s.kind === 'move' ? `${s.n}/${k.moves} · ${s.stance}` : `${k.name} · ${s.stance}`;
+      cPos.textContent = s.kind === 'move' ? `${s.n}/${k.moves} · ${s.stance}` : s.kind === 'name' ? s.stance : `${k.name} · ${s.stance}`;
       chips.innerHTML = '';
       if (s.kiai) chips.append(el('span', { class: 'ans-chip kiai', text: 'Kiai' }));
       if (s.slow) chips.append(el('span', { class: 'ans-chip slow', text: 'langsam' }));
