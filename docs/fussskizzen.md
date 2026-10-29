@@ -97,6 +97,10 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   die Übersichtsskizze; laut Buchtext bleibt er stehen). Dadurch steht der rechte Fuß in 53 direkt hinter dem linken
   und gleitet in 54 wie in der Einzelskizze fast gerade vor (9°, vorher 29°) – der Kiba-dachi in 55 liegt auf der
   Mittellinie, der rechte Fuß dreht dort auf der Stelle.
+- **Kanku Dai 34–45 (v1.36.5):** 34 und 35 haben die Länge der Einzelskizzen (vorher etwa ein Viertel länger), 36 ist
+  der kurze, schmale Gyaku-hanmi des Buches (346°) und steht auf der Mittellinie. In 43/44 steht der rechte Fuß genau vor
+  dem linken (vorher 14° schräg). 38–45 liegen auf der Mittellinie, der Sprungschritt 38 geht gerade zum Start; in 46
+  setzt der linke Fuß eine Standlänge links davon ab und rückt in 53 zurück zur Mitte.
 - **Kanku Dai 62:** Die Füße bleiben stehen, nur die Fußspitzen drehen nach außen; der Hachiji-dachi ist so breit wie der
   Kiba-dachi davor.
 

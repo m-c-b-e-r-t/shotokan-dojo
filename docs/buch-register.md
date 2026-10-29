@@ -529,7 +529,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 33 | Hidari Kokutsu-dachi | Migi Shuto Chudan-uke | Linkes Bein trägt, rechter Fuß gleitet schräg nach rechts (Richtung Start) | rechts hinten, Wendung ⅛ rechts herum | 115 |
 | 34 | Hidari Kokutsu-dachi | Migi Shuto Chudan-uke | Linkes Knie bleibt gebeugt, rechter Fuß schwingt nach links, Drehung rechts herum | links, Wendung ⅜ rechts herum | 116 |
 | 35 | Migi Kokutsu-dachi | Hidari Shuto Chudan-uke | Rechtes Bein trägt, linker Fuß gleitet schräg nach links (Richtung Start) | links hinten, Wendung ⅛ links herum | 116 |
-| 36 | Hidari Ashi-zenkutsu | Sasho Jodan-uke + Migi Shuto Jodan Soto-mawashi-uchi (Gyaku-hanmi; zuvor Hidari Shuto Gedan-barai) | Linker Fuß rückt auf die Mittellinie, Blick zum Start (Ashi-zenkutsu, Gyaku-hanmi) | Start, Wendung ⅛ links herum | 117 |
+| 36 | Hidari Ashi-zenkutsu | Sasho Jodan-uke + Migi Shuto Jodan Soto-mawashi-uchi (Gyaku-hanmi; zuvor Hidari Shuto Gedan-barai) | Rechtes Bein trägt, linker Fuß rückt zur Mittellinie, Blick zum Start (Ashi-zenkutsu, Gyaku-hanmi) | Start, Wendung ⅛ links herum | 117 |
 | 37 | Hidari Ashi-dachi | Migi Jodan Mae-geri-keage | Hüfte über den linken Fuß, rechtes Knie hoch, Mae-geri-keage | Start | 117 |
 | 38 | Migi Ashi-mae Kosa-dachi | Migi Uraken Tate-mawashi-uchi | Sprungschritt Richtung Start: rechter Fuß landet und trägt, linker Fuß kreuzt dahinter | Start | 118 |
 | 39 | Migi Zenkutsu-dachi | Migi Chudan Uchi-uke | Rechter Fuß bleibt, linker Fuß gleitet zurück | Start | 118 |
