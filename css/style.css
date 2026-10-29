@@ -166,6 +166,14 @@ h4 {
   fill: currentColor;
 }
 
+/* Offenes Buch für „Begriffe“ – nur Umriss */
+.bottombar a .ico-linie {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
 .bottombar a.active {
   color: var(--red);
   font-weight: 700;
