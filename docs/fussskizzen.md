@@ -52,6 +52,10 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   0,15 länger, nach Best Karate „anderthalb Sprungschritte“), damit der Kiba-dachi ab 55 wie in der Übersichtsskizze an
   der oberen Linie steht und der Sprung in 65 nicht überlang wird. Ebenso in Jion 18–30 nach dem verlängerten
   Kiai-Schritt 17, der Sprung in 31 nimmt den Versatz auf.
+- **Jion 18–21 (v1.36.16):** In den Rohdaten stehen beide Füße der Kokutsu-dachi 18 und 20 auf einer Höhe (wie die
+  Kiba-dachi 19 und 21), und 20 („Füße bleiben“) hat die Plätze aus 19. Vorher lag der linke Fuß in 18 höher, der
+  Yori-ashi in 19 sprang dadurch um etwa 0,3 nach unten und glitt nicht zur Seite. Der Abschnitt 18–21 liegt jetzt auf
+  einer Höhe, 17 ist so lang wie 16.
 
 **Durchsicht aller Kata (v1.33.0)** – Stellung für Stellung gegen Register, Einzelskizzen und Buchtext geprüft:
 - Fußarbeit-Texte passend zur Karte bzw. zum Buch: Heian Nidan 19 (der rechte Fuß gleitet zurück), Heian Sandan 4 (linkes
