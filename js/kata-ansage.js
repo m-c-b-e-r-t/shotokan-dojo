@@ -554,6 +554,20 @@
       localStorage.setItem(TEMPO_KEY, String(i));
     } catch (e) { /* privates Fenster */ }
   }
+  // Eingeklappte Bereiche (Optionen, Legende) bleiben eingeklappt – auch beim Wechsel zur nächsten Kata
+  const FOLD_KEY = 'shotokan-sensai-ansage-zu';
+  function loadFold() {
+    try {
+      return JSON.parse(localStorage.getItem(FOLD_KEY)) || {};
+    } catch (e) { return {}; }
+  }
+  function saveFold(name, closed) {
+    const f = loadFold();
+    f[name] = closed;
+    try {
+      localStorage.setItem(FOLD_KEY, JSON.stringify(f));
+    } catch (e) { /* privates Fenster */ }
+  }
 
   // ---------- Sprachausgabe ----------
   // Nur mit japanischer Stimme; fehlt sie, läuft die Ansage stumm (Anzeige und Karte im Takt).
@@ -624,6 +638,18 @@
     const prevBtn = el('button', { class: 'btn', type: 'button', 'aria-label': 'Eine Ansage zurück', text: '◀' });
     const nextBtn = el('button', { class: 'btn', type: 'button', 'aria-label': 'Eine Ansage weiter', text: '▶' });
     const fsBtn = document.fullscreenEnabled ? el('button', { class: 'btn', type: 'button', text: 'Vollbild' }) : null;
+    const order = SK.ansageKata();
+    const pos = order.indexOf(k.id);
+    const prevKata = order[(pos - 1 + order.length) % order.length];
+    const nextKata = order[(pos + 1) % order.length];
+    const kataPrev = el('a', { class: 'btn', href: `#/ansage/${prevKata}`, 'aria-label': `Vorherige Kata: ${SK.kata[prevKata].name}`, text: '◀ Vorherige' });
+    const kataNext = el('a', { class: 'btn', href: `#/ansage/${nextKata}`, 'aria-label': `Nächste Kata: ${SK.kata[nextKata].name}`, text: 'Nächste ▶' });
+    function fold(name, title, ...body) {
+      const d = el('details', { class: 'ans-fold' }, el('summary', { text: title }), ...body);
+      d.open = !loadFold()[name];
+      d.addEventListener('toggle', () => saveFold(name, !d.open));
+      return d;
+    }
 
     // Tempo-Regler: Änderung gilt sofort, eine laufende Ansage zählt ab der aktuellen Bewegung im neuen Takt weiter
     const tempoIn = el('input', { type: 'range', id: 'ans-tempo', min: '0', max: String(BEATS.length - 1), step: '1', value: String(tempo), 'aria-label': 'Tempo' });
@@ -827,20 +853,20 @@
     app.innerHTML = '';
     app.append(
       el('nav', { class: 'crumbs' }, el('a', { href: '#/ansage', text: 'Üben' }), ' › ', el('span', { text: k.name })),
-      el('h1', { text: `${k.name} – Ansage` }),
-      el('p', { class: 'muted', text: 'Die App zählt die Kata auf Japanisch im Rhythmus des Buches – wie im Dojo bis Ju und dann wieder ab Ichi. Die Karte zeigt von oben, wo die Füße stehen, wohin der Körper zeigt und wie gedreht wird. Handy hinlegen, Ton an, Start.' }),
+      el('h1', { text: k.name }),
       infoOut,
       el('div', { class: 'ans-wrap' }, stage,
         el('div', { class: 'ans-controls' }, prevBtn, playBtn, nextBtn),
-        el('div', { class: 'ans-tempo' },
-          el('div', { class: 'ans-tempo-row' }, el('span', { class: 'muted small', text: '3× langsamer' }), tempoIn, el('span', { class: 'muted small', text: '3× schneller' })),
-          tempoOut),
-        track,
-        el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-kiai', text: 'Kiai' }), el('span', { class: 'lg-slow', text: 'langsam' }), el('span', { class: 'lg-link', text: 'fließend zur nächsten' })),
-        el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-lift', text: 'Fuß angehoben' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }), el('span', { class: 'lg-turn', text: 'Wendung' }), el('span', { class: 'lg-via', text: 'Fuß zieht heran und zurück' }))),
-      ...(fsBtn ? [el('div', { class: 'actions' }, fsBtn)] : []),
-      el('p', { class: 'muted small' }, 'Mehr zur Kata: ', el('a', { href: `#/wissen/${k.id}-ueberblick`, text: `${k.name} im Kata-Wissen` })),
-      el('p', { class: 'src', text: `Ablauf, Kiai, fließende und langsame Bewegungen: ${SK.BOOK_SOURCE}, ab ${SK.bookPages(k.seq[0][3])}. Fußstellungen nach der Embusen-Skizze, ${SK.bookPages(k.ansage.page)}; Drehrichtungen daraus abgeleitet. Das Tempo nennt das Buch nicht – voreingestellt ist das Trainingstempo von 2 s je Bewegung.` })
+        fold('optionen', 'Tempo und Bewegungen',
+          el('div', { class: 'ans-tempo' },
+            el('div', { class: 'ans-tempo-row' }, el('span', { class: 'muted small', text: '3× langsamer' }), tempoIn, el('span', { class: 'muted small', text: '3× schneller' })),
+            tempoOut),
+          track),
+        fold('legende', 'Legende',
+          el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-kiai', text: 'Kiai' }), el('span', { class: 'lg-slow', text: 'langsam' }), el('span', { class: 'lg-link', text: 'fließend zur nächsten' })),
+          el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-lift', text: 'Fuß angehoben' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }), el('span', { class: 'lg-turn', text: 'Wendung' }), el('span', { class: 'lg-via', text: 'Fuß zieht heran und zurück' })))),
+      el('div', { class: 'actions ans-katanav' }, kataPrev, ...(fsBtn ? [fsBtn] : []), kataNext),
+      el('p', { class: 'muted small' }, 'Mehr zur Kata: ', el('a', { href: `#/wissen/${k.id}-ueberblick`, text: `${k.name} im Kata-Wissen` }))
     );
     buildTrack();
     info();

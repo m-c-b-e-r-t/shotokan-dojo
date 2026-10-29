@@ -20,9 +20,9 @@
   };
   SK.bookSrc = (n) => `${SK.BOOK_SOURCE}, ${SK.bookPages(n)}`;
   // Bei jeder veröffentlichten Änderung hochzählen: node tools/version.js patch|minor|major (setzt auch ?v= in index.html)
-  SK.VERSION = '1.33.0';
+  SK.VERSION = '1.34.0';
   SK.VERSION_DATE = '29.10.2026';
-  SK.VERSION_TIME = '08:06';
+  SK.VERSION_TIME = '08:29';
 
   SK.util = {
     shuffle(arr) {

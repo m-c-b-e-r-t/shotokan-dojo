@@ -815,7 +815,7 @@
     const k = SK.kata[id];
     if (!k || !k.ansage) return viewNotFound();
     setNav('ansage');
-    setTitle(`${k.name} – Ansage`);
+    setTitle(k.name);
     SK.viewAnsage(app, k);
     finishView();
   }
