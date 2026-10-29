@@ -1540,8 +1540,8 @@ main:fullscreen {
 }
 
 .emb-txt {
-  font: 700 17px system-ui, sans-serif;
-  fill: var(--muted);
+  font: 800 22px system-ui, sans-serif;
+  fill: var(--ink);
 }
 
 .emb-body {
