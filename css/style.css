@@ -1473,15 +1473,25 @@ main:fullscreen {
   height: 100%;
 }
 
-/* Name der Kata oben links auf der Karte */
+/* Name der Kata als Schild unten mittig auf der Karte */
 .ans-kname {
   position: absolute;
-  top: 0.45rem;
-  left: 0.6rem;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 1rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   pointer-events: none;
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--muted);
+  color: var(--ink);
+  background: var(--card);
+  border-left: 4px solid var(--red);
+  border-radius: 4px;
+  padding: 0.15rem 0.6rem;
+  box-shadow: var(--shadow);
 }
 
 /* Kiai, langsam, fließend: auf der Karte, damit sie den Kasten nicht verschieben */

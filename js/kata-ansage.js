@@ -493,10 +493,12 @@
     return [cx, cy, Math.max(...pts.map((f) => Math.abs(f[0] - cx))), Math.max(...pts.map((f) => Math.abs(f[1] - cy)))];
   }
   // aspect (Breite / Höhe der Karte): der Ausschnitt wird in der kürzeren Richtung erweitert, damit das Raster die Karte füllt
+  // unten bleibt zusätzlich Platz für das Schild mit dem Kata-Namen
   function bounds(k, aspect) {
-    const [cx, cy, rx, ry] = reach(k);
+    const [cx, reachCy, rx, ry] = reach(k);
+    const cy = reachCy - 0.2;
     let hx = rx + 0.45;
-    let hy = ry + 0.45;
+    let hy = ry + 0.65;
     if (aspect) {
       if (hx / hy < aspect) hx = hy * aspect;
       else hy = hx / aspect;
