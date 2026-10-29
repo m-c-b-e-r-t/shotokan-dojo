@@ -633,7 +633,7 @@
     const cPos = el('span', { class: 'ans-pos' });
     const chips = el('div', { class: 'ans-chips' });
     const map = el('div', { class: 'ans-map-svg' });
-    const mapBox = el('div', { class: 'ans-map' }, map, el('div', { class: 'ans-kname', text: k.name }), chips);
+    const mapBox = el('div', { class: 'ans-map' }, map, chips);
     const cHint = el('div', { class: 'ans-hint' });
     const cTech = el('div', { class: 'ans-tech muted' });
     const head = el('div', { class: 'ans-head' }, cKan, el('div', { class: 'ans-head-txt' }, cRo, cPos));
@@ -687,7 +687,8 @@
     function fill(s) {
       cKan.textContent = s.kan;
       cKan.hidden = !s.kan;
-      cRo.textContent = s.ro;
+      // beim Zählen steht der Kata-Name vor der Zahl: „Heian Shodan – Ichi“
+      cRo.textContent = s.kind === 'move' ? `${k.name} – ${s.ro}` : s.ro;
       cPos.textContent = s.kind === 'move' ? `${s.n}/${k.moves} · ${s.stance}` : `${k.name} · ${s.stance}`;
       chips.innerHTML = '';
       if (s.kiai) chips.append(el('span', { class: 'ans-chip kiai', text: 'Kiai' }));
