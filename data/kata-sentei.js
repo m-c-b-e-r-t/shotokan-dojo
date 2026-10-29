@@ -207,7 +207,7 @@
         { f: [[0.39, 0.89, 84, 0.7], [0.26, 0.45, 178, 0.3]], body: 180, h: 'Rechter Fuß gleitet vor' },
         { f: [[-0.47, 0.6, 278, 0.7], [0.12, 0.68, 282, 0.3]], body: 270, turn: -270, h: 'Rechtes Bein trägt, linker Fuß schwingt nach rechts, ¾ Drehung links herum' },
         { f: [[-0.21, 0.35, 290, 0.7], [0.4, 0.51, 293, 0.3]], body: 270, h: 'Stand bleibt' },
-        { f: [[-0.21, 0.35, 57, 0.3], [0.33, 0.04, 54, 0.7]], body: 90, turn: 180, h: 'Linkes Bein trägt, Hüfte dreht rechts herum, rechter Fuß nach rechts' },
+        { f: [[-0.21, 0.35, 57, 0.3], [0.36, 0.22, 54, 0.7]], body: 90, turn: 180, h: 'Linkes Bein trägt, Hüfte dreht rechts herum, rechter Fuß nach rechts' },
         { f: [[-0.21, 0.35, 59, 0.3], [0.35, 0.07, 68, 0.7]], body: 90, h: 'Stand bleibt' },
         { f: [[-0.21, 0.35, 56, 0.3], [0.33, 0.08, 68, 0.7]], body: 90, h: 'Stand bleibt' },
         { f: [[-0.21, 0.35, 90, 1], [-0.2, 0.24, 90, 0]], body: 90, look: 180, h: 'Linker Fuß bleibt und dreht, beide Füße zeigen nach rechts, Blick zum Start, rechte Fußsohle an das linke Knie' },
