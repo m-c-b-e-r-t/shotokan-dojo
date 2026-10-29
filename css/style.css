@@ -267,12 +267,8 @@ main {
   position: absolute;
 }
 
-.hero h1,
-.hero p {
-  position: relative;
-}
-
 .hero h1 {
+  position: relative;
   margin: 0.1em 0 0;
   font-weight: 400;
   line-height: 1.15;
