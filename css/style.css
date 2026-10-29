@@ -79,7 +79,7 @@ h4 {
 }
 
 .version {
-  margin: 1.5rem 0 0.5rem;
+  margin: 1rem 0 0;
   text-align: center;
   font-size: 0.75rem;
   color: var(--muted);
@@ -259,8 +259,8 @@ main {
 .hero {
   position: relative;
   overflow: hidden;
-  padding: 1rem 0;
-  margin: 1rem 0;
+  padding: 0.25rem 0;
+  margin: 0.25rem 0;
 }
 
 .hero-filter {
@@ -277,7 +277,7 @@ main {
 .hero-kanji {
   display: block;
   font-family: "SK Kanji", "Hiragino Mincho ProN", "Yu Mincho", serif;
-  font-size: 3rem;
+  font-size: 2.5rem;
   letter-spacing: 0.02em;
   color: #141210;
   filter: url(#hero-tusche);
