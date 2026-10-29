@@ -459,7 +459,14 @@
     const back = to + (deg > 0 ? -100 : 100);
     const [h1x, h1y] = pt(ex, ey, back - 35, 14);
     const [h2x, h2y] = pt(ex, ey, back + 35, 14);
-    return `<path class="emb-turn" d="M${sx} ${sy} A${r} ${r} 0 ${Math.abs(deg) > 180 ? 1 : 0} ${deg > 0 ? 1 : 0} ${ex} ${ey}"/><path class="emb-turn-head" d="M${h1x} ${h1y} L${ex} ${ey} L${h2x} ${h2y}"/>`;
+    // in Stücken bis 120° – ein einzelner Bogen über eine ganze Drehung (Start = Ende) würde nicht gezeichnet
+    const parts = Math.ceil(Math.abs(deg) / 120);
+    let d = `M${sx} ${sy}`;
+    for (let i = 1; i <= parts; i++) {
+      const [qx, qy] = pt(x, y, from + (deg * i) / parts, r);
+      d += ` A${r} ${r} 0 0 ${deg > 0 ? 1 : 0} ${qx} ${qy}`;
+    }
+    return `<path class="emb-turn" d="${d}"/><path class="emb-turn-head" d="M${h1x} ${h1y} L${ex} ${ey} L${h2x} ${h2y}"/>`;
   }
   // Zwischenstellung (via): Fuß zieht heran und kehrt zurück – Doppelpfeil zwischen beiden Stellen
   function viaArrow(a, b) {
@@ -523,8 +530,8 @@
     if (look) svg += gaze(look[0], look[1], pose.look, look[2]);
     return `<svg class="emb-map" viewBox="${Math.round(x0)} ${Math.round(-y1)} ${Math.round(x1 - x0)} ${Math.round(y1 - y0)}" role="img" aria-label="Fußstellung von oben">${svg}</svg>`;
   };
-  // Drehung in Worten: ⅛ bis ¾ links/rechts herum
-  SK.turnText = (deg) => `Wendung ${{ 45: '⅛', 90: '¼', 135: '⅜', 180: '½', 225: '⅝', 270: '¾' }[Math.abs(deg)] || `${Math.abs(deg)}°`} ${deg < 0 ? 'links' : 'rechts'} herum`;
+  // Drehung in Worten: ⅛ bis ¾ links/rechts herum, eine ganze Drehung (Drehsprung in Enpi) eigens
+  SK.turnText = (deg) => (Math.abs(deg) === 360 ? `ganze Drehung ${deg < 0 ? 'links' : 'rechts'} herum` : `Wendung ${{ 45: '⅛', 90: '¼', 135: '⅜', 180: '½', 225: '⅝', 270: '¾' }[Math.abs(deg)] || `${Math.abs(deg)}°`} ${deg < 0 ? 'links' : 'rechts'} herum`);
 
   // ---------- Takt ----------
   // Das Buch nennt kein Tempo. Mitte = Training (2 s je Bewegung); langsamer in ganzen Sekunden bis 6 s (3× langsamer),

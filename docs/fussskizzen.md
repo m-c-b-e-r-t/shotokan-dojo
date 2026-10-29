@@ -22,7 +22,7 @@ keine Abschriften.
 - Manche Bewegungen haben zwei Skizzen (erst Drehen, dann Fußarbeit), z. B. Heian Godan 21 und 23 und Bassai Dai 25, 26 und 28.
   Die Tabellen messen jeweils die letzte Skizze.
 
-## Umsetzung in der App (v1.32.0, ergänzt in v1.32.1)
+## Umsetzung in der App (v1.32.0, ergänzt in v1.32.1 und v1.33.0)
 
 Die Befunde unten (Stand v1.31.10) sind in die Kata-Ansage übernommen. Danach meldet `node tools/skizzen-vergleich.js`
 nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
@@ -30,7 +30,7 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
 **Regeln in `js/kata-ansage.js`**
 - **Standgeometrie (C):** Im Bild, in dem ein Fuß ankommt, zählt seine Lage zum stehenden Fuß zusätzlich (`W_STANCE`).
   Spurbreite und Standlänge gehen beim Ausgleich nicht mehr verloren. Die Lage auf der Ablauflinie bleibt gewahrt, und
-  jede Kata endet weiter am Startpunkt.
+  jede Kata endet weiter am Startpunkt (Ausnahme Tekki Shodan, siehe unten).
 - **Zenkutsu-dachi (D):** Der vordere Fuß zeigt 15° nach innen (`ZEN_IN`, im Buch im Mittel 15°). Der hintere zeigt
   mindestens 10° nach außen, sonst 25° (`ZEN_OUT`). Damit erscheint auch die Drehung des hinteren Fußes beim nächsten
   Schritt.
@@ -51,6 +51,24 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   Bild an den stehenden Fuß angeglichen, der Sprung in 65 nimmt den Versatz auf. Ebenso in Jion 18–30 nach dem
   verlängerten Kiai-Schritt 17, der Sprung in 31 nimmt den Versatz auf.
 
+**Durchsicht aller Kata (v1.33.0)** – Stellung für Stellung gegen Register, Einzelskizzen und Buchtext geprüft:
+- Fußarbeit-Texte passend zur Karte bzw. zum Buch: Heian Nidan 19 (der rechte Fuß gleitet zurück), Heian Sandan 4 (linkes
+  Bein trägt, der linke Fuß dreht nur), Bassai Dai 42 (der rechte Fuß zieht zur Mitte zurück), Kanku Dai 55 (dreht auf dem
+  rechten Bein, der linke Fuß gleitet vor) und 62 (der rechte Fuß rückt nach außen), Jion 12 (der linke Fuß gleitet nach
+  links) und 46 (erst Drehung, dann Yori-ashi mit beiden Füßen), Enpi 9 (der vordere Fuß rückt etwas heran), 13 (Füße
+  bleiben) und 36 (Landung einen Schritt weiter hinten).
+- Ende am Startpunkt: Heian Godan 23 – der linke Fuß dreht über die Ferse quer und rückt dabei etwas nach links (wie in der
+  Skizze); vorher endete die Kata 0,19 rechts vom Start mit zu schmalem Hachiji-dachi. Enpi beginnt jetzt mittig (Yoi).
+- Standmaße: Heian Shodan 8 (normal lang statt kurz und breit) und 17 (etwas breiter und länger als 15/16, Hinweis nach
+  Kyohan), Heian Yondan 14 (auf der Diagonale), Bassai Dai 8–13 (Hachiji-dachi 0,45 statt 0,65, Verhältnis wie in der
+  Einzelskizze) und 35/37 (Ashi-zenkutsu so lang wie ein Zenkutsu-dachi, Einzelskizzen 4,3 wie Bewegung 24), Kanku Dai
+  56 (Yori-ashi sichtbar), 60/61 (Kiba-dachi 0,55 statt 0,42) und 62, Jion 9–11 (auf der Diagonale), 16 (normal lang statt
+  0,35), 43–45 (Kiba-dachi gleich breit), Enpi 2–4 (Ashi-zenkutsu und Kiba-dachi im Verhältnis der Einzelskizzen) und 22
+  (die Füße tauschen genau die Plätze; der Sprung in 27 wird dadurch etwa 1,0 lang).
+- Rhythmus: Bassai Dai 25 langsam (Teil 2), 26 fließend in 27.
+- Namigaeshi in Tekki (11, 13, 25, 27): der angehobene Fuß erscheint als Zwischenstellung (`via`).
+- Drehsprung Enpi 36: als ganze Drehung links herum (`turn: -360`) mit Drehbogen auf der Karte.
+
 **Bewusst offen gelassen**
 - **Jion 2:** Im Buch ist der vordere Fuß etwa 41° eingedreht, die App setzt wie überall 15°.
 - **Jion 42:** Der linke Fuß steht nicht ganz vor dem rechten (Abweichung etwa 30°). Die Übersichtsskizze ist von 42 bis
@@ -60,6 +78,14 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
 - **Heian Shodan 20, Heian Nidan 25, Enpi 1/2:** Die Stände sind etwas länger (Shodan 20, Nidan 25) bzw. schmaler
   (Enpi 1/2) als im Buch. Eine Korrektur würde das Ende der Kata 0,15–0,2 vom Startpunkt wegschieben.
 - **Kiba-dachi in Tekki:** Die Zehen bleiben parallel (im Buch leicht nach innen).
+- **Tekki Shodan, Ende:** Naore endet 0,24 rechts vom Yoi. Laut Buchtext bleibt der linke Fuß stehen und der rechte
+  schließt heran; der linke steht nach dem Kreuzschritt in 1 aber rechts vom Start. Die Übersichtsskizze zeichnet das Ende
+  am Start – beides zugleich geht nicht, die App folgt dem Text.
+- **Tekki Shodan 16:** bleibt als langsam markiert (so bei der Erfassung aus dem Buchtext übernommen, v1.21.0); das
+  Register nennt das langsame Kake-uke als Hinweis nach Funakoshi.
+- **Heian Yondan 22:** Mit 0,39 der kürzeste Kokutsu-dachi der Kata – im Buch ebenso (Einzelskizzen 3,1 / 3,3 / 3,8 für
+  22 / 23 / 24), daher unverändert.
+- **Kanku Dai 65:** Der Nidan-geri-Sprung ist rund 1,5 lang, weil er den Versatz von 46–64 aufnimmt (siehe oben).
 - **Kanku Dai 46–64:** Der Abschnitt liegt etwas neben der Mittellinie der Übersichtsskizze, weil der linke Fuß dort laut
   Buch durchgehend stehen bleibt.
 

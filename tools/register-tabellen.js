@@ -37,7 +37,7 @@ function table(k) {
 }
 
 // SK.turnText steht in kata-ansage.js (braucht den Browser) – hier dieselbe Formel
-SK.turnText = (deg) => `Wendung ${{ 45: '⅛', 90: '¼', 135: '⅜', 180: '½', 225: '⅝', 270: '¾' }[Math.abs(deg)] || `${Math.abs(deg)}°`} ${deg < 0 ? 'links' : 'rechts'} herum`;
+SK.turnText = (deg) => (Math.abs(deg) === 360 ? `ganze Drehung ${deg < 0 ? 'links' : 'rechts'} herum` : `Wendung ${{ 45: '⅛', 90: '¼', 135: '⅜', 180: '½', 225: '⅝', 270: '¾' }[Math.abs(deg)] || `${Math.abs(deg)}°`} ${deg < 0 ? 'links' : 'rechts'} herum`);
 
 const file = path.join(root, 'docs/buch-register.md');
 let md = fs.readFileSync(file, 'utf8');
