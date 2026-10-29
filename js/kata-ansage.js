@@ -632,7 +632,7 @@
     const cPos = el('span', { class: 'ans-pos' });
     const chips = el('div', { class: 'ans-chips' });
     const map = el('div', { class: 'ans-map-svg' });
-    const mapBox = el('div', { class: 'ans-map' }, map, chips);
+    const mapBox = el('div', { class: 'ans-map' }, map, el('div', { class: 'ans-kname', text: k.name }), chips);
     const cHint = el('div', { class: 'ans-hint' });
     const cTech = el('div', { class: 'ans-tech muted' });
     const head = el('div', { class: 'ans-head' }, cKan, el('div', { class: 'ans-head-txt' }, cRo, cPos));
@@ -719,11 +719,11 @@
     // clientHeight ändert sich nicht, wenn Chrome die Adressleiste ein- oder ausblendet.
     function fit() {
       const fs = document.fullscreenElement;
-      const top = fs ? 0 : stage.getBoundingClientRect().top + window.scrollY;
+      const top = fs ? stage.getBoundingClientRect().top - fs.getBoundingClientRect().top + fs.scrollTop : stage.getBoundingClientRect().top + window.scrollY;
       const bottom = fs ? 0 : (document.querySelector('.bottombar') || {}).offsetHeight || 0;
       const view = fs ? fs.clientHeight : document.documentElement.clientHeight;
       controls.style.bottom = `${bottom}px`;
-      const rest = stage.offsetHeight - mapBox.offsetHeight + controls.offsetHeight + 16 + (fs ? 32 : 0);
+      const rest = stage.offsetHeight - mapBox.offsetHeight + controls.offsetHeight + 16;
       mapBox.style.height = `${Math.round(Math.max(240, Math.min(view - top - bottom - rest, mapBox.clientWidth * 1.6)))}px`;
     }
     let resizeTimer = 0;
@@ -848,7 +848,6 @@
       document.removeEventListener('visibilitychange', onVisibility);
       document.removeEventListener('keydown', onKey);
       if (tts) tts.onvoiceschanged = null;
-      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
       SK.ansageCleanup = null;
     };
 
@@ -862,10 +861,40 @@
       const d = ev.target.closest('.ans-dot');
       if (d) jump(steps.findIndex((s) => s.n === Number(d.dataset.n)));
     });
+    // Vollbild für die ganze Seite: Beim Wechsel zur nächsten Kata wird nur ihr Inhalt getauscht, das Vollbild bleibt.
     if (fsBtn) fsBtn.addEventListener('click', () => {
       if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
-      else stage.parentNode.requestFullscreen().catch(() => {});
+      else app.requestFullscreen().catch(() => {});
     });
+
+    // Wischen über den Kasten wechselt die Kata: nach links zur nächsten, nach rechts zur vorherigen. Gesten vom
+    // Bildschirmrand gehören dem System (Zurück-Geste unter Android) und zählen nicht.
+    function toKata(id, dir) {
+      SK.ansageSlide = dir;
+      location.hash = `#/ansage/${id}`;
+    }
+    kataPrev.addEventListener('click', () => { SK.ansageSlide = 'prev'; });
+    kataNext.addEventListener('click', () => { SK.ansageSlide = 'next'; });
+    let touch = null;
+    stage.addEventListener('touchstart', (ev) => {
+      const t = ev.touches[0];
+      const edge = 24;
+      touch = ev.touches.length === 1 && t.clientX > edge && t.clientX < window.innerWidth - edge ? { x: t.clientX, y: t.clientY, at: Date.now() } : null;
+    }, { passive: true });
+    stage.addEventListener('touchend', (ev) => {
+      if (!touch) return;
+      const t = ev.changedTouches[0];
+      const dx = t.clientX - touch.x;
+      const dy = t.clientY - touch.y;
+      const quick = Date.now() - touch.at < 800;
+      touch = null;
+      if (quick && Math.abs(dx) > 60 && Math.abs(dx) > 1.5 * Math.abs(dy)) toKata(dx < 0 ? nextKata : prevKata, dx < 0 ? 'next' : 'prev');
+    });
+    stage.addEventListener('touchcancel', () => { touch = null; });
+    if (SK.ansageSlide) {
+      stage.classList.add(`ans-in-${SK.ansageSlide}`);
+      SK.ansageSlide = null;
+    }
     app.innerHTML = '';
     app.append(
       el('h1', { class: 'visually-hidden', text: k.name }),

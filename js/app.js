@@ -59,6 +59,7 @@
   function finishView() {
     app.focus({ preventScroll: true });
     window.scrollTo(0, 0);
+    app.scrollTop = 0;
   }
   // Gleiche Adresse löst kein hashchange aus – dann direkt neu rendern.
   function go(hash) {
@@ -831,6 +832,8 @@
     if (SK.quizCleanup) SK.quizCleanup();
     if (SK.ansageCleanup) SK.ansageCleanup();
     const [view, arg] = (location.hash.replace(/^#\/?/, '') || '').split('/').map(decodeURIComponent);
+    // Vollbild gibt es nur beim Kata-Zählen; beim Wechsel zur nächsten Kata bleibt es
+    if (document.fullscreenElement && !(view === 'ansage' && arg)) document.exitFullscreen().catch(() => {});
     if (!view) return viewStart();
     if (view === 'wissen') return arg ? viewWissen(arg) : viewWissenList();
     if (view === 'lesson') return viewWissen(arg);

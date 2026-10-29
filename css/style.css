@@ -1388,11 +1388,34 @@ details.unit>summary::-webkit-details-marker {
   gap: 0.8rem;
 }
 
-.ans-wrap:fullscreen {
+main:fullscreen {
+  max-width: none;
   background: var(--bg);
   padding: 1rem;
   overflow: auto;
-  align-content: start;
+}
+
+.ans-stage.ans-in-next {
+  animation: ans-in-next 0.25s ease-out;
+}
+
+.ans-stage.ans-in-prev {
+  animation: ans-in-prev 0.25s ease-out;
+}
+
+@keyframes ans-in-next {
+  from { transform: translateX(40px); opacity: 0.3; }
+}
+
+@keyframes ans-in-prev {
+  from { transform: translateX(-40px); opacity: 0.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ans-stage.ans-in-next,
+  .ans-stage.ans-in-prev {
+    animation: none;
+  }
 }
 
 .ans-stage {
@@ -1448,6 +1471,17 @@ details.unit>summary::-webkit-details-marker {
 
 .ans-map-svg {
   height: 100%;
+}
+
+/* Name der Kata oben links auf der Karte */
+.ans-kname {
+  position: absolute;
+  top: 0.45rem;
+  left: 0.6rem;
+  pointer-events: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
 }
 
 /* Kiai, langsam, fließend: auf der Karte, damit sie den Kasten nicht verschieben */
