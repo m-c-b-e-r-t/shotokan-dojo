@@ -81,7 +81,6 @@
     app.innerHTML = '';
     const due = SK.srs.due().length;
     const read = allLessons.filter((l) => store.data.read[l.id]).length;
-    const asked = Object.keys(store.data.asked).filter((id) => qById[id]).length;
     const tile = (href, title, text, cls) => el('a', { class: `tile ${cls || ''}`, href }, el('h3', { text: title }), el('p', { text }));
     app.append(
       el(
@@ -96,7 +95,6 @@
         tile('#/wissen', 'Wissen', `Alle Inhalte zum Durcharbeiten – ${read}/${allLessons.length} gelesen`),
         tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen'),
         tile('#/begriffe', 'Begriffe-Trainer', 'Stände, Techniken & Begriffe – kurz abgefragt'),
-        tile('#/zufall', 'Zufallsmix', `${SK.questions.length - asked} Fragen noch nie gestellt`),
         tile('#/review', 'Wiederholen', due ? `${due} Fragen fällig` : 'Heute nichts fällig'),
         tile('#/exam', 'Prüfungen', 'DJKB-Prüfungsprogramm je Gürtel: Kihon, Kata, Kumite')
       ),
