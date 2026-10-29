@@ -689,7 +689,6 @@
       cRo.textContent = s.ro;
       cPos.textContent = s.kind === 'move' ? `${s.n}/${k.moves} · ${s.stance}` : `${k.name} · ${s.stance}`;
       chips.innerHTML = '';
-      if (s.pose.turn) chips.append(el('span', { class: 'ans-chip turn', text: SK.turnText(s.pose.turn) }));
       if (s.kiai) chips.append(el('span', { class: 'ans-chip kiai', text: 'Kiai' }));
       if (s.slow) chips.append(el('span', { class: 'ans-chip slow', text: 'langsam' }));
       if (s.cont) chips.append(el('span', { class: 'ans-chip cont', text: 'fließend' }));
@@ -715,17 +714,16 @@
       fit();
       render(idx);
     }
-    // Die Karte bekommt die Höhe, die neben Kopf, Text und Knöpfen auf dem Bildschirm bleibt: Ist der Kasten oben
-    // angekommen, passen Karte und Knöpfe ohne Scrollen hinein. Die Knöpfe kleben am unteren Rand und springen nie.
+    // Die Karte bekommt die Höhe, die neben Kopf, Text und Knöpfen auf dem Bildschirm bleibt: Karte und Knöpfe passen
+    // gleich beim Öffnen ohne Scrollen hinein. Auf kleinen Bildschirmen kleben die Knöpfe am unteren Rand.
     // clientHeight ändert sich nicht, wenn Chrome die Adressleiste ein- oder ausblendet.
     function fit() {
       const fs = document.fullscreenElement;
-      const top = fs ? 0 : (document.querySelector('.topbar') || {}).offsetHeight || 0;
+      const top = fs ? 0 : stage.getBoundingClientRect().top + window.scrollY;
       const bottom = fs ? 0 : (document.querySelector('.bottombar') || {}).offsetHeight || 0;
       const view = fs ? fs.clientHeight : document.documentElement.clientHeight;
-      stage.style.scrollMarginTop = `${top + 8}px`;
       controls.style.bottom = `${bottom}px`;
-      const rest = stage.offsetHeight - mapBox.offsetHeight + controls.offsetHeight + 8 + 16 + (fs ? 32 : 0);
+      const rest = stage.offsetHeight - mapBox.offsetHeight + controls.offsetHeight + 16 + (fs ? 32 : 0);
       mapBox.style.height = `${Math.round(Math.max(240, Math.min(view - top - bottom - rest, mapBox.clientWidth * 1.6)))}px`;
     }
     let resizeTimer = 0;
@@ -791,7 +789,6 @@
       if (from + 1 < steps.length) schedule(from + 1);
       else timers.push(setTimeout(finish, 1500));
       running = true;
-      toStage();
       wake(true);
       ui();
     }
@@ -811,12 +808,7 @@
     function jump(i) {
       i = Math.max(0, Math.min(steps.length - 1, i));
       if (running) start(i);
-      else { idx = i; render(i); toStage(); }
-    }
-    // Kasten nach oben holen, damit Karte und Knöpfe ganz zu sehen sind (nur wenn er nicht schon dort steht)
-    function toStage() {
-      const r = stage.getBoundingClientRect();
-      if (Math.abs(r.top - parseFloat(stage.style.scrollMarginTop || 0)) > 4) stage.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      else { idx = i; render(i); }
     }
     function ui() {
       playBtn.textContent = running ? '❚❚ Pause' : idx > 0 && idx < steps.length - 1 ? '▶ Weiter zählen' : '▶ Start';
@@ -876,8 +868,7 @@
     });
     app.innerHTML = '';
     app.append(
-      el('nav', { class: 'crumbs' }, el('a', { href: '#/ansage', text: 'Üben' }), ' › ', el('span', { text: k.name })),
-      el('h1', { text: k.name }),
+      el('h1', { class: 'visually-hidden', text: k.name }),
       el('div', { class: 'ans-wrap' }, stage,
         controls,
         infoOut,

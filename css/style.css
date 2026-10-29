@@ -1403,7 +1403,6 @@ details.unit>summary::-webkit-details-marker {
   display: grid;
   gap: 0.4rem;
   box-shadow: var(--shadow);
-  scroll-margin-top: 70px;
 }
 
 .ans-stage.kiai {
@@ -1451,7 +1450,7 @@ details.unit>summary::-webkit-details-marker {
   height: 100%;
 }
 
-/* Wendung, Kiai, langsam, fließend: auf der Karte, damit sie den Kasten nicht verschieben */
+/* Kiai, langsam, fließend: auf der Karte, damit sie den Kasten nicht verschieben */
 .ans-chips {
   position: absolute;
   top: 0.4rem;
@@ -1483,11 +1482,6 @@ details.unit>summary::-webkit-details-marker {
 .ans-chip.cont {
   background: var(--ok-bg);
   color: var(--ok);
-}
-
-.ans-chip.turn {
-  background: #e65100;
-  color: #fff;
 }
 
 .ans-map svg {
