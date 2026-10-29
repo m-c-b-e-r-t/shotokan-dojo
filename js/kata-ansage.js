@@ -554,16 +554,17 @@
       localStorage.setItem(TEMPO_KEY, String(i));
     } catch (e) { /* privates Fenster */ }
   }
-  // Eingeklappte Bereiche (Optionen, Legende) bleiben eingeklappt – auch beim Wechsel zur nächsten Kata
-  const FOLD_KEY = 'shotokan-sensai-ansage-zu';
+  // Der Bereich mit Tempo, Bewegungen und Legende ist anfangs eingeklappt; Auf- oder Zuklappen bleibt gespeichert,
+  // auch beim Wechsel zur nächsten Kata
+  const FOLD_KEY = 'shotokan-sensai-ansage-offen';
   function loadFold() {
     try {
       return JSON.parse(localStorage.getItem(FOLD_KEY)) || {};
     } catch (e) { return {}; }
   }
-  function saveFold(name, closed) {
+  function saveFold(name, open) {
     const f = loadFold();
-    f[name] = closed;
+    f[name] = open;
     try {
       localStorage.setItem(FOLD_KEY, JSON.stringify(f));
     } catch (e) { /* privates Fenster */ }
@@ -646,8 +647,8 @@
     const kataNext = el('a', { class: 'btn', href: `#/ansage/${nextKata}`, 'aria-label': `Nächste Kata: ${SK.kata[nextKata].name}`, text: 'Nächste ▶' });
     function fold(name, title, ...body) {
       const d = el('details', { class: 'ans-fold' }, el('summary', { text: title }), ...body);
-      d.open = !loadFold()[name];
-      d.addEventListener('toggle', () => saveFold(name, !d.open));
+      d.open = !!loadFold()[name];
+      d.addEventListener('toggle', () => saveFold(name, d.open));
       return d;
     }
 
@@ -857,12 +858,11 @@
       infoOut,
       el('div', { class: 'ans-wrap' }, stage,
         el('div', { class: 'ans-controls' }, prevBtn, playBtn, nextBtn),
-        fold('optionen', 'Tempo und Bewegungen',
+        fold('optionen', 'Tempo, Bewegungen und Legende',
           el('div', { class: 'ans-tempo' },
             el('div', { class: 'ans-tempo-row' }, el('span', { class: 'muted small', text: '3× langsamer' }), tempoIn, el('span', { class: 'muted small', text: '3× schneller' })),
             tempoOut),
-          track),
-        fold('legende', 'Legende',
+          track,
           el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-kiai', text: 'Kiai' }), el('span', { class: 'lg-slow', text: 'langsam' }), el('span', { class: 'lg-link', text: 'fließend zur nächsten' })),
           el('div', { class: 'ans-legend muted small' }, el('span', { class: 'lg-heavy', text: 'viel Gewicht' }), el('span', { class: 'lg-light', text: 'wenig Gewicht' }), el('span', { class: 'lg-ghost', text: 'Fuß vorher' }), el('span', { class: 'lg-lift', text: 'Fuß angehoben' }), el('span', { class: 'lg-body', text: 'Körper zeigt' }), el('span', { class: 'lg-look', text: 'Blick' }), el('span', { class: 'lg-turn', text: 'Wendung' }), el('span', { class: 'lg-via', text: 'Fuß zieht heran und zurück' })))),
       el('div', { class: 'actions ans-katanav' }, kataPrev, ...(fsBtn ? [fsBtn] : []), kataNext),
