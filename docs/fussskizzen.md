@@ -57,6 +57,9 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2). Sie ist bewusst so
   Kiba-dachi 19 und 21), und 20 („Füße bleiben“) hat die Plätze aus 19. Vorher lag der linke Fuß in 18 höher, der
   Yori-ashi in 19 sprang dadurch um etwa 0,3 nach unten und glitt nicht zur Seite. Der Abschnitt 18–21 liegt jetzt auf
   einer Höhe, 17 ist so lang wie 16.
+- **Enpi 9, 13, 29 (v1.36.19–20):** Vom Hizakutsu in den Zenkutsu-dachi rückt der linke Fuß jedes Mal etwas heran (in
+  13 vorher „Füße bleiben“, in 29 ohne Angabe). Der Hizakutsu 28 ist so lang wie 8 und 12 (0,8 statt 0,6; Einzelskizze 28
+  liegt zwischen 8 und 12), sonst bliebe in 29 kaum ein Heranrücken übrig.
 
 **Durchsicht aller Kata (v1.33.0)** – Stellung für Stellung gegen Register, Einzelskizzen und Buchtext geprüft:
 - Fußarbeit-Texte passend zur Karte bzw. zum Buch: Heian Nidan 19 (der rechte Fuß gleitet zurück), Heian Sandan 4 (linkes
