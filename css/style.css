@@ -1869,3 +1869,45 @@ main:fullscreen {
     background: var(--red);
   }
 }
+
+/* Kata-Ansage: Lexikon-Begriffe in Stand und Technik, Fenster mit dem Eintrag */
+.ans-lex {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+}
+
+.ans-lex:hover,
+.ans-lex:focus-visible {
+  color: var(--red);
+}
+
+.ans-lex-dlg {
+  width: min(26rem, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0.8rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.ans-lex-dlg::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.ans-lex-dlg .lex-grid {
+  grid-template-columns: 1fr;
+  margin: 0 0 0.6rem;
+}
+
+.ans-lex-dlg .actions {
+  margin: 0;
+  justify-content: flex-end;
+}

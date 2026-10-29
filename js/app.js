@@ -199,7 +199,8 @@
     finishView();
   }
 
-  function viewLexikon() {
+  // arg: Suchbegriff, mit dem das Lexikon öffnet (z. B. aus der Kata-Ansage)
+  function viewLexikon(arg) {
     setNav('wissen');
     setTitle('Lexikon');
     app.innerHTML = '';
@@ -259,6 +260,7 @@
       count,
       list
     );
+    if (arg) search.value = arg;
     filter();
     finishView();
   }
@@ -837,7 +839,7 @@
     if (!view) return viewStart();
     if (view === 'wissen') return arg ? viewWissen(arg) : viewWissenList();
     if (view === 'lesson') return viewWissen(arg);
-    if (view === 'lexikon') return viewLexikon();
+    if (view === 'lexikon') return viewLexikon(arg);
     if (view === 'quiz') return arg ? viewQuiz(arg) : viewQuizList();
     if (view === 'zufall') return viewZufall(arg);
     if (view === 'begriffe') return viewBegriffe();

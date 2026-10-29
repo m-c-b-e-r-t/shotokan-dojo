@@ -612,6 +612,87 @@
     if (st.kiai) utter(KIAI, TONE_KIAI, fast, false);
   }
 
+  // ---------- Lexikon-Begriffe in Stand und Technik ----------
+  // Zerlegt einen Ansagetext in Textstücke und Lexikon-Treffer: [{ s, e? }]. Gesucht wird nach ganzen Wörtern
+  // (Bindestrich und Leerzeichen trennen), längster Begriff zuerst; „Hiji / Enpi“ zählt für beide Namen.
+  // Eine Körperwaffe (oder ein anderes Vorderwort) vor einer Abwehr oder einem Schlag steht für die zusammengesetzte
+  // Technik, wenn das Lexikon sie kennt und die Technik dahinter nicht selbst ein Begriff ist: „Shuto Chudan-uke“ →
+  // Shuto-uke, „Haiwan Hidari Sokumen Jodan Yoko-uke“ → Haiwan-uke (Seite, Höhe und Richtung dazwischen werden
+  // übersprungen), „Morote Jodan Age-uke“ bleibt Age-uke.
+  let lexIndex = null;
+  function lexTerms() {
+    if (lexIndex) return lexIndex;
+    const norm = (s) => s.toLowerCase().split(/[\s-]+/).filter(Boolean);
+    const list = [];
+    const byName = new Map();
+    SK.glossary.forEach((e) => {
+      e.t.split(' / ').forEach((name) => {
+        if (/[()]/.test(name)) return;
+        const w = norm(name);
+        list.push({ w, e });
+        byName.set(w.join('-'), e);
+      });
+    });
+    list.sort((a, b) => b.w.length - a.w.length);
+    // Wörter, die eine zusammengesetzte Abwehr oder einen Schlag beginnen (Shuto-uke, Haiwan-uke, Uraken-uchi …)
+    const lead = new Set(list.filter((t) => t.w.length === 2 && /^(uke|uchi)$/.test(t.w[1])).map((t) => t.w[0]));
+    lexIndex = { list, byName, lead };
+    return lexIndex;
+  }
+  const LEX_FILL = new Set(['migi', 'hidari', 'jodan', 'chudan', 'gedan', 'sokumen', 'ryote', 'ryoken', 'saken', 'uken', 'sasho', 'usho']);
+  SK.lexParts = function (text) {
+    const { list, byName, lead } = lexTerms();
+    // Wörter mit Position im Text, damit die Treffer den Originaltext (Großschreibung, Klammern) behalten
+    const words = [];
+    text.replace(/[A-Za-zÄÖÜäöüß]+/g, (m, at) => { words.push({ w: m.toLowerCase(), at, end: at + m.length }); return m; });
+    // nur Leerzeichen oder Bindestrich vor Wort m (keine Klammer, kein „+“ dazwischen)
+    const plain = (m) => /^[\s-]+$/.test(text.slice(words[m - 1].end, words[m].at));
+    const hits = [];
+    for (let i = 0; i < words.length; ) {
+      let hit = null;
+      const w = words[i].w;
+      if (lead.has(w) && i + 1 < words.length && plain(i + 1) && text.slice(words[i].end, words[i + 1].at) !== '-') {
+        // Füllwörter überspringen, dann bis zum Ende des folgenden Bindestrich-Worts (Chudan-uke, Yoko-uke)
+        let j = i + 1;
+        while (j < words.length && LEX_FILL.has(words[j].w) && plain(j)) j++;
+        let k = j;
+        while (k + 1 < words.length && text.slice(words[k].end, words[k + 1].at) === '-') k++;
+        const last = k < words.length && /^(uke|uchi)$/.test(words[k].w) ? words[k].w : '';
+        // ist die folgende Technik selbst ein Begriff („Morote Jodan Age-uke“), gilt sie
+        const own = last && j <= k && byName.has(words.slice(j, k + 1).map((x) => x.w).join('-'));
+        // „Tate-shuto Chudan-uke“: Vorsilbe am Bindestrich gehört zur Technik (Tate-shuto-uke)
+        const pre = i > 0 && text.slice(words[i - 1].end, words[i].at) === '-' ? words[i - 1].w : '';
+        const e = last && !own && ((pre && byName.get(`${pre}-${w}-${last}`)) || (!pre && byName.get(`${w}-${last}`)));
+        let ok = !!e;
+        for (let m = i + 1; m <= k && ok; m++) ok = plain(m);
+        if (ok) hit = { from: pre ? i - 1 : i, to: k, e };
+      }
+      if (!hit) {
+        for (const t of list) {
+          const n = t.w.length;
+          if (i + n > words.length) continue;
+          let ok = true;
+          for (let m = 0; m < n && ok; m++) {
+            ok = words[i + m].w === t.w[m] && (m === 0 || plain(i + m));
+          }
+          if (ok) { hit = { from: i, to: i + n - 1, e: t.e }; break; }
+        }
+      }
+      if (hit) { hits.push(hit); i = hit.to + 1; } else i++;
+    }
+    const parts = [];
+    let pos = 0;
+    hits.forEach((h) => {
+      const a = words[h.from].at;
+      const b = words[h.to].end;
+      if (a > pos) parts.push({ s: text.slice(pos, a) });
+      parts.push({ s: text.slice(a, b), e: h.e });
+      pos = b;
+    });
+    if (pos < text.length) parts.push({ s: text.slice(pos) });
+    return parts;
+  };
+
   // ---------- Ansicht ----------
   SK.viewAnsage = function (app, k) {
     const { el } = util;
@@ -689,13 +770,40 @@
       cKan.hidden = !s.kan;
       // beim Zählen und bei Rei, Yoi, Naore steht der Kata-Name davor: „Heian Shodan – Ichi“
       cRo.textContent = s.kind === 'name' ? s.ro : `${k.name} – ${s.ro}`;
-      cPos.textContent = s.kind === 'move' ? `${s.n}/${k.moves} · ${s.stance}` : s.stance;
+      lexFill(cPos, s.kind === 'move' ? `${s.n}/${k.moves} · ${s.stance}` : s.stance);
       chips.innerHTML = '';
       if (s.kiai) chips.append(el('span', { class: 'ans-chip kiai', text: 'Kiai' }));
       if (s.slow) chips.append(el('span', { class: 'ans-chip slow', text: 'langsam' }));
       if (s.cont) chips.append(el('span', { class: 'ans-chip cont', text: 'fließend' }));
       cHint.textContent = s.pose.h;
-      cTech.textContent = s.kind === 'move' ? s.tech + (s.note ? ` · ${s.note}` : '') : s.note || '';
+      lexFill(cTech, s.kind === 'move' ? s.tech + (s.note ? ` · ${s.note}` : '') : s.note || '');
+    }
+    // Lexikon-Begriffe in Stand und Technik antippbar: hält die Ansage an und zeigt den Eintrag aus dem Lexikon
+    function lexFill(node, text) {
+      node.textContent = '';
+      SK.lexParts(text).forEach((p) => {
+        node.append(p.e ? el('button', { class: 'ans-lex', type: 'button', text: p.s, title: 'Im Lexikon nachsehen', onclick: () => lexShow(p.e) }) : p.s);
+      });
+    }
+    const lexBody = el('div');
+    const lexDlg = el(
+      'dialog',
+      { class: 'ans-lex-dlg', 'aria-label': 'Lexikon' },
+      lexBody,
+      el('div', { class: 'actions' },
+        el('a', { class: 'btn', href: '#/lexikon', text: 'Im Lexikon öffnen', onclick: () => lexDlg.close() }),
+        el('button', { class: 'btn primary', type: 'button', text: 'Schließen', onclick: () => lexDlg.close() }))
+    );
+    // Tippen neben das Fenster schließt es (der Innenrand gehört auch zum dialog-Element, daher über die Lage)
+    lexDlg.addEventListener('click', (ev) => {
+      const r = lexDlg.getBoundingClientRect();
+      if (ev.target === lexDlg && (ev.clientX < r.left || ev.clientX > r.right || ev.clientY < r.top || ev.clientY > r.bottom)) lexDlg.close();
+    });
+    function lexShow(e) {
+      if (running) pause();
+      lexBody.innerHTML = SK.glossaryHtml([e]);
+      lexDlg.querySelector('a.btn').href = `#/lexikon/${encodeURIComponent(e.t.split(' / ')[0])}`;
+      lexDlg.showModal();
     }
     // Der Kasten soll beim Zählen nicht wachsen und schrumpfen: Kopf, Fußarbeit und Technik bekommen die Höhe der
     // längsten Ansage dieser Kata (bei der aktuellen Breite, daher neu bei Größenänderung und Vollbild).
@@ -839,7 +947,7 @@
     }
     document.addEventListener('visibilitychange', onVisibility);
     function onKey(ev) {
-      if (ev.code !== 'Space' || /INPUT|SELECT|TEXTAREA|BUTTON/.test(ev.target.tagName)) return;
+      if (ev.code !== 'Space' || lexDlg.open || /INPUT|SELECT|TEXTAREA|BUTTON/.test(ev.target.tagName)) return;
       ev.preventDefault();
       playBtn.click();
     }
@@ -900,7 +1008,7 @@
     app.innerHTML = '';
     app.append(
       el('h1', { class: 'visually-hidden', text: k.name }),
-      el('div', { class: 'ans-wrap' }, stage,
+      el('div', { class: 'ans-wrap' }, stage, lexDlg,
         controls,
         infoOut,
         fold('optionen', 'Tempo, Bewegungen und Legende',
