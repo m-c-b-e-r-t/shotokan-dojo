@@ -207,7 +207,7 @@
       theory: ['Begriffe: Dojo, Te, Do, Kogeki, Uke'],
     },
     {
-      id: '5kyu', name: '5. Kyu', belt: 'Violettgurt', cls: 'belt-violet', kata: ['heian-yondan'], stufe: 'II',
+      id: '5kyu', name: '5. Kyu', belt: 'Blaugurt', cls: 'belt-blue', kata: ['heian-yondan'], stufe: 'II',
       wait: '4 Monate',
       kihon: {
         reps: 'Jede Technik je 3x.',
