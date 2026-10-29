@@ -89,7 +89,7 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   22 / 23 / 24), daher unverändert.
 - **Kanku Dai 38–54:** Der Abschnitt liegt etwas neben der Übersichtsskizze, weil der linke Fuß in 46–54 laut Buch
   durchgehend stehen bleibt; der längere Sprungschritt in 38 gleicht das aus (siehe oben). 55–59 liegen wie in der
-  Übersichtsskizze an der oberen Linie (der linke Fuß in 55 auf ihr, das Yori-ashi in 56 gleitet nur 0,1), der
+  Übersichtsskizze an der oberen Linie (der linke Fuß in 55 auf ihr, das Yori-ashi in 56 gleitet nur 0,08), der
   Nidan-geri-Sprung in 65 ist rund 1,1 lang.
 - **Kanku Dai 48:** Der rechte Fuß steht seit v1.36.2 wie in der Einzelskizze fast genau rechts vom linken (Buch 102°,
   vorher 120°, also zu breit).
@@ -98,7 +98,11 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   Übersichtsskizze etwas rechts der Mittellinie, in 43 steht der rechte Fuß genau vor dem linken. In 44 dreht das rechte
   Bein, der linke Fuß rückt wie in der Übersichtsskizze deutlich nach rechts (Kokutsu-dachi daher etwa 336° statt 359°).
   46 hat die Länge der Einzelskizze, damit steht der linke Fuß in 46–54 nahe der Mittellinie und bleibt laut Buch bis 54
-  stehen; der rechte Fuß gleitet in 54 fast gerade vor. Das Yori-ashi in 56 gleitet nur 0,1.
+  stehen; der rechte Fuß gleitet in 54 fast gerade vor.
+- **Kanku Dai 53–64 (v1.36.7):** In 53 setzt der rechte Fuß weiter rechts ab, der linke rückt dabei etwas nach rechts
+  (0,18). Ab 55 steht der Kiba-dachi wie in der Übersichtsskizze rechts direkt an der Mittellinie (Fußmitte 0,07); der
+  Sprung in 65 geht dadurch fast gerade zum Start. Diese Stellungen tragen `free: true` und rasten nicht auf der Linie ein
+  (neue Möglichkeit in `js/kata-ansage.js`, sonst von keiner Kata genutzt). Das Yori-ashi in 56 gleitet 0,08.
 - **Kanku Dai 62:** Die Füße bleiben stehen, nur die Fußspitzen drehen nach außen; der Hachiji-dachi ist so breit wie der
   Kiba-dachi davor.
 

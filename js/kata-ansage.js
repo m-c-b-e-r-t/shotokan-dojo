@@ -64,6 +64,8 @@
   //    Kiba-dachi die Fußmitte). Bei Zenkutsu-dachi zeigt der vordere Fuß ZEN_IN nach innen, der hintere mindestens
   //    ZEN_OUT_MIN nach außen; bei Kokutsu-dachi zeigt der vordere Fuß genau in Körperrichtung und der hintere quer (wie in
   //    den Einzelskizzen des Buches, docs/fussskizzen.md).
+  // Eine Stellung mit free: true rastet nicht auf Embusen-Linien ein (Punkt 2 und 3), z. B. wenn die Füße im Buch knapp
+  // neben einer Linie stehen (Kanku Dai 53–64).
   const STILL = { d: 0.12, deg: 20 };
   const PIN_MAX = 0.6; // weiter versetzt die Skizze einen Fuß nur, wenn er sich wirklich bewegt
   const SNAP = 0.1; // so nah an einer Embusen-Linie wird der Stand auf sie gesetzt
@@ -206,7 +208,7 @@
     }));
     const pos = Array.from({ length: nSeg }, () => [0, 0]); // je Platz nur die Achse c genutzt, zu der er gehört
     const off = raw.map(() => [0, 0]);
-    const onL = raw.map((p, j) => p.f.map((x, i) => lines.map((l) => lineAt(x, l, ON_LINE)).filter(Boolean).concat(extra[j][i])));
+    const onL = raw.map((p, j) => p.f.map((x, i) => (p.free ? [] : lines.map((l) => lineAt(x, l, ON_LINE)).filter(Boolean)).concat(extra[j][i])));
     for (let it = 0; it < 400; it++) {
       const sum = pos.map(() => [0, 0]);
       const cnt = pos.map(() => [0, 0]);
@@ -287,7 +289,7 @@
       const back = p.f.map((x) => k * toe(x[2])[c]);
       const m = (p.f[0][c] - back[0] + p.f[1][c] - back[1]) / 2;
       const line = a.lines.find((l) => l[c] === l[c + 2] && Math.abs(m - l[c]) < NEAR);
-      if (line) p.f.forEach((x, i) => extra[j][i].push([c, line[c] + back[i], W_SYM]));
+      if (line && !p.free) p.f.forEach((x, i) => extra[j][i].push([c, line[c] + back[i], W_SYM]));
     });
     seg.forEach((sj) => sj.forEach((si) => { si[0] = find(si[0]); si[1] = find(si[1]); }));
     const { pos, off } = balance(raw, seg, nSeg, frame, a.lines, extra);
@@ -301,7 +303,7 @@
         return held[i] ? [prev.f[i][0], prev.f[i][1], d, x[3]] : [r2(pos[seg[j][i][0]][0]), r2(pos[seg[j][i][1]][1]), d, x[3]];
       });
       if (pin[j] !== 'stand') {
-        f = shape(f, stances[j], m.body, held, a.lines, heelAt[j]);
+        f = shape(f, stances[j], m.body, held, m.free ? [] : a.lines, heelAt[j]);
         // Kosa-dachi (gekreuzter Fuß dahinter; der Kreuzschritt in Tekki heißt nur „Kosa“): der Ballenfuß steht
         // mindestens KOSA_BACK hinter dem tragenden Fuß
         if (/kosa-dachi/i.test(stances[j])) {
