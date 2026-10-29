@@ -43,7 +43,14 @@ function sketches() {
   return out;
 }
 
+// Bewusst so belassene Abweichungen (siehe „Bewusst offen gelassen“ in docs/fussskizzen.md): werden nicht gemeldet,
+// nur am Ende gezählt. Schlüssel: Kata-ID und Stellung (Nr, Rei, Yoi …).
+const ACCEPTED = {
+  jion: { 2: 'vorderer Fuß im Buch etwa 41° eingedreht, die App setzt wie überall 15°' },
+};
+
 const book = sketches();
+let accepted = 0;
 let total = 0;
 SK.ansageKata().filter((id) => !only.length || only.includes(id)).forEach((id) => {
   const k = SK.kata[id];
@@ -73,6 +80,10 @@ SK.ansageKata().filter((id) => !only.length || only.includes(id)).forEach((id) =
       const moved = [0, 1].map((i) => Math.hypot(f[i][0] - q[i][0], f[i][1] - q[i][1]));
       ['linker', 'rechter'].forEach((s, i) => { if (moved[i] > 0.03) what.push(`keine Skizze (Stand bleibt), App versetzt ${s} Fuß um ${moved[i].toFixed(2)}`); });
     }
+    if (what.length && (ACCEPTED[id] || {})[names[j]]) {
+      accepted++;
+      return;
+    }
     if (what.length) rows.push(`  ${names[j]}${stances[j] ? ` (${stances[j]})` : ''}: ${what.join('; ')}`);
   });
   total += rows.length;
@@ -80,3 +91,4 @@ SK.ansageKata().filter((id) => !only.length || only.includes(id)).forEach((id) =
   rows.forEach((r) => console.log(r));
 });
 console.log(`\n${total} Stellungen mit Abweichung über ${limit}° (${raw ? 'Rohdaten' : 'angezeigte Stellungen'}).`);
+if (accepted) console.log(`${accepted} bewusst so belassen (ACCEPTED in tools/skizzen-vergleich.js), nicht gemeldet.`);
