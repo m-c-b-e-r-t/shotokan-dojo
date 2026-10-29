@@ -169,7 +169,7 @@
     'gedan-kamae': S('Gedan-kamae', side([GUARD_FAR, ...S_ZK, arm([[112, 62], [134, 100], [158, 124]])]), '', ['seitlich: Kampfhaltung, vordere Faust', 'unten über dem Knie'], still),
     'shuto-kamae': S('Shuto-kamae', side([far(arm([[112, 62], [118, 92], [136, 88]], 'open')), ...S_KK, arm([[112, 62], [138, 80], [160, 62]], 'open')]), '', ['seitlich (Kokutsu-dachi): beide', 'Hände als Handkanten'], still),
     'koshi-kamae': F('Koshi-kamae', fr([arm([[93, 62], [104, 96], [126, 104]]), arm([[127, 62], [140, 94], [130, 114]])]), ring(128, 110, 15), ['von vorne: beide Fäuste übereinander', 'an einer Hüfte'], still),
-    'mizunagare-no-kamae': F('Mizunagare-no-kamae', fr([HIKITE_L, arm([[93, 62], [74, 100], [118, 86]])]), '', ['von vorne: Unterarm schräg vor dem', 'Solarplexus, zwei Fäuste entfernt'], still),
+    'mizunagare-no-kamae': F('Mizunagare-no-kamae', fr([HIKITE_L, arm([[93, 62], [74, 88], [118, 96]])]), '', ['von vorne: Unterarm schräg vor dem', 'Solarplexus, zwei Fäuste entfernt'], still),
     hanmi: F('Hanmi', hanmiSpec(false), tag(124, 60, 'vordere Schulter', 206, 20, 'end'), ['von vorne: Oberkörper halb gedreht –', 'Schulter des vorderen Beins vorne'], still),
     'gyaku-hanmi': F('Gyaku-hanmi', hanmiSpec(true), tag(98, 60, 'vordere Schulter', 14, 20, 'start'), ['von vorne: zur Gegenseite gedreht –', 'Schulter des hinteren Beins vorne'], still),
     shizentai: F('Shizentai', fr([arm([[93, 62], [86, 96], [94, 128]]), arm([[127, 62], [134, 96], [126, 128]])], SHIZEN), '', ['von vorne: natürliche Haltung,', 'Füße etwa schulterbreit'], still),
