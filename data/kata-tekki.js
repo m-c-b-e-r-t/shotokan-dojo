@@ -45,8 +45,10 @@
         { f: [[0.22, 0.01, 353, 0.5], [0.93, 0.01, 5, 0.5]], body: 0, look: 90, h: 'Stand bleibt, Blick nach rechts' },
         { f: [[0.11, 0.01, 354, 0.5], [0.92, 0, 6, 0.5]], body: 0, look: 90, h: 'Stand bleibt – Kiai' },
       ],
-      naore: { f: [[-0.06, 0.03, 357, 0.5], [0.07, 0.02, 6, 0.5]], body: 0, h: 'Linker Fuß bleibt, rechter Fuß zieht neben den linken zurück' },
-      end: { f: [[-0.05, -0.01, 330, 0.5], [0.05, -0.01, 30, 0.5]], body: 0, h: 'Verbeugung, Ende der Kata' },
+      // Naore und Ende: Die Skizze zeichnet sie am Start, der linke Fuß bleibt aber laut Text stehen – wie nach dem ersten
+      // Kreuzschritt endet die Kata etwas rechts vom Start, dort auch die Verbeugung (sonst sprängen beide Füße zum Rei).
+      naore: { f: [[0.16, 0.03, 357, 0.5], [0.27, 0.02, 6, 0.5]], body: 0, h: 'Linker Fuß bleibt, rechter Fuß zieht neben den linken zurück' },
+      end: { f: [[0.16, -0.01, 330, 0.5], [0.27, -0.01, 30, 0.5]], body: 0, h: 'Verbeugung, Ende der Kata' },
     },
     yoi: 'Heisoku-dachi, linke Handfläche auf dem Rücken der rechten Hand vor dem Unterbauch',
     naore: 'Der linke Fuß bleibt, der rechte Fuß geht neben den linken zurück in die Yoi-Position.',
