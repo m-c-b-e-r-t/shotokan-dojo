@@ -479,7 +479,7 @@
     return `<path class="emb-via" d="M${sx} ${sy} L${ex} ${ey}"/><path class="emb-via-head" d="${head(ex, ey, d)} ${head(sx, sy, d + 180)}"/>`;
   }
   // Ausschnitt fest je Kata, damit die Karte beim Zählen nicht springt. Das Embusen (Linien) steht in der Mitte;
-  // alle Kata bekommen gleich große Karten (die größte), damit Feld und Füße überall gleich groß erscheinen.
+  // jede Kata füllt die Karte so gut es geht, damit die Füße möglichst groß erscheinen.
   function reach(k) {
     const a = steadyPoses(k);
     const L = k.ansage.lines;
@@ -490,18 +490,20 @@
     const pts = [a.rei, a.yoi, a.naore, a.end].concat(a.moves).flatMap((p) => p.f).concat(L.flatMap((l) => [[l[0], l[1]], [l[2], l[3]]]));
     return [cx, cy, Math.max(...pts.map((f) => Math.abs(f[0] - cx))), Math.max(...pts.map((f) => Math.abs(f[1] - cy)))];
   }
-  let half = null;
-  function bounds(k) {
-    if (!half) {
-      const all = SK.ansageKata().map((id) => reach(SK.kata[id]));
-      half = [Math.max(...all.map((r) => r[2])) + 0.3, Math.max(...all.map((r) => r[3])) + 0.3];
+  // aspect (Breite / Höhe der Karte): der Ausschnitt wird in der kürzeren Richtung erweitert, damit das Raster die Karte füllt
+  function bounds(k, aspect) {
+    const [cx, cy, rx, ry] = reach(k);
+    let hx = rx + 0.45;
+    let hy = ry + 0.45;
+    if (aspect) {
+      if (hx / hy < aspect) hx = hy * aspect;
+      else hy = hx / aspect;
     }
-    const [cx, cy] = reach(k);
-    return [cx - half[0], cx + half[0], cy - half[1], cy + half[1]].map((v) => v * U);
+    return [cx - hx, cx + hx, cy - hy, cy + hy].map((v) => v * U);
   }
-  SK.embusenSvg = function (k, pose, prev) {
+  SK.embusenSvg = function (k, pose, prev, aspect) {
     const a = k.ansage;
-    const [x0, x1, y0, y1] = bounds(k);
+    const [x0, x1, y0, y1] = bounds(k, aspect);
     let g = '';
     for (let x = Math.ceil(x0 / 50) * 50; x <= x1; x += 50) g += `M${x} ${-y1} V${-y0}`;
     for (let y = Math.ceil(y0 / 50) * 50; y <= y1; y += 50) g += `M${x0} ${-y} H${x1}`;
@@ -629,15 +631,17 @@
     const cRo = el('span', { class: 'ans-ro' });
     const cPos = el('span', { class: 'ans-pos' });
     const chips = el('div', { class: 'ans-chips' });
-    const map = el('div', { class: 'ans-map' });
+    const map = el('div', { class: 'ans-map-svg' });
+    const mapBox = el('div', { class: 'ans-map' }, map, chips);
     const cHint = el('div', { class: 'ans-hint' });
     const cTech = el('div', { class: 'ans-tech muted' });
-    const head = el('div', { class: 'ans-head' }, cKan, el('div', { class: 'ans-head-txt' }, cRo, cPos), chips);
-    const stage = el('section', { class: 'ans-stage', 'aria-live': 'polite' }, head, map, cHint, cTech);
+    const head = el('div', { class: 'ans-head' }, cKan, el('div', { class: 'ans-head-txt' }, cRo, cPos));
+    const stage = el('section', { class: 'ans-stage', 'aria-live': 'polite' }, head, mapBox, cHint, cTech);
     const track = el('div', { class: 'ans-track', role: 'group', 'aria-label': 'Bewegungen' });
     const playBtn = el('button', { class: 'btn primary ans-play', type: 'button' });
     const prevBtn = el('button', { class: 'btn', type: 'button', 'aria-label': 'Eine Ansage zurück', text: '◀' });
     const nextBtn = el('button', { class: 'btn', type: 'button', 'aria-label': 'Eine Ansage weiter', text: '▶' });
+    const controls = el('div', { class: 'ans-controls' }, prevBtn, playBtn, nextBtn);
     const fsBtn = document.fullscreenEnabled ? el('button', { class: 'btn', type: 'button', text: 'Vollbild' }) : null;
     const order = SK.ansageKata();
     const pos = order.indexOf(k.id);
@@ -683,7 +687,7 @@
       cKan.textContent = s.kan;
       cKan.hidden = !s.kan;
       cRo.textContent = s.ro;
-      cPos.textContent = s.kind === 'move' ? `Bewegung ${s.n} von ${k.moves} · ${s.stance}` : `${k.name} · ${s.stance}`;
+      cPos.textContent = s.kind === 'move' ? `${s.n}/${k.moves} · ${s.stance}` : `${k.name} · ${s.stance}`;
       chips.innerHTML = '';
       if (s.pose.turn) chips.append(el('span', { class: 'ans-chip turn', text: SK.turnText(s.pose.turn) }));
       if (s.kiai) chips.append(el('span', { class: 'ans-chip kiai', text: 'Kiai' }));
@@ -708,7 +712,21 @@
         boxes.forEach((b, j) => { max[j] = Math.max(max[j], b.offsetHeight); });
       });
       boxes.forEach((b, j) => { b.style.minHeight = `${max[j]}px`; });
+      fit();
       render(idx);
+    }
+    // Die Karte bekommt die Höhe, die neben Kopf, Text und Knöpfen auf dem Bildschirm bleibt: Ist der Kasten oben
+    // angekommen, passen Karte und Knöpfe ohne Scrollen hinein. Die Knöpfe kleben am unteren Rand und springen nie.
+    // clientHeight ändert sich nicht, wenn Chrome die Adressleiste ein- oder ausblendet.
+    function fit() {
+      const fs = document.fullscreenElement;
+      const top = fs ? 0 : (document.querySelector('.topbar') || {}).offsetHeight || 0;
+      const bottom = fs ? 0 : (document.querySelector('.bottombar') || {}).offsetHeight || 0;
+      const view = fs ? fs.clientHeight : document.documentElement.clientHeight;
+      stage.style.scrollMarginTop = `${top + 8}px`;
+      controls.style.bottom = `${bottom}px`;
+      const rest = stage.offsetHeight - mapBox.offsetHeight + controls.offsetHeight + 8 + 16 + (fs ? 32 : 0);
+      mapBox.style.height = `${Math.round(Math.max(240, Math.min(view - top - bottom - rest, mapBox.clientWidth * 1.6)))}px`;
     }
     let resizeTimer = 0;
     function onResize() {
@@ -723,7 +741,7 @@
       if (!s) return;
       fill(s);
       stage.classList.toggle('kiai', !!s.kiai);
-      map.innerHTML = SK.embusenSvg(k, s.pose, i ? s.prev : null);
+      map.innerHTML = SK.embusenSvg(k, s.pose, i ? s.prev : null, mapBox.clientWidth / mapBox.clientHeight || null);
       const firstMove = steps.findIndex((x) => x.kind === 'move');
       const cur = s.kind === 'move' ? s.n : i < firstMove ? 0 : Infinity;
       track.querySelectorAll('.ans-dot').forEach((d) => {
@@ -773,7 +791,7 @@
       if (from + 1 < steps.length) schedule(from + 1);
       else timers.push(setTimeout(finish, 1500));
       running = true;
-      stage.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      toStage();
       wake(true);
       ui();
     }
@@ -793,7 +811,12 @@
     function jump(i) {
       i = Math.max(0, Math.min(steps.length - 1, i));
       if (running) start(i);
-      else { idx = i; render(i); }
+      else { idx = i; render(i); toStage(); }
+    }
+    // Kasten nach oben holen, damit Karte und Knöpfe ganz zu sehen sind (nur wenn er nicht schon dort steht)
+    function toStage() {
+      const r = stage.getBoundingClientRect();
+      if (Math.abs(r.top - parseFloat(stage.style.scrollMarginTop || 0)) > 4) stage.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
     function ui() {
       playBtn.textContent = running ? '❚❚ Pause' : idx > 0 && idx < steps.length - 1 ? '▶ Weiter zählen' : '▶ Start';
@@ -855,9 +878,9 @@
     app.append(
       el('nav', { class: 'crumbs' }, el('a', { href: '#/ansage', text: 'Üben' }), ' › ', el('span', { text: k.name })),
       el('h1', { text: k.name }),
-      infoOut,
       el('div', { class: 'ans-wrap' }, stage,
-        el('div', { class: 'ans-controls' }, prevBtn, playBtn, nextBtn),
+        controls,
+        infoOut,
         fold('optionen', 'Tempo, Bewegungen und Legende',
           el('div', { class: 'ans-tempo' },
             el('div', { class: 'ans-tempo-row' }, el('span', { class: 'muted small', text: '3× langsamer' }), tempoIn, el('span', { class: 'muted small', text: '3× schneller' })),
