@@ -48,10 +48,10 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
 - Yori-ashi mit beiden Füßen: Kanku Dai 56, Jion 19, Enpi 34 und 35. Enpi 15: Der rechte Fuß kommt hinter das linke Knie.
 - **Angleichung ganzer Abschnitte:** In Kanku Dai bleibt der linke Fuß von 46 bis 54 stehen, so sagen es Text und
   Einzelskizzen. Die Übersichtsskizze rückt den Stand ab 48 zur Mittellinie. Die Rohbilder 47–64 sind deshalb Bild für
-  Bild an den stehenden Fuß angeglichen. Den Versatz nimmt seit v1.36.1 der Sprungschritt in 38 auf (rund 0,35 länger,
-  nach Best Karate „anderthalb Sprungschritte“), damit der Kiba-dachi ab 55 wie in der Übersichtsskizze an der oberen
-  Linie steht und der Sprung in 65 nicht überlang wird. Ebenso in Jion 18–30 nach dem
-  verlängerten Kiai-Schritt 17, der Sprung in 31 nimmt den Versatz auf.
+  Bild an den stehenden Fuß angeglichen. Den Versatz nimmt seit v1.36.1 der Sprungschritt in 38 auf (seit v1.36.3 rund
+  0,15 länger, nach Best Karate „anderthalb Sprungschritte“), damit der Kiba-dachi ab 55 wie in der Übersichtsskizze an
+  der oberen Linie steht und der Sprung in 65 nicht überlang wird. Ebenso in Jion 18–30 nach dem verlängerten
+  Kiai-Schritt 17, der Sprung in 31 nimmt den Versatz auf.
 
 **Durchsicht aller Kata (v1.33.0)** – Stellung für Stellung gegen Register, Einzelskizzen und Buchtext geprüft:
 - Fußarbeit-Texte passend zur Karte bzw. zum Buch: Heian Nidan 19 (der rechte Fuß gleitet zurück), Heian Sandan 4 (linkes
@@ -89,10 +89,11 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   22 / 23 / 24), daher unverändert.
 - **Kanku Dai 38–54:** Der Abschnitt liegt etwas neben der Übersichtsskizze, weil der linke Fuß in 46–54 laut Buch
   durchgehend stehen bleibt; der längere Sprungschritt in 38 gleicht das aus (siehe oben). 55–59 liegen wie in der
-  Übersichtsskizze an der oberen Linie, der Nidan-geri-Sprung in 65 ist rund 1,0 lang.
+  Übersichtsskizze an der oberen Linie (der linke Fuß in 55 auf ihr, das Yori-ashi in 56 gleitet nur 0,16), der
+  Nidan-geri-Sprung in 65 ist rund 1,1 lang.
 - **Kanku Dai 48:** Der rechte Fuß steht seit v1.36.2 wie in der Einzelskizze fast genau rechts vom linken (Buch 102°,
   vorher 120°, also zu breit).
-- **Kanku Dai 54:** Der rechte Fuß gleitet etwa 26° schräg nach vorne (Buch 9°). Der linke Fuß steht von 46 bis 54 eine
+- **Kanku Dai 54:** Der rechte Fuß gleitet etwa 29° schräg nach vorne (Buch 9°). Der linke Fuß steht von 46 bis 54 eine
   Standlänge links der Mittellinie (er bleibt laut Buch stehen), der Kiba-dachi in 55 liegt auf ihr, und der rechte Fuß
   dreht in 55 auf der Stelle – so muss er in 54 zur Mittellinie hin gleiten. Abhilfe ginge nur, wenn der linke Fuß in
   51 oder 53 zur Mitte rückt (so zeichnet es die Übersichtsskizze, gegen den Buchtext) oder 55–64 neben der Linie lägen.
