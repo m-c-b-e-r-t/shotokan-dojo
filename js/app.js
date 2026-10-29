@@ -95,7 +95,7 @@
         tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen'),
         tile('#/begriffe', 'Begriffe-Trainer', 'Stände, Techniken & Begriffe – kurz abgefragt'),
         tile('#/ansage', 'Kata-Trainer', 'Alle Kata – Embusen und Schrittfolgen'),
-        tile('#/exam', 'Prüfungen', 'DJKB-Prüfungsprogramm je Gürtel: Kihon, Kata, Kumite')
+        tile('#/exam', 'Prüfungen', 'DJKB-Prüfungsprogramm: Kihon, Kata, Kumite')
       ),
       versionLine()
     );
