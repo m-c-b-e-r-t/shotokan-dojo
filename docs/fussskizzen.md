@@ -25,7 +25,8 @@ keine Abschriften.
 ## Umsetzung in der App (v1.32.0, ergänzt in v1.32.1 und v1.33.0)
 
 Die Befunde unten (Stand v1.31.10) sind in die Kata-Ansage übernommen. Danach meldet `node tools/skizzen-vergleich.js`
-nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
+nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2). Seit v1.36.17 ist auch sie behoben: Die Stellung gibt mit
+`zenIn` an, wie weit der vordere Fuß im Zenkutsu-dachi eingedreht ist (Jion 2: 41° wie im Buch statt allgemein 15°).
 
 **Regeln in `js/kata-ansage.js`**
 - **Standgeometrie (C):** Im Bild, in dem ein Fuß ankommt, zählt seine Lage zum stehenden Fuß zusätzlich (`W_STANCE`).
@@ -76,8 +77,7 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
 - Drehsprung Enpi 36: als ganze Drehung links herum (`turn: -360`) mit Drehbogen auf der Karte.
 
 **Bewusst offen gelassen**
-- **Jion 2:** Im Buch ist der vordere Fuß etwa 41° eingedreht, die App setzt wie überall 15°.
-- **Jion 42:** Der linke Fuß steht nicht ganz vor dem rechten (Abweichung etwa 30°). Die Übersichtsskizze ist von 42 bis
+- **Jion 42:** Der linke Fuß steht nicht ganz vor dem rechten (Abweichung etwa 20°). Die Übersichtsskizze ist von 42 bis
   46 in sich stimmig, und eine Korrektur hätte 46/47 verzerrt.
 - **Heian Yondan 24:** Der Kokutsu-dachi bleibt mit 0,46 etwas kurz. Die Übersichtsskizze widerspricht sich bei 23/24 beim
   stehenden rechten Fuß, und die Kata muss am Startpunkt enden.

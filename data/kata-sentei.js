@@ -349,7 +349,7 @@
       yoi: { f: [[-0.04, 0.16, 0, 0.5], [0.08, 0.16, 0, 0.5]], body: 0, h: 'Füße geschlossen (Heisoku-dachi)' },
       moves: [
         { f: [[0.01, -0.36, 335, 0.3], [0.08, 0.15, 354, 0.7]], body: 0, h: 'Linker Fuß gleitet zurück' },
-        { f: [[-0.43, 0.46, 334, 0.7], [0.08, 0.13, 328, 0.3]], body: 315, turn: -45, h: 'Langsam: rechtes Bein trägt, linker Fuß gleitet schräg nach links vorne' },
+        { f: [[-0.43, 0.46, 334, 0.7], [0.08, 0.13, 328, 0.3]], zenIn: 41, body: 315, turn: -45, h: 'Langsam: rechtes Bein trägt, linker Fuß gleitet schräg nach links vorne' },
         { f: [[-0.57, 0.59, 324, 1], [-0.45, 0.55, 315, 0]], body: 315, h: 'Hüfte über den linken Fuß, rechtes Knie hoch, Mae-geri-keage' },
         { f: [[-0.47, 0.58, 270, 0.3], [-0.82, 1, 332, 0.7]], body: 315, h: 'Rechter Fuß setzt nach dem Tritt vorne ab' },
         { f: [[-0.46, 0.57, 318, 0.3], [-0.44, 1.12, 332, 0.7]], body: 315, h: 'Stand bleibt' },
