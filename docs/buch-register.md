@@ -555,7 +555,7 @@ Die Spalte „Scan-S.“ nennt die Scan-Seite mit dem Buchtext zur Bewegung.
 | 59 | Kiba-dachi | Migi Sokumen Migi Gedan-barai | Stand bleibt | rechts, Blick Start | 126 |
 | 60 | Kiba-dachi | Hidari Zenwan Gedan-uke + Uken Furiage | Rechtes Bein trägt, linker Fuß geht nach rechts Richtung Start, schnelle Drehung rechts herum – Kiba-dachi | links, Wendung ½ rechts herum | 126 |
 | 61 | Kiba-dachi | Uken Otoshi-zuki | Stand bleibt | links | 127 |
-| 62 | Hachiji-dachi | Kaisho Jodan Kosa-uke | Beide Knie strecken, rechter Fuß rückt etwas nach außen – etwas breiterer Hachiji-dachi | links | 127 |
+| 62 | Hachiji-dachi | Kaisho Jodan Kosa-uke | Füße bleiben, beide Knie strecken, die Fußspitzen drehen nach außen – breiter Hachiji-dachi | links | 127 |
 | 63 | Migi Zenkutsu-dachi | Migi Ashi-jiku Migi-mawari (Drehung, Hände gekreuzt) | Rechtes Bein trägt, Drehung rechts herum, linker Fuß schwingt nach rechts – Blick zum Start | Start, Wendung ¾ rechts herum | 127 |
 | 64 | Migi Zenkutsu-dachi | Ryoken Mune-mae – langsam | Langsam: Stand bleibt | Start | 128 |
 | 65 | Migi Zenkutsu-dachi | Nidan-geri + Migi Uraken Tate-mawashi-uchi – **Kiai** | Nidan-geri im Sprung, rechter Fuß landet vorne – Kiai | Start | 128 |

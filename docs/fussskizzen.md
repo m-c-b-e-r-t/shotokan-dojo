@@ -48,7 +48,9 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
 - Yori-ashi mit beiden Füßen: Kanku Dai 56, Jion 19, Enpi 34 und 35. Enpi 15: Der rechte Fuß kommt hinter das linke Knie.
 - **Angleichung ganzer Abschnitte:** In Kanku Dai bleibt der linke Fuß von 46 bis 54 stehen, so sagen es Text und
   Einzelskizzen. Die Übersichtsskizze rückt den Stand ab 48 zur Mittellinie. Die Rohbilder 47–64 sind deshalb Bild für
-  Bild an den stehenden Fuß angeglichen, der Sprung in 65 nimmt den Versatz auf. Ebenso in Jion 18–30 nach dem
+  Bild an den stehenden Fuß angeglichen. Den Versatz nimmt seit v1.36.1 der Sprungschritt in 38 auf (rund 0,35 länger,
+  nach Best Karate „anderthalb Sprungschritte“), damit der Kiba-dachi ab 55 wie in der Übersichtsskizze an der oberen
+  Linie steht und der Sprung in 65 nicht überlang wird. Ebenso in Jion 18–30 nach dem
   verlängerten Kiai-Schritt 17, der Sprung in 31 nimmt den Versatz auf.
 
 **Durchsicht aller Kata (v1.33.0)** – Stellung für Stellung gegen Register, Einzelskizzen und Buchtext geprüft:
@@ -85,9 +87,11 @@ nur noch eine Stellung mit mehr als 25° Abweichung (Jion 2, siehe unten).
   Register nennt das langsame Kake-uke als Hinweis nach Funakoshi.
 - **Heian Yondan 22:** Mit 0,39 der kürzeste Kokutsu-dachi der Kata – im Buch ebenso (Einzelskizzen 3,1 / 3,3 / 3,8 für
   22 / 23 / 24), daher unverändert.
-- **Kanku Dai 65:** Der Nidan-geri-Sprung ist rund 1,5 lang, weil er den Versatz von 46–64 aufnimmt (siehe oben).
-- **Kanku Dai 46–64:** Der Abschnitt liegt etwas neben der Mittellinie der Übersichtsskizze, weil der linke Fuß dort laut
-  Buch durchgehend stehen bleibt.
+- **Kanku Dai 38–54:** Der Abschnitt liegt etwas neben der Übersichtsskizze, weil der linke Fuß in 46–54 laut Buch
+  durchgehend stehen bleibt; der längere Sprungschritt in 38 gleicht das aus (siehe oben). 55–59 liegen wie in der
+  Übersichtsskizze an der oberen Linie, der Nidan-geri-Sprung in 65 ist rund 1,0 lang.
+- **Kanku Dai 62:** Die Füße bleiben stehen, nur die Fußspitzen drehen nach außen; der Hachiji-dachi ist so breit wie der
+  Kiba-dachi davor.
 
 ## Abgleich mit der Kata-Ansage (Stand App v1.31.10)
 
