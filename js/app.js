@@ -79,7 +79,6 @@
     setNav('');
     setTitle('');
     app.innerHTML = '';
-    const due = SK.srs.due().length;
     const read = allLessons.filter((l) => store.data.read[l.id]).length;
     const tile = (href, title, text, cls) => el('a', { class: `tile ${cls || ''}`, href }, el('h3', { text: title }), el('p', { text }));
     app.append(
@@ -95,7 +94,7 @@
         tile('#/wissen', 'Wissen', `Alle Inhalte zum Durcharbeiten – ${read}/${allLessons.length} gelesen`),
         tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen'),
         tile('#/begriffe', 'Begriffe-Trainer', 'Stände, Techniken & Begriffe – kurz abgefragt'),
-        tile('#/review', 'Wiederholen', due ? `${due} Fragen fällig` : 'Heute nichts fällig'),
+        tile('#/ansage', 'Kata-Trainer', 'Kata im Rhythmus mitzählen, mit Fußstellungen'),
         tile('#/exam', 'Prüfungen', 'DJKB-Prüfungsprogramm je Gürtel: Kihon, Kata, Kumite')
       ),
       versionLine()
@@ -788,7 +787,7 @@
   // Auswahl für die Kata-Ansage (eigener Eintrag in der unteren Leiste)
   function viewAnsageList() {
     setNav('ansage');
-    setTitle('Kata zählen');
+    setTitle('Kata-Trainer');
     app.innerHTML = '';
     const list = el('div', { class: 'grade-list' });
     SK.ansageKata().forEach((id) => {
@@ -804,7 +803,7 @@
       );
     });
     app.append(
-      el('h1', { text: 'Kata zählen' }),
+      el('h1', { text: 'Kata-Trainer' }),
       el('p', { class: 'muted', text: 'Kata auswählen – die App zählt sie auf Japanisch im Rhythmus des Buches und zeigt dazu die Fußstellungen.' }),
       list
     );
