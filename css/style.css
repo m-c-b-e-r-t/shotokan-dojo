@@ -359,13 +359,6 @@ main:has(> .version) {
   opacity: 0.6;
 }
 
-.fort-due {
-  display: inline-block;
-  margin-top: 0.55rem;
-  font-size: 0.78rem;
-  color: var(--red);
-  text-decoration: none;
-}
 
 .unit-section h2 {
   margin-top: 1.6rem;
@@ -836,6 +829,14 @@ figure.gfx svg {
 
 .tile h3 {
   margin-bottom: 0.2rem;
+}
+
+.tile-badge {
+  float: right;
+  margin-top: 0.1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--red);
 }
 
 .tile p {

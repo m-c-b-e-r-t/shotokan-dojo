@@ -82,7 +82,8 @@
     setTitle('');
     app.innerHTML = '';
     const read = learnLessons.filter((l) => store.data.read[l.id]).length;
-    const tile = (href, title, text, cls) => el('a', { class: `tile ${cls || ''}`, href }, el('h3', { text: title }), el('p', { text }));
+    const due = SK.srs.due().length;
+    const tile = (href, title, text, badge) => el('a', { class: 'tile', href }, el('h3', {}, title, badge ? el('span', { class: 'tile-badge', text: badge }) : ''), el('p', { text }));
     app.append(
       el(
         'section',
@@ -95,7 +96,7 @@
         { class: 'tiles' },
         tile('#/lexikon', 'Lexikon', 'Alle Stände, Techniken & Begriffe zum Nachschlagen'),
         tile('#/wissen', 'Lernen', 'Alle Inhalte zum Durcharbeiten'),
-        tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen'),
+        tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen', due ? `${due} fällig` : ''),
         tile('#/ansage', 'Kata-Trainer', 'Alle Kata – Embusen und Schrittfolgen'),
         tile('#/exam', 'Prüfungen', 'DJKB-Prüfungsprogramm: Kihon, Kata, Kumite')
       ),
@@ -105,12 +106,11 @@
     finishView();
   }
 
-  // Dezenter Fortschritt unter den Karten: gelesen, gefragt, gefestigt (ab Fach 4), dazu fällige Fragen.
+  // Dezenter Fortschritt unter den Karten: gelesen, gefragt, gefestigt (ab Fach 4). Fällige Fragen stehen an der Quiz-Karte.
   function progressStrip(read) {
     const total = SK.questions.length;
     const asked = Object.keys(store.data.asked).filter((id) => qById[id]).length;
     const sure = Object.keys(store.data.srs).filter((id) => qById[id] && store.data.srs[id].b >= 4).length;
-    const due = SK.srs.due().length;
     const stat = (href, label, n, max) => {
       // Breite per CSSOM, die CSP erlaubt keine style-Attribute.
       const fill = el('i');
@@ -126,8 +126,7 @@
         stat('#/wissen', 'Gelesen', read, learnLessons.length),
         stat('#/quiz', 'Gefragt', asked, total),
         stat('#/review', 'Gefestigt', sure, total)
-      ),
-      due ? el('a', { class: 'fort-due', href: '#/review', text: `${due} ${due === 1 ? 'Frage' : 'Fragen'} zur Wiederholung fällig ›` }) : ''
+      )
     );
   }
 
