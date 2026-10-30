@@ -118,7 +118,7 @@
     app.innerHTML = '';
     app.append(
       el('h1', { text: 'Lernen' }),
-      el('p', { class: 'muted', text: 'Alle Lerninhalte frei zum Durcharbeiten. Das Quiz findest du getrennt unter „Quiz“.' })
+      el('p', { class: 'muted', text: 'Alle Themen zum Nachlesen – von den Grundlagen bis zu den Kata.' })
     );
     const section = (title, list, note) => {
       const wrap = el('section', { class: 'unit-section' }, el('h2', { text: title }), note ? el('p', { class: 'muted small', text: note }) : '');
