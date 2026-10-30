@@ -82,8 +82,7 @@
     setTitle('');
     app.innerHTML = '';
     const read = learnLessons.filter((l) => store.data.read[l.id]).length;
-    const due = SK.srs.due().length;
-    const tile = (href, title, text, badge) => el('a', { class: 'tile', href }, el('h3', {}, title, badge ? el('span', { class: 'tile-badge', text: badge }) : ''), el('p', { text }));
+    const tile = (href, title, text) => el('a', { class: 'tile', href }, el('h3', { text: title }), el('p', { text }));
     app.append(
       el(
         'section',
@@ -96,7 +95,7 @@
         { class: 'tiles' },
         tile('#/lexikon', 'Lexikon', 'Alle Stände, Techniken & Begriffe zum Nachschlagen'),
         tile('#/wissen', 'Lernen', 'Alle Inhalte zum Durcharbeiten'),
-        tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen', due ? `${due} fällig` : ''),
+        tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen'),
         tile('#/ansage', 'Kata-Trainer', 'Alle Kata – Embusen und Schrittfolgen'),
         tile('#/exam', 'Prüfungen', 'DJKB-Prüfungsprogramm: Kihon, Kata, Kumite')
       ),
@@ -106,7 +105,7 @@
     finishView();
   }
 
-  // Dezenter Fortschritt unter den Karten: gelesen, gefragt, gefestigt (ab Fach 4). Fällige Fragen stehen an der Quiz-Karte.
+  // Dezenter Fortschritt unter den Karten: gelesen, gefragt, gefestigt (ab Fach 4).
   function progressStrip(read) {
     const total = SK.questions.length;
     const asked = Object.keys(store.data.asked).filter((id) => qById[id]).length;
