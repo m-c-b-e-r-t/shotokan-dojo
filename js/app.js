@@ -197,7 +197,7 @@
 
   // arg: Suchbegriff, mit dem das Lexikon öffnet (z. B. aus der Kata-Ansage)
   function viewLexikon(arg) {
-    setNav('wissen');
+    setNav('lexikon');
     setTitle('Lexikon');
     app.innerHTML = '';
     const search = el('input', { type: 'search', class: 'search', enterkeyhint: 'search', placeholder: 'Suchen, z. B. „Kokutsu“ oder „Ferse“', 'aria-label': 'Lexikon durchsuchen' });
@@ -320,7 +320,7 @@
   function viewQuiz(id) {
     const entry = lessonIndex[id];
     if (!entry) return viewNotFound();
-    setNav(entry.unit.kind === 'drill' ? 'begriffe' : 'quiz');
+    setNav('quiz');
     setTitle(`Quiz: ${entry.lesson.title}`);
     const back = entry.unit.kind === 'drill' ? '#/begriffe' : '#/quiz';
     const pool = qByLesson[id] || [];
@@ -406,7 +406,7 @@
 
   // ---------- Begriffe-Trainer ----------
   function viewBegriffe() {
-    setNav('begriffe');
+    setNav('quiz');
     setTitle('Begriffe-Trainer');
     app.innerHTML = '';
     const total = drillUnit.lessons.reduce((s, l) => s + (qByLesson[l.id] || []).length, 0);
