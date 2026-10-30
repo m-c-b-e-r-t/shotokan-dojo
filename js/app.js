@@ -91,8 +91,8 @@
       el(
         'div',
         { class: 'tiles' },
-        tile('#/lexikon', 'Lexikon', `Alle Stände, Techniken & Begriffe zum Nachschlagen – ${SK.glossary.length} Einträge`),
-        tile('#/wissen', 'Wissen', `Alle Inhalte zum Durcharbeiten – ${read}/${allLessons.length} gelesen`),
+        tile('#/lexikon', 'Lexikon', 'Alle Stände, Techniken & Begriffe zum Nachschlagen'),
+        tile('#/wissen', 'Lernen', `Alle Inhalte zum Durcharbeiten – ${read}/${allLessons.length} gelesen`),
         tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen'),
         tile('#/ansage', 'Kata-Trainer', 'Alle Kata – Embusen und Schrittfolgen'),
         tile('#/exam', 'Prüfungen', 'DJKB-Prüfungsprogramm: Kihon, Kata, Kumite')
@@ -111,13 +111,13 @@
     );
   }
 
-  // ---------- Wissen ----------
+  // ---------- Lernen ----------
   function viewWissenList() {
     setNav('wissen');
-    setTitle('Wissen');
+    setTitle('Lernen');
     app.innerHTML = '';
     app.append(
-      el('h1', { text: 'Wissen' }),
+      el('h1', { text: 'Lernen' }),
       el('p', { class: 'muted', text: 'Alle Lerninhalte frei zum Durcharbeiten. Das Quiz findest du getrennt unter „Quiz“.' }),
       el('div', { class: 'actions' }, el('a', { class: 'btn primary', href: '#/lexikon', text: 'Lexikon: alle Stände, Techniken & Begriffe' }))
     );
@@ -177,7 +177,7 @@
     const n = (qByLesson[id] || []).length;
     app.innerHTML = '';
     app.append(
-      el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Wissen' }), ' › ', el('span', { text: unit.title })),
+      el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Lernen' }), ' › ', el('span', { text: unit.title })),
       el('h1', { text: lesson.title }),
       learn,
       el(
@@ -249,7 +249,7 @@
       count.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
     app.append(
-      el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Wissen' }), ' › ', el('span', { text: 'Lexikon' })),
+      el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Lernen' }), ' › ', el('span', { text: 'Lexikon' })),
       el('h1', { text: 'Lexikon' }),
       form,
       chips,
@@ -309,7 +309,7 @@
             el('span', { class: 'node-title', text: l.title }),
             el('span', { class: 'node-meta', text: st ? `${Math.round(st.best * 100)} %` : `${n} Fragen` })
           ),
-          el('a', { class: 'node-learn', href: `#/wissen/${l.id}`, text: 'Wissen', title: 'Lerninhalt öffnen' })
+          el('a', { class: 'node-learn', href: `#/wissen/${l.id}`, text: 'Lernen', title: 'Lerninhalt öffnen' })
         )
       );
     });
