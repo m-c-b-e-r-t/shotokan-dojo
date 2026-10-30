@@ -277,7 +277,7 @@
         el('a', { class: 'tile', href: '#/review' }, el('h3', { text: 'Wiederholen' }), el('p', { text: due ? `${due} Fragen fällig` : 'Heute nichts fällig' })),
         el('a', { class: 'tile', href: '#/begriffe' }, el('h3', { text: 'Begriffe-Trainer' }), el('p', { text: 'Stände, Techniken & Begriffe – kurz abgefragt' }))
       ),
-      el('p', { class: 'muted small', text: 'Lernpfad: Jede Lektion mit mind. 80 % bestehen, um die nächste freizuschalten.' })
+      el('p', { class: 'muted small', text: 'Alle Lektionen sind frei wählbar. Ab 80 % richtigen Antworten gilt eine Lektion als bestanden (✓).' })
     );
     const section = (title, list) => {
       const wrap = el('section', { class: 'unit-section' }, el('h2', { text: title }));
