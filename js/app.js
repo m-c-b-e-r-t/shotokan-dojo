@@ -249,7 +249,6 @@
       count.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
     app.append(
-      el('nav', { class: 'crumbs' }, el('a', { href: '#/wissen', text: 'Lernen' }), ' › ', el('span', { text: 'Lexikon' })),
       el('h1', { text: 'Lexikon' }),
       form,
       chips,
