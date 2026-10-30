@@ -14,6 +14,8 @@
   const lessonIndex = {};
   units.forEach((u) => u.lessons.forEach((l, i) => (lessonIndex[l.id] = { unit: u, lesson: l, idx: i })));
   const allLessons = units.flatMap((u) => u.lessons);
+  // Unter „Lernen“ nur Lerninhalte; der Begriffe-Trainer ist ein Quiz.
+  const learnLessons = SK.generalUnits.concat(kataUnits).flatMap((u) => u.lessons);
   const qByLesson = {};
   SK.questions.forEach((q) => (qByLesson[q.lesson] = qByLesson[q.lesson] || []).push(q));
   const qById = Object.fromEntries(SK.questions.map((q) => [q.id, q]));
@@ -79,7 +81,7 @@
     setNav('');
     setTitle('');
     app.innerHTML = '';
-    const read = allLessons.filter((l) => store.data.read[l.id]).length;
+    const read = learnLessons.filter((l) => store.data.read[l.id]).length;
     const tile = (href, title, text, cls) => el('a', { class: `tile ${cls || ''}`, href }, el('h3', { text: title }), el('p', { text }));
     app.append(
       el(
@@ -92,7 +94,7 @@
         'div',
         { class: 'tiles' },
         tile('#/lexikon', 'Lexikon', 'Alle Stände, Techniken & Begriffe zum Nachschlagen'),
-        tile('#/wissen', 'Lernen', `Alle Inhalte zum Durcharbeiten – ${read}/${allLessons.length} gelesen`),
+        tile('#/wissen', 'Lernen', `Alle Inhalte zum Durcharbeiten – ${read}/${learnLessons.length} gelesen`),
         tile('#/quiz', 'Quiz', 'Alle Lektionen als Quiz, Zufallsmix aus allen Fragen'),
         tile('#/ansage', 'Kata-Trainer', 'Alle Kata – Embusen und Schrittfolgen'),
         tile('#/exam', 'Prüfungen', 'DJKB-Prüfungsprogramm: Kihon, Kata, Kumite')
@@ -153,8 +155,7 @@
     };
     app.append(
       section('Allgemeines Wissen', SK.generalUnits),
-      section('Kata-Wissen', kataUnits, 'Ausschließlich aus „Karate-Do Kata Vol. 1“ (JKA).'),
-      section('Begriffe', [drillUnit])
+      section('Kata-Wissen', kataUnits, 'Ausschließlich aus „Karate-Do Kata Vol. 1“ (JKA).')
     );
     finishView();
   }
@@ -167,9 +168,9 @@
     setTitle(lesson.title);
     store.data.read[id] = 1;
     store.save();
-    const pos = allLessons.indexOf(lesson);
-    const prev = allLessons[pos - 1];
-    const next = allLessons[pos + 1];
+    const pos = learnLessons.indexOf(lesson);
+    const prev = pos > 0 ? learnLessons[pos - 1] : null;
+    const next = pos >= 0 ? learnLessons[pos + 1] : null;
     const learn = el('div', { class: 'learn' });
     // Hinweis zu den Bewegungsgrafiken einmal oben statt in jedem Bild
     learn.innerHTML = (/data-gfx="(mv|tc):/.test(lesson.learn) ? SK.gfxHint : '') + lesson.learn;
@@ -663,13 +664,13 @@
     const d = store.data;
     app.innerHTML = '';
     const done = allLessons.filter((l) => passed(l.id)).length;
-    const read = allLessons.filter((l) => d.read[l.id]).length;
+    const read = learnLessons.filter((l) => d.read[l.id]).length;
     const asked = Object.keys(d.asked).filter((id) => qById[id]).length;
     const statGrid = el(
       'div',
       { class: 'stat-grid' },
       [
-        ['Lektionen gelesen', `${read}/${allLessons.length}`],
+        ['Lektionen gelesen', `${read}/${learnLessons.length}`],
         ['Quiz-Lektionen bestanden', `${done}/${allLessons.length}`],
         ['Fragen gestellt', `${asked}/${SK.questions.length}`],
         ['Trefferquote', d.answered ? `${Math.round((d.correct / d.answered) * 100)} %` : '–'],
