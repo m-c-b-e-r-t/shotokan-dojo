@@ -30,11 +30,11 @@ Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikett
 
 `node tools/version.js patch` (bzw. `minor`, `major` oder z. B. `1.12.0`) setzt Versionsnummer, Datum und Uhrzeit in `js/core.js` und hängt `?v=<Version>` an alle Dateien in `index.html`, damit Browser nach dem Update keine alten Dateien verwenden. Ohne Argument prüft das Skript, ob `index.html` zur Version passt.
 
-## Ladezeit und Offline-Betrieb
+## Ladezeit
 
 - Die Startseite (Leitspruch und Karten) steht fest in `index.html` und erscheint, bevor die Skripte geladen sind. Wird `viewStart()` in `js/app.js` geändert, `index.html` mitziehen – `tools/test/smoke.html` meldet Abweichungen.
 - Grafiken, Lektionstexte und Quizbilder entstehen erst beim Öffnen (`learn: () => …` und `SK.util.lazy`), nicht beim Start.
-- `sw.js` (Service Worker) legt die App auf dem Gerät ab: ab dem zweiten Besuch fast sofort da, auch offline. Er liest die Dateiliste aus `index.html` und muss bei neuen Versionen nicht angepasst werden. Er läuft nur über https (GitHub Pages); lokal mit `?sw` zum Testen.
+- Kein Offline-Speicher: Der Service Worker aus v1.41.0 ist wieder abgeschaltet. `sw.js` bleibt nur, damit Geräte, die ihn installiert haben, ihn wieder entfernen – nicht löschen.
 
 ## Fragen-IDs
 

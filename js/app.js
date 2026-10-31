@@ -955,12 +955,10 @@
   });
   route();
 
-  // App auf dem Gerät ablegen (sw.js) – erst nach dem Laden, damit es den Start nicht bremst.
-  // Lokal nur mit ?sw, sonst würden beim Entwickeln alte Dateien aus dem Speicher kommen.
-  if ('serviceWorker' in navigator && (location.protocol === 'https:' || /[?&]sw\b/.test(location.search))) {
-    const reg = () => navigator.serviceWorker.register('sw.js').catch(() => {});
-    if (document.readyState === 'complete') reg();
-    else window.addEventListener('load', reg);
+  // Offline-Speicher (sw.js, v1.41.0) ist abgeschaltet: früher installierten wieder entfernen.
+  if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
+    navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
+    if (window.caches) caches.delete('sk-app').catch(() => {});
   }
 
   SK.debug = { units, lessonIndex, qByLesson };
