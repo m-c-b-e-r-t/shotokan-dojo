@@ -1862,6 +1862,62 @@ main:fullscreen {
   }
 }
 
+/* ---------- Breite Bildschirme (Laptop/Desktop) ----------
+   Handy und Tablet bleiben unverändert; erst ab 1100 px wird der Inhalt breiter.
+   Fließtext behält eine angenehme Zeilenlänge. */
+@media (min-width: 1100px) {
+  main {
+    max-width: 1180px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  /* Startseite: alle fünf Kacheln in einer Reihe, Fortschritt über die ganze Breite */
+  .hero ~ .tiles {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .fort-stats {
+    max-width: none;
+  }
+
+  /* Themenlisten (Lernen, Quiz) zweispaltig */
+  .unit-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
+    align-items: start;
+  }
+
+  .unit-section > :not(.unit) {
+    grid-column: 1 / -1;
+  }
+
+  /* Im Raster fallen Ränder nicht zusammen: halbieren, damit der Abstand gleich bleibt */
+  .unit-section > .unit {
+    margin: 0.35rem 0;
+  }
+
+  /* Gürtel- und Kata-Listen (Prüfungen, Kata-Trainer) zweispaltig */
+  .grade-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Fließtext nicht zu lang werden lassen */
+  .learn > p,
+  .learn > ul,
+  .learn > ol,
+  main > p:not(.version) {
+    max-width: 75ch;
+  }
+
+  /* Kata-Trainer: Bodenkarte nicht höher als der Bildschirm */
+  .ans-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --ink: #ececec;
