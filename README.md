@@ -3,6 +3,7 @@
 Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikette, Geschichte, Begriffe, Stände, Kihon, Kumite, detailliertes Kata-Wissen und das DJKB-Prüfungsprogramm (9. Kyu bis 5. Dan).
 
 - Kata-Fragen stammen ausschließlich aus „Karate-Do Kata Vol. 1“ (JKA) – mit Angabe der gedruckten Buchseiten.
+- **3D-Figuren**: Alle Bilder mit ganzer Figur werden als echte 3D-Figur im Gi gerechnet (eigene WebGL2-Engine ohne Bibliothek, `js/figur3d.js`; Posen in `js/figur-posen.js`; Einbindung in `js/figur-app.js`). Ruhend zeigt jede Karte das Kernbild (bester Moment und Blickwinkel, Ausgangsstellung blass dahinter); antippen und ziehen dreht die Figur, „▶ Bewegung“ und „Phasenbild“ zeigen den Ablauf. Ohne WebGL 2 (oder mit `?svg`) erscheinen die bisherigen SVG-Grafiken.
 - Getrennte Bereiche: **Wissen** (alle Inhalte + Lexikon mit Grafiken, Stände als „Figur & Fußbild“, Fußbewegungen als animierte Fußspuren, **Kompakt-Übersicht** je Gürtel zum Drucken unter `#/kompakt`), **Quiz** (Lernpfad, Zufallsmix aus dem Gesamtpool), **Begriffe-Trainer** (Stände, Techniken, Körperwaffen stumpf abfragen), **Prüfungen** (DJKB-Prüfungsprogramm je Gürtel, unterteilt in Kihon, Kata, Kumite und Theorie).
 - **Kata-Ansage** („Kata-Trainer“, eigener Eintrag „Kata“ in der unteren Leiste, alle zehn Kata des Buches): zählt die Kata auf Japanisch im Rhythmus des Buches (fließend, langsam, Kiai; wie im Dojo bis 10, dann wieder ab 1), sagt den Kiai mit an, zeigt jede Stellung auf einer Bodenkarte von oben nach der Embusen-Skizze im Buch und hält den Bildschirm an. Gezählt wird mit japanischer Stimme, das Tempo lässt sich per Regler von 3× langsamer bis 3× schneller einstellen (Mitte = Training); ohne japanische Stimme läuft die Ansage stumm.
 - Lernpfad mit allen Lektionen frei zugänglich, Wiederholung nach Karteikasten-Prinzip.
@@ -16,7 +17,9 @@ Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikett
 
 - `tools/test/validate.html` – prüft Datenkonsistenz (Fragen, Kata, Prüfungsprogramm); vor jedem Commit.
 - `tools/test/smoke.html` – klickt automatisch durch Prüfungsseiten, Lektionen und Quiz; löscht dabei den lokalen Fortschritt und läuft deshalb nur lokal (`file://` oder `localhost`).
-- `tools/test/gfx.html` – Vorschau aller Grafiken.
+- `tools/test/gfx.html` – Vorschau aller SVG-Grafiken.
+- `tools/test/gfx3d.html` – alle 3D-Figuren als Kernbild auf einen Blick (`?f=tc:` filtert).
+- `labor/figuren.html` – Figuren-Labor zum Ausprobieren von Stilen und Abläufen.
 - `tools/version.js` – Versionsnummer setzen (siehe unten).
 - `tools/kata-pdf/` – Python-Skripte, die Text und Fußskizzen aus dem Kata-Buch auswerten (siehe README dort).
 - `tools/register-tabellen.js` – schreibt die Ablauftabellen der Kata aus den App-Daten in `docs/buch-register.md`.

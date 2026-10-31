@@ -23,6 +23,10 @@
 - Das Kata-PDF und `tools/out/` niemals committen.
 - Heft „Karate kompakt“ (Quelle `SK.sources.kompakt`): Wissen steht in `docs/karate-kompakt.md`. Keine Scans, Bilder oder wörtlichen Texte des Heftes ins Repo – nur Fakten in eigenen Worten; Grafiken selbst zeichnen. Für Kata-Inhalte gilt weiter nur das JKA-Buch.
 
+## 3D-Figuren
+- Bilder mit ganzer Figur kommen aus `js/figur-posen.js` (Schlüssel wie bei den SVG-Grafiken, z. B. `tc:age-zuki`). Neue Technik mit Figur: Pose dort ergänzen, die SVG-Grafik bleibt als Rückfall.
+- Nach Änderungen an Posen `tools/test/gfx3d.html` mit WebGL (Playwright: `--use-angle=swiftshader`) ansehen; `validate.html` prüft, dass alle Posen rechenbar sind und Standfüße ihren Platz erreichen.
+
 ## Buchwissen (ohne PDF)
 - Bei Fragen zum Buch oder neuen Kata-Inhalten zuerst `docs/buch-register.md` lesen: Seitenzählung, Kapitel, Zusammenfassungen der allgemeinen Kapitel, Hinweise des Buches je Bewegung und Ablauftabellen aller zehn Kata. Nur Fakten und eigene Worte ins Repo, keine Abschriften aus dem Buch.
 - Die Ablauftabellen im Register werden aus den App-Daten erzeugt: nach Änderungen an `seq` oder `ansage` in `data/kata-*.js` `node tools/register-tabellen.js` laufen lassen.

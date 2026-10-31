@@ -97,8 +97,8 @@
     ['Teisho-uke', 'Abwehr mit dem Handballen', 'uke', tc('teisho-uke'), PDF(142)],
     ['Uchiotoshi', 'Unterarm schlägt einen Angriff nach unten (Jion)', 'uke', tc('uchiotoshi'), PDF(150)],
     ['Manji-uke', 'Doppelabwehr: eine Hand wehrt unten ab (Gedan-barai), die andere schützt oben (Jodan-uchi-uke)', 'uke', tc('manji-uke'), KO],
-    ['Te-nagashi-uke', 'Die offene Hand lenkt einen Jodan- oder Chudan-Angriff zur Seite ab – vor allem im Kampf', 'uke', null, KO],
-    ['Gedan-nagashi-uke', 'Ablenkende Abwehr im unteren Bereich, in Gegenrichtung zum Gedan-barai', 'uke', null, KO],
+    ['Te-nagashi-uke', 'Die offene Hand lenkt einen Jodan- oder Chudan-Angriff zur Seite ab – vor allem im Kampf', 'uke', tc('te-nagashi-uke'), KO],
+    ['Gedan-nagashi-uke', 'Ablenkende Abwehr im unteren Bereich, in Gegenrichtung zum Gedan-barai', 'uke', tc('gedan-nagashi-uke'), KO],
 
     ['Mae-geri', 'Fußtritt nach vorne mit dem Fußballen', 'geri', mv('mae-geri')],
     ['Yoko-geri-keage', 'Seitlicher Schnapptritt', 'geri', tc('yoko-geri-keage')],
@@ -214,7 +214,7 @@
   };
 
   // Hinweis zu den Bewegungsgrafiken – einmal pro Seite (Lexikon, Lektionen mit Bewegungsgrafiken)
-  SK.gfxHint = '<p class="muted small gfx-hint">In den Grafiken: gestrichelt bzw. blass = Ausgangsstellung, blau = bewegtes Körperteil, rot gestrichelt = Weg, Zahlen = Reihenfolge. „▶ Bewegung“ spielt den Ablauf ab.</p>';
+  SK.gfxHint = '<p class="muted small gfx-hint">In den Grafiken: gestrichelt bzw. blass = Ausgangsstellung, blau = bewegtes Körperteil, rot gestrichelt = Weg, Zahlen = Reihenfolge. „▶ Bewegung“ spielt den Ablauf ab. 3D-Figuren lassen sich mit dem Finger drehen; „Phasenbild“ zeigt alle Zwischenstellungen.</p>';
   SK.glossaryHtml = function (items) {
     return `<div class="lex-grid">${items
       .map(

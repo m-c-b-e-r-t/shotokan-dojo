@@ -1,4 +1,4 @@
-/* Figuren-Labor: Karateka in 3D, ohne Bibliothek.
+/* 3D-Figuren: Karateka in 3D, ohne Bibliothek.
    Die Figur besteht aus weichen Körperformen (Signed Distance Fields), die der Grafikchip
    pro Bildpunkt abtastet: Licht, weiche Schatten, Umgebungsverdeckung, Fußabdrücke am Boden.
    Ein gemeinsamer WebGL2-Kontext zeichnet nacheinander in beliebig viele 2D-Leinwände. */
@@ -42,9 +42,11 @@
 
   const DEF = {
     pelvis: [0, 0.9, 0], yaw: 0, chest: 0, lean: 0, look: 0,
-    L: { x: 0.1, z: 0, y: 0.075, yaw: 8, pitch: 0, kp: [0, 0, 0] },
-    R: { x: -0.1, z: 0, y: 0.075, yaw: -8, pitch: 0, kp: [0, 0, 0] },
+    L: { x: 0.1, z: 0, y: 0.075, yaw: 8, pitch: 0, kp: [0, 0, 0], sole: [0, 0, 0] },
+    R: { x: -0.1, z: 0, y: 0.075, yaw: -8, pitch: 0, kp: [0, 0, 0], sole: [0, 0, 0] },
     hL: [0.16, -0.38, 0.02], hR: [-0.16, -0.38, 0.02], eL: [0, 0, 0], eR: [0, 0, 0],
+    // offene Hand (0 = Faust, 1 = offen), Handflächen-Normale und Fingerrichtung (Brustkoordinaten, 0 = automatisch)
+    oL: 0, oR: 0, pL: [0, 0, 0], pR: [0, 0, 0], fL: [0, 0, 0], fR: [0, 0, 0],
     w: [0.5, 0.5],
   };
   function full(p) {
@@ -82,6 +84,7 @@
       const [knee, ank] = ik(hip, ankle, THIGH, SHIN, kp);
       let sole = sub(mul(dir, dot(UP, dir)), UP);
       sole = len(sole) < 0.05 ? mul(fh, -1) : norm(sole);
+      if (len(F.sole) > 0.01) sole = norm(sub(F.sole, mul(dir, dot(F.sole, dir))));
       J['hip' + s] = hip;
       J['knee' + s] = knee;
       J['ankle' + s] = ank;
@@ -96,7 +99,19 @@
       J['sh' + s] = sh;
       J['elbow' + s] = elbow;
       J['wrist' + s] = wrist;
-      J['fist' + s] = add(wrist, mul(norm(sub(wrist, elbow)), 0.045));
+      const fa = norm(sub(wrist, elbow));
+      J['fist' + s] = add(wrist, mul(fa, 0.045));
+      // offene Hand: Finger in Unterarmrichtung oder vorgegeben, Handfläche quer dazu
+      J['open' + s] = P['o' + s] > 0.5;
+      const fd0 = P['f' + s];
+      const fd = len(fd0) > 0.01 ? norm(sub(toW(fd0), chest)) : fa;
+      const pv0 = P['p' + s];
+      let palm = len(pv0) > 0.01 ? sub(toW(pv0), chest) : mul(up, -1);
+      palm = sub(palm, mul(fd, dot(palm, fd)));
+      if (len(palm) < 0.05) palm = cross(fd, lc);
+      J['fd' + s] = fd;
+      J['tip' + s] = add(wrist, mul(fd, 0.17));
+      J['wd' + s] = norm(cross(fd, norm(palm)));
     });
     return J;
   }
@@ -128,7 +143,11 @@
       cone(J['sh' + s], e, 0.058, 0.05, 0);
       cone(e, mix(e, w, 0.7), 0.05, 0.047, 0);
       cone(mix(e, w, 0.62), w, 0.033, 0.03, 1);
-      cone(J['fist' + s], J['fist' + s], 0.043, 0.043, 1);
+      if (J['open' + s]) {
+        const fd = J['fd' + s];
+        const wd = J['wd' + s];
+        [1, -1].forEach((k) => cone(add(add(w, mul(fd, 0.03)), mul(wd, 0.016 * k)), add(add(w, mul(fd, 0.17)), mul(wd, 0.013 * k)), 0.021, 0.015, 1));
+      } else cone(J['fist' + s], J['fist' + s], 0.043, 0.043, 1);
       const k = J['knee' + s];
       const a = J['ankle' + s];
       cone(J['hip' + s], k, 0.088, 0.07, 0);
@@ -144,7 +163,7 @@
   }
 
   /* ---------- Shader ---------- */
-  const N = 32;
+  const N = 40;
   const VS = `#version 300 es
 in vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }`;
   const FS = `#version 300 es
@@ -155,7 +174,7 @@ uniform vec3 uRo, uCw, uCu, uCv;
 uniform float uF;
 uniform vec4 uA[${N}], uB[${N}];
 uniform float uM[${N}];
-uniform int uN, uMode, uStyle;
+uniform int uN, uMode, uStyle, uTint;
 uniform vec3 uPel, uUp, uFwd, uLeft, uHead, uHFwd, uPFwd, uPLeft;
 uniform vec4 uBound;
 uniform vec2 uBase;
@@ -232,7 +251,7 @@ float foot2(vec2 q, vec2 heel, vec2 toe){
 
 vec3 baseCol(float m, vec3 p, out float kind){
   kind = 0.0;
-  vec3 gi = uStyle == 2 ? vec3(0.72, 0.5, 0.3) : vec3(0.93, 0.925, 0.91);
+  vec3 gi = uStyle == 2 ? vec3(0.72, 0.5, 0.3) : uTint == 1 ? vec3(0.66, 0.7, 0.76) : vec3(0.93, 0.925, 0.91);
   vec3 skin = uStyle == 1 ? vec3(0.97, 0.93, 0.9) : uStyle == 2 ? vec3(0.76, 0.55, 0.34) : vec3(0.82, 0.62, 0.5);
   vec3 ink = uStyle == 2 ? vec3(0.25, 0.14, 0.08) : vec3(0.045, 0.04, 0.04);
   if (m > 3.5 && m < 4.5) {
@@ -372,11 +391,26 @@ void main(){
 
   /* ---------- Gemeinsamer Zeichner ---------- */
   let GL = null;
+  let probe = null;
+  // Nur prüfen, ob WebGL 2 da ist; der große Shader wird erst beim ersten Bild übersetzt
+  function supported() {
+    if (probe == null) {
+      try {
+        probe = !!document.createElement('canvas').getContext('webgl2');
+      } catch (e) {
+        probe = false;
+      }
+    }
+    return probe;
+  }
   function renderer() {
+    if (GL && GL.ok && GL.gl.isContextLost()) GL = null;
     if (GL) return GL;
     const cv = document.createElement('canvas');
     const gl = cv.getContext('webgl2', { premultipliedAlpha: true, preserveDrawingBuffer: true, antialias: false });
     if (!gl) return (GL = { ok: false });
+    // Kontext verloren (z. B. App im Hintergrund): beim nächsten Bild neu aufbauen
+    cv.addEventListener('webglcontextlost', (ev) => { ev.preventDefault(); GL = null; });
     const sh = (type, src) => {
       const s = gl.createShader(type);
       gl.shaderSource(s, src);
@@ -397,7 +431,7 @@ void main(){
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const U = {};
-    ['uRes', 'uRo', 'uCw', 'uCu', 'uCv', 'uF', 'uA', 'uB', 'uM', 'uN', 'uMode', 'uStyle', 'uPel', 'uUp', 'uFwd', 'uLeft', 'uHead', 'uHFwd', 'uPFwd', 'uPLeft', 'uBound', 'uBase', 'uDec', 'uDecP'].forEach((n) => (U[n] = gl.getUniformLocation(pr, n)));
+    ['uRes', 'uRo', 'uCw', 'uCu', 'uCv', 'uF', 'uA', 'uB', 'uM', 'uN', 'uMode', 'uStyle', 'uTint', 'uPel', 'uUp', 'uFwd', 'uLeft', 'uHead', 'uHFwd', 'uPFwd', 'uPLeft', 'uBound', 'uBase', 'uDec', 'uDecP'].forEach((n) => (U[n] = gl.getUniformLocation(pr, n)));
     GL = { ok: true, gl, cv, U };
     return GL;
   }
@@ -430,8 +464,14 @@ void main(){
 
   // Zeichnet eine Pose in die 2D-Leinwand ctx. mode: 0 alles, 1 nur Boden, 2 nur Figur
   function draw(ctx, w, h, pose, cam, opt) {
-    const R = renderer();
-    if (!R.ok) return false;
+    let R;
+    try {
+      R = renderer();
+    } catch (e) {
+      GL = { ok: false };
+      return false;
+    }
+    if (!R.ok || R.gl.isContextLost()) return false;
     const { gl, cv, U } = R;
     if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
     gl.viewport(0, 0, w, h);
@@ -454,6 +494,7 @@ void main(){
     gl.uniform1i(U.uN, P.length);
     gl.uniform1i(U.uMode, opt.mode || 0);
     gl.uniform1i(U.uStyle, opt.style || 0);
+    gl.uniform1i(U.uTint, opt.tint ? 1 : 0);
     gl.uniform3fv(U.uPel, J.pel);
     gl.uniform3fv(U.uUp, J.up);
     gl.uniform3fv(U.uFwd, J.fc);
@@ -470,6 +511,7 @@ void main(){
     gl.uniform4fv(U.uDec, dec);
     gl.uniform4fv(U.uDecP, decp);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
+    if (gl.isContextLost()) return false;
     ctx.drawImage(cv, 0, 0);
     return C;
   }
@@ -505,5 +547,5 @@ void main(){
     };
   }
 
-  window.Figur3D = { solve, prims, draw, camera, timeline, full, ok: () => renderer().ok, v: { add, sub, mul, mix, len, norm } };
+  window.Figur3D = { solve, prims, draw, camera, timeline, full, ok: supported, ready: () => renderer().ok, v: { add, sub, mul, mix, len, norm } };
 })();

@@ -324,7 +324,8 @@
         if (!items.length) return '';
         const cards = items.map((e) => {
           const g = tg[e.t];
-          return `<article class="k-card">${e.img ? `<div class="k-img">${SK.gfx.plainSvg(e.img)}</div>` : ''}<h4>${util.esc(e.t)}</h4><p>${util.esc(e.de)}</p>${g ? `<span class="badge">ab ${util.esc(gradeName(g))}</span>` : ''}</article>`;
+          const pic = !e.img ? '' : SK.fig3d && SK.fig3d.has(e.img.key) && !/^st:/.test(e.img.key) ? SK.fig3d.html(e.img.key, { tools: false }) : SK.gfx.plainSvg(e.img);
+          return `<article class="k-card">${pic ? `<div class="k-img">${pic}</div>` : ''}<h4>${util.esc(e.t)}</h4><p>${util.esc(e.de)}</p>${g ? `<span class="badge">ab ${util.esc(gradeName(g))}</span>` : ''}</article>`;
         });
         return `<section class="k-sec"><h2>${util.esc(c.title)} <span class="muted small">(${items.length})</span></h2><div class="k-grid">${cards.join('')}</div></section>`;
       });
@@ -934,7 +935,8 @@
   // Grafik-Knöpfe in Lektionen und Lexikon: Fußbild ↔ Seitenansicht, Standbild ↔ Animation
   document.addEventListener('click', (ev) => {
     const btn = ev.target.closest('.gfx-box .gfx-btn');
-    if (!btn) return;
+    // 3D-Knöpfe (data-act="f3d-…") bedient js/figur-app.js
+    if (!btn || !['side', 'anim'].includes(btn.dataset.act)) return;
     const box = btn.closest('.gfx-box');
     const views = box.querySelectorAll(':scope > .gfx-view');
     const on = btn.getAttribute('aria-pressed') !== 'true';
@@ -943,7 +945,7 @@
       views[0].hidden = on;
       views[1].hidden = !on;
       btn.textContent = on ? 'Fußbild' : btn.dataset.label;
-    } else {
+    } else if (btn.dataset.act === 'anim') {
       const anim = box.querySelector(':scope > .gfx-anim');
       anim.innerHTML = on ? SK.gfx.animSvg(box.dataset.gfx) : '';
       anim.hidden = !on;

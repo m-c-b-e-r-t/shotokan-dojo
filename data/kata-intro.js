@@ -59,14 +59,14 @@
             SK.gfx.figure(SK.gfx.MOVES['soto-uke'](), 'Soto-uke', '', 'mv:soto-uke'),
             SK.gfx.stanceFigure('ashizenkutsu'),
             SK.gfx.stanceFigure('hizakutsu'),
-            SK.gfx.figure(SK.gfx.levels(), 'Jodan, Chudan, Gedan'),
+            SK.gfx.figure(SK.gfx.levels(), 'Jodan, Chudan, Gedan', null, 'fig:levels'),
           ].join('')}</div>`,
       },
       {
         id: 'kb-ziele',
         title: 'Trefferzonen (Anhang)',
         learn: `
-          <div class="gfx-grid">${SK.gfx.figure(SK.gfx.targets(), 'Trefferzonen', 'Auswahl nach dem Anhang des Buchs')}</div>
+          <div class="gfx-grid">${SK.gfx.figure(SK.gfx.targets(), 'Trefferzonen', 'Auswahl nach dem Anhang des Buchs', 'fig:targets')}</div>
           <ul>
             <li><b>Kasumi / Komekami</b> – Schläfe</li>
             <li><b>Jinchu / Bika</b> – zwischen Oberlippe und Nasenansatz</li>

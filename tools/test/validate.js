@@ -99,6 +99,26 @@
 
   SK.idCollisions.forEach((id) => errors.push(`${id}: gleiche Frage mit gleicher Lösung mehrfach in der Lektion`));
 
+  // 3D-Figuren: jede Pose rechenbar, Standfüße erreichen ihren Platz, Grafik-Schlüssel existieren
+  const F3 = window.Figur3D;
+  const known = (key) => !!SK.gfx.byKey(key);
+  Object.entries(SK.fig3dDefs || {}).forEach(([key, d]) => {
+    if (!known(key)) errors.push(`3D ${key}: keine passende SVG-Grafik als Rückfall`);
+    const tl = F3.timeline(d.keys);
+    for (let i = 0; i <= 10; i++) {
+      const P = tl(i / 10);
+      const J = F3.solve(P);
+      if (/null|NaN/.test(JSON.stringify(J))) { errors.push(`3D ${key}: ungültige Werte bei t=${i / 10}`); break; }
+      ['L', 'R'].forEach((s) => {
+        const a = J['ankle' + s];
+        if (P[s].y < 0.1 && Math.hypot(a[0] - P[s].x, a[1] - P[s].y, a[2] - P[s].z) > 0.02) errors.push(`3D ${key}: Standfuß ${s} unerreichbar bei t=${i / 10}`);
+      });
+    }
+    if (d.eff && !(d.eff in F3.solve(tl(0)))) errors.push(`3D ${key}: unbekannter Bahnpunkt ${d.eff}`);
+    if (d.hit && !(d.hit.at in F3.solve(tl(0)))) errors.push(`3D ${key}: unbekannter Trefferpunkt ${d.hit.at}`);
+  });
+  out.push(`3D-Figuren: ${Object.keys(SK.fig3dDefs || {}).length}`);
+
   out.push(`Fragen gesamt: ${SK.questions.length}`);
   out.push(`Kata-Fragen: ${SK.questions.filter((q) => lessons.get(q.lesson) && lessons.get(q.lesson).kind === 'kata').length}`);
   out.push(`Typen: ${['mc', 'multi', 'order'].map((t) => `${t}=${SK.questions.filter((q) => q.type === t).length}`).join(', ')}`);

@@ -25,7 +25,7 @@
     ashidachi: G.stanceFigure('ashidachi', false, 'Hidari Ashi-dachi'),
     orishiki: G.stanceFigure('orishiki', false, 'Migi Ashi Orishiki Hidari Hiza-tate'),
   };
-  const W = (key, caption, note) => G.figure(G.WEAPONS[key](), caption, note);
+  const W = (key, caption, note) => G.figure(G.WEAPONS[key](), caption, note, `wp:${key}`);
   const M = (key, caption, note) => G.figure(G.MOVES[key](), caption, note, `mv:${key}`);
   const T = (key, caption, note) => G.figure(G.TECH[key](), caption, note, `tc:${key}`);
   const A = (key, caption, note) => G.figure(G.ASHI[key](), caption, note, `as:${key}`);
@@ -139,7 +139,7 @@
               <li>Graduierungen: <b>Kyu</b> = Schülergrad (zählt abwärts bis 1. Kyu), <b>Dan</b> = Meistergrad (Shodan = 1. Dan, Nidan = 2. Dan, Sandan = 3. Dan)</li>
               <li>Kata-Namen: <b>Shodan, Nidan, Sandan, Yondan, Godan</b> = 1. bis 5. Stufe</li>
             </ul>
-            ${grid(G.figure(G.levels(), 'Die drei Stufen', 'Jodan = Gesicht, Chudan = Brust, Gedan = Unterbauch (Definition im JKA-Kata-Buch)'))}`,
+            ${grid(G.figure(G.levels(), 'Die drei Stufen', 'Jodan = Gesicht, Chudan = Brust, Gedan = Unterbauch (Definition im JKA-Kata-Buch)', 'fig:levels'))}`,
         },
         {
           id: 'te-koerper', title: 'Körperwaffen', minGrade: '8kyu',

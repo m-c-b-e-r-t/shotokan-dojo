@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="utf-8">
+  <title>3D-Figuren-Vorschau</title>
+  <style>
+    body { font-family: sans-serif; margin: 8px; background: #fff; }
+    .g { display: grid; grid-template-columns: repeat(var(--c, 5), 1fr); gap: 8px; }
+    figure { margin: 0; font-size: 11px; }
+    img { width: 100%; display: block; background: #f3efe8; border-radius: 8px; }
+  </style>
+</head>
+
+<body>
+  <p id="st">läuft …</p>
+  <div class="g" id="out"></div>
+  <script src="../../js/core.js"></script>
+  <script src="../../js/graphics.js"></script>
+  <script src="../../js/graphics-tech.js"></script>
+  <script src="../../js/graphics-ashi.js"></script>
+  <script src="../../js/figur3d.js"></script>
+  <script src="../../js/figur-posen.js"></script>
+  <script src="../../js/figur-app.js"></script>
+  <script>
+    // Alle Kernbilder auf einen Blick (?f=tc: filtert nach Schlüssel, ?c=4 Spalten, ?t=0.3 anderer Zeitpunkt)
+    const q = new URLSearchParams(location.search);
+    if (q.get('c')) document.body.style.setProperty('--c', q.get('c'));
+    const keys = Object.keys(SK.fig3dDefs).filter((k) => !q.get('f') || k.startsWith(q.get('f')));
+    const out = document.getElementById('out');
+    if (!SK.fig3d.ok()) document.getElementById('st').textContent = 'Kein WebGL 2';
+    else Promise.all(keys.map((k) => SK.fig3d.still(k, 400, 320, false).then((url) => {
+      out.insertAdjacentHTML('beforeend', `<figure><img src="${url}"><figcaption>${k}</figcaption></figure>`);
+    }).catch((e) => out.insertAdjacentHTML('beforeend', `<figure>FEHLER ${k}: ${e.message}</figure>`)))).then(() => (document.getElementById('st').textContent = `${keys.length} Figuren fertig`));
+  </script>
+</body>
+
+</html>
