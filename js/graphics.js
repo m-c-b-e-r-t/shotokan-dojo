@@ -124,22 +124,22 @@
 
   // Grundform: linker Fuß ist der namensgebende/vordere; Migi wird gespiegelt. Fuß = [x, y, Drehung, Gewicht, Seite, nur Ballen]
   const STANCES = {
-    musubi: { name: 'Musubi-dachi', feet: [[92, 116, -25, 0.5, 'L'], [108, 116, 25, 0.5, 'R']], note: 'Fersen zusammen, Fußspitzen V-förmig geöffnet' },
-    heisoku: { name: 'Heisoku-dachi', feet: [[89.5, 116, 0, 0.5, 'L'], [110.5, 116, 0, 0.5, 'R']], note: 'Füße geschlossen und parallel' },
-    hachiji: { name: 'Hachiji-dachi', feet: [[68, 116, -15, 0.5, 'L'], [132, 116, 15, 0.5, 'R']], note: 'Füße etwa schulterbreit, Spitzen leicht nach außen (Shizentai)' },
-    zenkutsu: { name: 'Zenkutsu-dachi', feet: [[72, 62, 0, 0.7, 'L'], [128, 160, 25, 0.3, 'R']], note: 'Vorderes Knie gebeugt, hinteres Bein gestreckt – Gewicht überwiegend vorne' },
-    ashizenkutsu: { name: 'Ashi-zenkutsu', feet: [[80, 80, 0, 0.7, 'L'], [120, 146, 20, 0.3, 'R']], note: 'Kürzer und schmaler als Zenkutsu-dachi (z. B. in Gyaku-hanmi)' },
-    kokutsu: { name: 'Kokutsu-dachi', feet: [[100, 64, 0, 0.3, 'L'], [118, 158, 90, 0.7, 'R']], note: 'Gewicht überwiegend hinten, hinterer Fuß quer, vorderer Fuß berührt leicht den Boden' },
-    kiba: { name: 'Kiba-dachi', feet: [[46, 116, 0, 0.5, 'L'], [154, 116, 0, 0.5, 'R']], note: 'Reiterstand: breit, Füße parallel, Gewicht gleich verteilt' },
-    kosa: { name: 'Kosa-dachi', feet: [[106, 84, 0, 0.9, 'L'], [88, 136, 10, 0.1, 'R', true]], note: 'Kreuzstand: hinterer Fuß kreuzt hinter die Ferse des vorderen und steht nur auf dem Ballen' },
-    ashidachi: { name: 'Ashi-dachi (Einbeinstand)', feet: [[92, 112, 0, 1, 'L'], [114, 96, 10, 0, 'R']], note: 'Stand auf einem Bein, das andere Bein ist angehoben (gestrichelt)' },
-    hizakutsu: { name: 'Hizakutsu', feet: [[72, 70, -35, 0.7, 'L'], [128, 152, -15, 0.3, 'R']], note: 'Knie gebeugt, beide Fußspitzen schräg zur Seite – Technik in andere Richtung als der Zenkutsu-dachi' },
-    renoji: { name: 'Renoji-dachi', feet: [[100, 82, 0, 0.4, 'L'], [118, 148, 90, 0.6, 'R']], note: 'L-förmiger Stand' },
-    teiji: { name: 'Teiji-dachi', feet: [[100, 72, 0, 0.5, 'L'], [100, 150, 90, 0.5, 'R']], note: 'T-förmiger Stand' },
-    fudo: { name: 'Fudo-dachi', feet: [[76, 62, 0, 0.5, 'L'], [126, 158, 45, 0.5, 'R']], note: '„Unbeweglicher“ Stand: beide Knie gebeugt, Gewicht ausgeglichen' },
-    neko: { name: 'Neko-ashi-dachi', feet: [[100, 80, 0, 0.1, 'L', true], [110, 148, 30, 0.9, 'R']], note: 'Katzenfußstand: vorderer Fuß nur auf dem Ballen, fast das gesamte Gewicht hinten' },
-    sanchin: { name: 'Sanchin-dachi', feet: [[86, 86, 25, 0.5, 'L'], [120, 140, -15, 0.5, 'R']], note: 'Sanduhrstand: Fußspitzen und Knie nach innen' },
-    hangetsu: { name: 'Hangetsu-dachi', feet: [[72, 72, 25, 0.5, 'L'], [130, 156, -25, 0.5, 'R']], note: 'Halbmondstand: länger und breiter als Sanchin-dachi' },
+    musubi: { name: 'Musubi-dachi', feet: [[92, 116, -25, 0.5, 'L'], [108, 116, 25, 0.5, 'R']], note: 'Fersen zusammen, Fußspitzen V-förmig geöffnet', mass: ['Fersen zusammen,', 'Spitzen etwa eine Faust weit offen'] },
+    heisoku: { name: 'Heisoku-dachi', feet: [[89.5, 116, 0, 0.5, 'L'], [110.5, 116, 0, 0.5, 'R']], note: 'Füße geschlossen und parallel', mass: ['Füße ganz geschlossen,', 'Innenkanten berühren sich'] },
+    hachiji: { name: 'Hachiji-dachi', feet: [[68, 116, -15, 0.5, 'L'], [132, 116, 15, 0.5, 'R']], note: 'Füße etwa schulterbreit, Spitzen leicht nach außen (Shizentai)', mass: ['Fersen etwa schulterbreit,', 'Spitzen leicht nach außen'] },
+    zenkutsu: { name: 'Zenkutsu-dachi', feet: [[72, 62, 0, 0.7, 'L'], [128, 160, 25, 0.3, 'R']], note: 'Vorderes Knie gebeugt, hinteres Bein gestreckt – Gewicht überwiegend vorne', mass: ['Länge etwa 1½–2 Schulterbreiten,', 'Breite etwa hüftbreit'] },
+    ashizenkutsu: { name: 'Ashi-zenkutsu', feet: [[80, 80, 0, 0.7, 'L'], [120, 146, 20, 0.3, 'R']], note: 'Kürzer und schmaler als Zenkutsu-dachi (z. B. in Gyaku-hanmi)', mass: ['kürzer und schmaler', 'als Zenkutsu-dachi'] },
+    kokutsu: { name: 'Kokutsu-dachi', feet: [[100, 64, 0, 0.3, 'L'], [118, 158, 90, 0.7, 'R']], note: 'Gewicht überwiegend hinten, hinterer Fuß quer, vorderer Fuß berührt leicht den Boden', mass: ['Länge etwa 1½ Schulterbreiten,', 'Fersen etwa auf einer Linie'] },
+    kiba: { name: 'Kiba-dachi', feet: [[46, 116, 0, 0.5, 'L'], [154, 116, 0, 0.5, 'R']], note: 'Reiterstand: breit, Füße parallel, Gewicht gleich verteilt', mass: ['Breite etwa 2 Schulterbreiten,', 'Füße parallel'] },
+    kosa: { name: 'Kosa-dachi', feet: [[106, 84, 0, 0.9, 'L'], [88, 136, 10, 0.1, 'R', true]], note: 'Kreuzstand: hinterer Fuß kreuzt hinter die Ferse des vorderen und steht nur auf dem Ballen', mass: ['Füße dicht gekreuzt,', 'hinterer Fuß nur auf dem Ballen'] },
+    ashidachi: { name: 'Ashi-dachi (Einbeinstand)', feet: [[92, 112, 0, 1, 'L'], [114, 96, 10, 0, 'R']], note: 'Stand auf einem Bein, das andere Bein ist angehoben (gestrichelt)', mass: ['ganzes Gewicht auf einem Bein'] },
+    hizakutsu: { name: 'Hizakutsu', feet: [[72, 70, -35, 0.7, 'L'], [128, 152, -15, 0.3, 'R']], note: 'Knie gebeugt, beide Fußspitzen schräg zur Seite – Technik in andere Richtung als der Zenkutsu-dachi', mass: ['Knie gebeugt, Fußspitzen', 'schräg zur Seite'] },
+    renoji: { name: 'Renoji-dachi', feet: [[100, 82, 0, 0.4, 'L'], [118, 148, 90, 0.6, 'R']], note: 'L-förmiger Stand', mass: ['etwa eine Fußlänge,', 'Füße bilden ein L'] },
+    teiji: { name: 'Teiji-dachi', feet: [[100, 72, 0, 0.5, 'L'], [100, 150, 90, 0.5, 'R']], note: 'T-förmiger Stand', mass: ['etwa eine Fußlänge,', 'Füße bilden ein T'] },
+    fudo: { name: 'Fudo-dachi', feet: [[76, 62, 0, 0.5, 'L'], [126, 158, 45, 0.5, 'R']], note: '„Unbeweglicher“ Stand: beide Knie gebeugt, Gewicht ausgeglichen', mass: ['Länge etwa wie Zenkutsu-dachi,', 'beide Knie gebeugt'] },
+    neko: { name: 'Neko-ashi-dachi', feet: [[100, 80, 0, 0.1, 'L', true], [110, 148, 30, 0.9, 'R']], note: 'Katzenfußstand: vorderer Fuß nur auf dem Ballen, fast das gesamte Gewicht hinten', mass: ['etwa eine Fußlänge,', 'vorne nur der Ballen'] },
+    sanchin: { name: 'Sanchin-dachi', feet: [[86, 86, 25, 0.5, 'L'], [120, 140, -15, 0.5, 'R']], note: 'Sanduhrstand: Fußspitzen und Knie nach innen', mass: ['vordere Ferse etwa auf Höhe der', 'hinteren Zehen, hüftbreit'] },
+    hangetsu: { name: 'Hangetsu-dachi', feet: [[72, 72, 25, 0.5, 'L'], [130, 156, -25, 0.5, 'R']], note: 'Halbmondstand: länger und breiter als Sanchin-dachi', mass: ['etwa eine Fußlänge kürzer als', 'Zenkutsu-dachi, schulterbreit'] },
     orishiki: { name: 'Orishiki (Knien)', feet: [[82, 78, 0, 0.5, 'L']], knee: [118, 128], note: 'Knien auf einem Bein, das andere Knie ist aufgestellt' },
   };
 
@@ -236,7 +236,8 @@
     teiji: { d: 4, hands: 'open', sideFoot: [117, 229], legs: [Object.assign(frontLeg([[102, 122], [108, 172], [114, 214]], [113, 218]), { far: true }), frontLeg([[118, 122], [112, 176], [100, 228]], [100, 233], true)] },
     kosa: { d: 42, hands: 'hips', legs: [Object.assign(frontLeg([[102, 160], [128, 204], [149, 214]], [151, 231]), { far: true }), frontLeg([[118, 160], [136, 194], [123, 226]], [122, 231], true)] },
   };
-  function stanceFrontSvg(key, title, mirrored) {
+  // Figur von vorne als Gruppe; fx = Mitte des Fußes [namensgebender/vorderer, anderer] in Bildkoordinaten
+  function frontFig(key, mirrored) {
     const f = STANCE_FRONT[key];
     const d = f.d || 0;
     const dn = (pts) => pts.map(([x, y]) => [x, y + d]);
@@ -254,16 +255,17 @@
       const [ax, ay] = mirrored ? mx(f.sideFoot) : f.sideFoot;
       sf = `<path d="M5,-15 C7,-6 7,0 2,0 L-27,0 C-32,0 -33,-5 -29,-6.5 C-21,-8 -13,-11 -6,-16 Z" transform="translate(${ax} ${ay}) scale(${mirrored ? -1.25 : 1.25} 1.25)" fill="${F_FAR_SKIN}" stroke="${PEN}" stroke-width="1.9" stroke-linejoin="round"/>`;
     }
+    const X = (x) => r1(16 + 0.84 * x);
+    return { view: 'front', ground: r1(-2 + 0.84 * 238), fx: [X(legs[1].foot[0]), X(legs[0].foot[0])], inner: `<g transform="translate(16 -2) scale(.84)"><path d="M20 238 H200" stroke="#cfd8dc" stroke-width="2"/>${sf}${person(spec)}</g>` };
+  }
+  function stanceFrontSvg(key, title, mirrored) {
     return `<svg viewBox="0 0 200 224" role="img" aria-label="${esc(title)} – von vorne" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="198" height="222" rx="12" fill="#fafafa" stroke="#ddd"/>
-      <g transform="translate(16 -2) scale(.84)"><path d="M20 238 H200" stroke="#cfd8dc" stroke-width="2"/>${sf}${person(spec)}</g>
+      ${frontFig(key, mirrored).inner}
       <text x="100" y="217" font-size="9.5" text-anchor="middle" fill="#78909c" ${FONT}>von vorne</text></svg>`;
   }
-  function stanceSideSvg(key, mirrored, opts) {
-    const title = (opts && opts.title) || (STANCES[key] && STANCES[key].name);
-    if (STANCE_FRONT[key]) return stanceFrontSvg(key, title, mirrored);
+  function sideFig(key, mirrored) {
     const g = STANCE_SIDE[key];
-    if (!g) return '';
     const d = g.d;
     // optional drittes Element: Knie fest vorgegeben (z. B. nach außen zeigend, seitlich verkürzt)
     const lg = ([ankle, toe, kn], isFar) => {
@@ -279,11 +281,79 @@
       parts: arms.concat([lg(g.L, !mirrored), lg(g.R, !!mirrored)]),
     };
     const plumb = g.plumb ? `<path d="M106 ${120 + d} V232" stroke="${HL}" stroke-width="2.5" stroke-dasharray="5 4" opacity=".8"/><circle cx="106" cy="${116 + d}" r="4" fill="${HL}"/>` : '';
+    const X = (x) => r1(14 + 0.86 * x);
+    const mid = (l) => (l[0][1] < 220 ? l[0][0] : (l[0][0] + l[1][0]) / 2);
+    return { view: 'side', ground: r1(4 + 0.86 * 232), fx: [X(mid(g.L)), X(mid(g.R))], inner: `<g transform="translate(14 4) scale(.86)"><path d="M20 232 H215" stroke="#cfd8dc" stroke-width="2"/>${person(spec)}${plumb}</g>` };
+  }
+  function stanceSideSvg(key, mirrored, opts) {
+    const title = (opts && opts.title) || (STANCES[key] && STANCES[key].name);
+    if (STANCE_FRONT[key]) return stanceFrontSvg(key, title, mirrored);
+    if (!STANCE_SIDE[key]) return '';
     return `<svg viewBox="0 0 200 224" role="img" aria-label="${esc(title)} – seitlich" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="198" height="222" rx="12" fill="#fafafa" stroke="#ddd"/>
       <text x="190" y="18" font-size="10" text-anchor="end" fill="#78909c" ${FONT}>vorne →</text>
-      <g transform="translate(14 4) scale(.86)"><path d="M20 232 H215" stroke="#cfd8dc" stroke-width="2"/>${person(spec)}${plumb}</g>
+      ${sideFig(key, mirrored).inner}
       <text x="100" y="216" font-size="9.5" text-anchor="middle" fill="#78909c" ${FONT}>seitlich</text></svg>`;
+  }
+
+  /* Doppelansicht wie in Zeichenvorlagen: oben die Figur, darunter dieselben Füße von oben,
+     so gedreht, dass „vorne“ in beiden Bildern gleich liegt. Gestrichelte Bezugslinien verbinden
+     jeden Fuß mit seinem Abdruck; der Kreis zeigt, wo der Schwerpunkt über dem Boden liegt. */
+  function stanceDuoSvg(key, mirrored, opts) {
+    const s = STANCES[key];
+    const fig = STANCE_FRONT[key] ? frontFig(key, mirrored) : STANCE_SIDE[key] && !s.knee ? sideFig(key, mirrored) : null;
+    if (!s || !fig) return '';
+    const title = (opts && opts.title) || s.name;
+    const feet = s.feet.map(([x, y, r, w, side, ball]) => (mirrored ? [200 - x, y, -r, w, side === 'L' ? 'R' : 'L', ball] : [x, y, r, w, side, ball]));
+    const side = fig.view === 'side';
+    // Achse in der Figur: seitlich = nach vorne (−y), von vorne = quer (Person links = Bild rechts)
+    const along = (f) => (side ? -f[1] : 100 - f[0]);
+    const across = (f) => (side ? f[0] - 100 : 116 - f[1]);
+    const [a0, a1] = feet.map(along);
+    let k = Math.abs(a0 - a1) > 12 ? (fig.fx[0] - fig.fx[1]) / (a0 - a1) : 0.75;
+    if (!(k > 0)) k = 0.75;
+    k = Math.min(1.05, Math.max(0.5, k));
+    const off = (fig.fx[0] + fig.fx[1]) / 2 - (k * (a0 + a1)) / 2;
+    const CY = 298;
+    const pos = feet.map((f) => [r1(off + k * along(f)), r1(CY + k * across(f))]);
+    // Tiefe von vorne: vorne (kleines y) liegt näher am Betrachter, also weiter unten
+    if (!side) {
+      const ym = (feet[0][1] + feet[1][1]) / 2;
+      feet.forEach((f, i) => { pos[i][1] = r1(CY + k * (f[1] < ym ? 1 : -1) * Math.abs(f[1] - ym)); });
+    }
+    const rot = (r) => r + (side ? 90 : 180);
+    const prints = feet.map((f, i) => foot(pos[i][0], pos[i][1], rot(f[2]), f[3], { side: f[4], ball: f[5], scale: r1(FS * k * 100) / 100 })).join('');
+    const guide = feet
+      .map((f, i) => `<path d="M${fig.fx[i]} ${fig.ground + 2} L${pos[i][0]} ${pos[i][1]}" stroke="${HL}" stroke-width="1.3" stroke-dasharray="4 3" opacity=".75"/>`)
+      .join('');
+    // Schwerpunkt über dem Boden: nach Gewicht gemittelt
+    const wsum = feet.reduce((t, f) => t + f[3], 0) || 1;
+    const cg = [0, 1].map((j) => r1(feet.reduce((t, f, i) => t + pos[i][j] * f[3], 0) / wsum));
+    const centre = `<circle cx="${cg[0]}" cy="${cg[1]}" r="9" fill="${HL}" fill-opacity=".12" stroke="${HL}" stroke-width="1.4"/><path d="M${cg[0] - 13} ${cg[1]} H${cg[0] + 13} M${cg[0]} ${cg[1] - 13} V${cg[1] + 13}" stroke="${HL}" stroke-width="1"/>`;
+    const sc = FS * k;
+    const pct = feet
+      .map((f, i) => {
+        const [x, y] = pos[i];
+        // Prozentzahl neben die Ferse (seitlich) bzw. nach außen (von vorne)
+        const right = !side && x >= cg[0];
+        let tx = side ? x - 28 * sc - 3 : right ? x + 16 * sc + 3 : x - 16 * sc - 3;
+        let ty = y + 4;
+        // am linken Rand: über bzw. unter den Fuß ausweichen
+        if (side && tx < 36) [tx, ty] = [x + 4, y < CY ? y - 14 : y + 24];
+        return `<text x="${r1(tx)}" y="${ty}" font-size="10" font-weight="700" text-anchor="${side && tx === x + 4 ? 'middle' : right ? 'start' : 'end'}" fill="${f[3] >= 0.6 ? RED : f[3] ? MID : GHOST}" ${FONT}>${f[3] ? `${Math.round(f[3] * 100)} %` : 'angehoben'}</text>`;
+      })
+      .join('');
+    const lines = (s.mass || []).map((t, i) => `<text x="100" y="${364 + i * 12}" font-size="9.5" text-anchor="middle" fill="#455a64" ${FONT}>${esc(t)}</text>`).join('');
+    const vorne = side ? `<text x="190" y="18" font-size="10" text-anchor="end" fill="#78909c" ${FONT}>vorne →</text>` : '';
+    return `<svg class="duo" viewBox="0 0 200 390" role="img" aria-label="${esc(title)} – Figur und Fußbild" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="198" height="388" rx="12" fill="#fafafa" stroke="#ddd"/>
+      ${vorne}${fig.inner}
+      <path d="M14 ${r1(fig.ground + 26)} H186" stroke="#e0e0e0"/>
+      <text x="10" y="${r1(fig.ground + 38)}" font-size="9" fill="#78909c" ${FONT}>von oben</text>
+      ${guide}${prints}${centre}${pct}
+      <text x="190" y="${r1(fig.ground + 38)}" font-size="9" text-anchor="end" fill="${HL}" ${FONT}>⊕ Schwerpunkt</text>
+      ${side ? '' : `<text x="10" y="${CY + 44}" font-size="9" fill="#78909c" ${FONT}>↓ vorne</text>`}
+      ${lines}</svg>`;
   }
 
   /* Ordnet einen Standnamen (wie im Kata-Buch) einer Grafik zu. */
@@ -325,19 +395,20 @@
     return k ? stanceSvg(k.key, k.mirrored, Object.assign({ title: name }, opts)) : '';
   }
 
-  // key: 'st:<stand>[:m]', 'mv:<bewegung>', 'tc:<technik>', 'wp:<waffe>'
+  // key: 'st:<stand>[:m]', 'mv:<bewegung>', 'tc:<technik>', 'wp:<waffe>', 'as:<fußbewegung>'
   function byKey(key) {
     const [kind, k, m] = key.split(':');
     if (kind === 'st') return stanceSvg(k, m === 'm');
     if (kind === 'mv') return MOVES[k]();
     if (kind === 'tc') return SK.gfx.TECH[k]();
     if (kind === 'wp') return WEAPONS[k]();
+    if (kind === 'as') return SK.gfx.ASHI[k]();
     return '';
   }
   const animCache = new Map();
   function animSvg(key) {
     if (!animCache.has(key)) {
-      const svg = /^(mv|tc):/.test(key) ? withMode({ anim: true }, () => byKey(key)) : '';
+      const svg = /^(mv|tc|as):/.test(key) ? withMode({ anim: true }, () => byKey(key)) : '';
       animCache.set(key, svg.includes('<animate') ? stripTags(svg) : null);
     }
     return animCache.get(key);
@@ -349,11 +420,11 @@
   function box(key, svg) {
     if (!key) return svg;
     const [kind, k, m] = key.split(':');
-    const side = kind === 'st' ? stanceSideSvg(k, m === 'm') : '';
+    const side = kind === 'st' ? stanceDuoSvg(k, m === 'm') || stanceSideSvg(k, m === 'm') : '';
     const anim = hasAnim(key);
     if (!side && !anim) return svg;
     const btn = (act, t) => `<button type="button" class="gfx-btn" data-act="${act}" data-label="${t}" aria-pressed="false">${t}</button>`;
-    return `<div class="gfx-box" data-gfx="${esc(key)}"><div class="gfx-view">${svg}</div>${side ? `<div class="gfx-view" hidden>${side}</div>` : ''}${anim ? '<div class="gfx-view gfx-anim" hidden></div>' : ''}<div class="gfx-tools">${side ? btn('side', STANCE_FRONT[k] ? 'Vorderansicht' : 'Seitenansicht') : ''}${anim ? btn('anim', '▶ Bewegung') : ''}</div></div>`;
+    return `<div class="gfx-box" data-gfx="${esc(key)}"><div class="gfx-view">${svg}</div>${side ? `<div class="gfx-view" hidden>${side}</div>` : ''}${anim ? '<div class="gfx-view gfx-anim" hidden></div>' : ''}<div class="gfx-tools">${side ? btn('side', side.includes('class="duo"') ? 'Figur & Fußbild' : STANCE_FRONT[k] ? 'Vorderansicht' : 'Seitenansicht') : ''}${anim ? btn('anim', '▶ Bewegung') : ''}</div></div>`;
   }
 
   function figure(svg, caption, note, key) {
@@ -626,7 +697,7 @@
   const ground = (w, y) => `<path d="M14 ${y} H${w - 14}" stroke="#cfd8dc" stroke-width="2"/>`;
   function frame(w, h, label, inner, lines) {
     // Unter dem Bild nur die Blickrichtung – die Erklärung steht im Text zur Grafik
-    const view = /^(seitlich|von vorne)[^:]*(?=:)/.exec((lines && lines[0]) || '');
+    const view = /^(seitlich|von vorne|von oben)[^:]*(?=:)/.exec((lines && lines[0]) || '');
     const shown = view ? [view[0]] : lines || [];
     const hh = view ? 290 : h;
     const cap = shown.map((t, i, a) => `<text x="${w / 2}" y="${hh - 10 - (a.length - 1 - i) * 13}" font-size="10.5" text-anchor="middle" fill="#455a64" ${FONT}>${esc(t)}</text>`).join('');
@@ -950,7 +1021,7 @@
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(s)}`;
   }
 
-  SK.gfx = { STANCES, STANCE_SIDE, foot, stanceSvg, stanceSideSvg, stanceFor, stanceKey, stanceFigure, figure, box, byKey, animSvg, hasAnim, plainSvg, levels, WEAPONS, MOVES, targets, dataUri };
+  SK.gfx = { STANCES, STANCE_SIDE, foot, stanceSvg, stanceSideSvg, stanceDuoSvg, stanceFor, stanceKey, stanceFigure, figure, box, byKey, animSvg, hasAnim, plainSvg, levels, WEAPONS, MOVES, targets, dataUri };
   // Bausatz für weitere Technik-Grafiken (js/graphics-tech.js)
   SK.gfx.kit = { person, scene, frame, arm, ghost, front, FRONT, SIDE, SL, SA, sLeg, seqOf, stepLegs, STEP_SHIFT, LEG_R, LEG_L, HIKITE_R, HIKITE_L, arrow, hit, tag, foot, timeline, animEl, animTf, fadeLoop, mode, path, FONT, HL, HLF, HLS, INK, GHOST, ARR };
 })();

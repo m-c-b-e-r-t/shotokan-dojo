@@ -923,6 +923,11 @@ figure.gfx svg {
   max-height: 180px;
 }
 
+/* Doppelansicht (Figur über Fußbild) ist höher */
+.lex-img svg.duo {
+  max-height: 340px;
+}
+
 .quiz-img {
   display: block;
   width: 100%;
@@ -1978,4 +1983,88 @@ main:fullscreen {
 .ans-lex-dlg .actions {
   margin: 0;
   justify-content: flex-end;
+}
+/* Kompakt-Übersicht: kleine Karten, druckbar */
+.kompakt-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin: 0.6rem 0 1rem;
+}
+
+.kompakt-sel {
+  min-height: 40px;
+  padding: 0.3rem 0.6rem;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+}
+
+.k-sec h2 {
+  font-size: 1.1rem;
+  margin: 1.2rem 0 0.5rem;
+}
+
+.k-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.6rem;
+}
+
+.k-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--red);
+  border-radius: 10px;
+  padding: 0.45rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.k-card h4 {
+  margin: 0.2rem 0 0.1rem;
+  font-size: 0.95rem;
+}
+
+.k-card p {
+  margin: 0 0 0.3rem;
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+.k-img svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 130px;
+}
+
+.k-img svg > rect:first-of-type {
+  stroke: none;
+}
+
+@media print {
+  .topbar,
+  .bottombar,
+  .no-print {
+    display: none !important;
+  }
+
+  body,
+  main {
+    background: #fff;
+    padding: 0;
+    margin: 0;
+  }
+
+  .k-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .k-card {
+    box-shadow: none;
+  }
 }

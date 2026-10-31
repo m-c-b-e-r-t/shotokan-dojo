@@ -42,7 +42,7 @@
         if (!filled.every(Boolean)) throw new Error(`leerer Reiter bei ${g.id}`);
         if (app.querySelector('.quiz-card, .actions .btn.primary')) throw new Error(`Quiz-Knopf auf Prüfungsseite ${g.id}`);
       }
-      for (const id of ['et-dojo', 'heian-shodan-ueberblick', 'gl-stand', 'gl-waffe']) {
+      for (const id of ['et-dojo', 'heian-shodan-ueberblick', 'gl-stand', 'gl-waffe', 'gl-ashi', 'da-ashi']) {
         location.hash = `#/quiz/${id}`;
         await wait();
         await answerAll(true);
@@ -68,7 +68,7 @@
         await wait();
         log.push(`Zufall ${scope}: vorher ${before}, nachher ${app.querySelector('.card b').textContent} ungestellt`);
       }
-      for (const h of ['#/', '#/exam', '#/wissen', '#/wissen/da-kampf', '#/wissen/heian-godan-b17', '#/ansage', '#/ansage/heian-sandan', '#/lexikon', '#/begriffe', '#/stats']) {
+      for (const h of ['#/', '#/exam', '#/wissen', '#/wissen/da-kampf', '#/wissen/da-ashi', '#/kompakt', '#/kompakt/5kyu', '#/wissen/heian-godan-b17', '#/ansage', '#/ansage/heian-sandan', '#/lexikon', '#/begriffe', '#/stats']) {
         location.hash = h;
         await wait();
         log.push(`Seite ${h}: ${app.querySelector('h1') ? app.querySelector('h1').textContent : 'FEHLT'}`);

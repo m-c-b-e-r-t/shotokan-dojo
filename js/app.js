@@ -1,4 +1,4 @@
-/* Router und Ansichten: Wissen, Lexikon, Quiz-Lernpfad, Zufallsmix, Begriffe-Trainer, Wiederholung, Prüfungen, Kata-Ansage, Fortschritt, Datenschutz. */
+/* Router und Ansichten: Wissen, Lexikon, Kompakt-Übersicht, Quiz-Lernpfad, Zufallsmix, Begriffe-Trainer, Wiederholung, Prüfungen, Kata-Ansage, Fortschritt, Datenschutz. */
 (function () {
   'use strict';
   const { util, store } = SK;
@@ -198,7 +198,7 @@
     const next = pos >= 0 ? learnLessons[pos + 1] : null;
     const learn = el('div', { class: 'learn' });
     // Hinweis zu den Bewegungsgrafiken einmal oben statt in jedem Bild
-    learn.innerHTML = (/data-gfx="(mv|tc):/.test(lesson.learn) ? SK.gfxHint : '') + lesson.learn;
+    learn.innerHTML = (/data-gfx="(mv|tc|as):/.test(lesson.learn) ? SK.gfxHint : '') + lesson.learn;
     const n = (qByLesson[id] || []).length;
     app.innerHTML = '';
     app.append(
@@ -275,6 +275,7 @@
     });
     app.append(
       el('h1', { text: 'Lexikon' }),
+      el('p', { class: 'small' }, el('a', { href: '#/kompakt', text: 'Kompakt-Übersicht (Spickzettel je Gürtel, druckbar) ›' })),
       form,
       chips,
       count,
@@ -282,6 +283,64 @@
     );
     if (arg) search.value = arg;
     filter();
+    finishView();
+  }
+
+  // ---------- Kompakt-Übersicht (Spickzettel) ----------
+  // Ab welchem Grad ein Begriff im Prüfungsprogramm (Kihon, Kumite, Kata, Theorie) vorkommt
+  let termGradeCache = null;
+  function termGrades() {
+    if (termGradeCache) return termGradeCache;
+    const words = (t) => ` ${t.toLowerCase().replace(/empi/g, 'enpi').replace(/ß/g, 'ss').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, ' ').trim()} `;
+    const abbr = (t) => t.replace(/\bZk\b/g, 'Zenkutsu-dachi').replace(/\bKk\b/g, 'Kokutsu-dachi').replace(/\bKb\b/g, 'Kiba-dachi');
+    const map = {};
+    SK.grades.forEach((g) => {
+      const txt = words(abbr(JSON.stringify([g.kihon, g.kumite, g.kataProg, g.theory])));
+      SK.glossary.forEach((e) => {
+        if (map[e.t]) return;
+        const names = e.t.split(/\s*\/\s*|\s*\(|\)/).map((n) => n.trim()).filter((n) => n.length > 2);
+        if (names.some((n) => txt.includes(words(n)))) map[e.t] = g.id;
+      });
+    });
+    termGradeCache = map;
+    return map;
+  }
+  function viewKompakt(arg) {
+    setNav('lexikon');
+    setTitle('Kompakt-Übersicht');
+    app.innerHTML = '';
+    const tg = termGrades();
+    const gradeName = (id) => (SK.grades.find((g) => g.id === id) || {}).name;
+    const sel = el('select', { class: 'kompakt-sel', 'aria-label': 'Gürtel wählen' },
+      el('option', { value: '', text: 'Alle Einträge' }),
+      SK.grades.map((g) => el('option', { value: g.id, text: `bis ${g.name} (${g.belt})` })));
+    if (arg && SK.gradeIndex(arg) >= 0) sel.value = arg;
+    const body = el('div');
+    function render() {
+      const lim = sel.value ? SK.gradeIndex(sel.value) : Infinity;
+      const ok = (e) => !sel.value || (tg[e.t] && SK.gradeIndex(tg[e.t]) <= lim);
+      const parts = SK.glossaryCats.map((c) => {
+        const items = SK.glossary.filter((e) => e.cat === c.id && ok(e));
+        if (!items.length) return '';
+        const cards = items.map((e) => {
+          const g = tg[e.t];
+          return `<article class="k-card">${e.img ? `<div class="k-img">${SK.gfx.plainSvg(e.img)}</div>` : ''}<h4>${util.esc(e.t)}</h4><p>${util.esc(e.de)}</p>${g ? `<span class="badge">ab ${util.esc(gradeName(g))}</span>` : ''}</article>`;
+        });
+        return `<section class="k-sec"><h2>${util.esc(c.title)} <span class="muted small">(${items.length})</span></h2><div class="k-grid">${cards.join('')}</div></section>`;
+      });
+      const n = parts.filter(Boolean).length;
+      body.innerHTML = n ? parts.join('') : '<p class="muted">Für diesen Gürtel gibt es noch keine Einträge.</p>';
+      if (location.hash !== `#/kompakt${sel.value ? `/${sel.value}` : ''}`) history.replaceState(null, '', `#/kompakt${sel.value ? `/${sel.value}` : ''}`);
+    }
+    sel.addEventListener('change', render);
+    app.append(
+      el('nav', { class: 'crumbs no-print' }, el('a', { href: '#/lexikon', text: 'Lexikon' }), ' › ', el('span', { text: 'Kompakt-Übersicht' })),
+      el('h1', { text: 'Kompakt-Übersicht' }),
+      el('p', { class: 'muted small no-print', text: 'Alle Stände, Techniken und Begriffe auf einen Blick – eine Karte je Eintrag. Mit Gürtel-Auswahl siehst du nur, was im DJKB-Prüfungsprogramm bis zu diesem Gürtel vorkommt („ab …“ = erstes Auftreten).' }),
+      el('div', { class: 'kompakt-tools no-print' }, sel, el('button', { type: 'button', class: 'btn', text: 'Drucken', onclick: () => window.print() })),
+      body
+    );
+    render();
     finishView();
   }
 
@@ -860,6 +919,7 @@
     if (view === 'wissen') return arg ? viewWissen(arg) : viewWissenList();
     if (view === 'lesson') return viewWissen(arg);
     if (view === 'lexikon') return viewLexikon(arg);
+    if (view === 'kompakt') return viewKompakt(arg);
     if (view === 'quiz') return arg ? viewQuiz(arg) : viewQuizList();
     if (view === 'zufall') return viewZufall(arg);
     if (view === 'begriffe') return viewBegriffe();

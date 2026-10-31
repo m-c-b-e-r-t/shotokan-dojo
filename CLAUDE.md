@@ -21,6 +21,7 @@
 - Kata-Fragen nur aus „Karate-Do Kata Vol. 1“ (JKA) mit gedruckter Buchseite (`SK.bookSrc`).
 - Fragen-IDs entstehen aus Lektion, Fragetext und richtiger Antwort (`SK.qb`). `data/legacy-ids.js` ist eingefroren und wird nicht bearbeitet.
 - Das Kata-PDF und `tools/out/` niemals committen.
+- Heft „Karate kompakt“ (Quelle `SK.sources.kompakt`): Wissen steht in `docs/karate-kompakt.md`. Keine Scans, Bilder oder wörtlichen Texte des Heftes ins Repo – nur Fakten in eigenen Worten; Grafiken selbst zeichnen. Für Kata-Inhalte gilt weiter nur das JKA-Buch.
 
 ## Buchwissen (ohne PDF)
 - Bei Fragen zum Buch oder neuen Kata-Inhalten zuerst `docs/buch-register.md` lesen: Seitenzählung, Kapitel, Zusammenfassungen der allgemeinen Kapitel, Hinweise des Buches je Bewegung und Ablauftabellen aller zehn Kata. Nur Fakten und eigene Worte ins Repo, keine Abschriften aus dem Buch.

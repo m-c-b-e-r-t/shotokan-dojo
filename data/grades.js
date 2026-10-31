@@ -9,6 +9,7 @@
     ueb: 'DJKB-Übersicht Prüfungsprogramm (Kihon/Kata/Kumite)',
     pdf: 'Karate-Do Kata Vol. 1 (JKA)',
     allg: 'Allgemeines Shotokan-/JKA-Grundwissen (u. a. Wikipedia: Shōtōkan, Gichin Funakoshi, JKA)',
+    kompakt: 'Heft „Karate kompakt – Grundlagen im Überblick“ (F. Tartaglia, aus „Die Karate-Essenz“) – Inhalte in eigenen Worten',
   };
 
   const SENTEI_BOOK = ['bassai-dai', 'kanku-dai', 'jion', 'enpi'];

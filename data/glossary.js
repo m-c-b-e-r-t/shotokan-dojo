@@ -5,6 +5,7 @@
   const PDF = (n) => SK.bookSrc(n);
   const ALLG = SK.sources.allg;
   const PO = SK.sources.po;
+  const KO = SK.sources.kompakt;
 
   SK.glossaryCats = [
     { id: 'stand', title: 'Stände (Dachi)', ask: 'Welcher Stand ist abgebildet?' },
@@ -12,6 +13,8 @@
     { id: 'uchi', title: 'Schläge (Uchi)', ask: 'Welcher Schlag ist abgebildet?' },
     { id: 'uke', title: 'Abwehrtechniken (Uke)', ask: 'Welche Abwehr ist abgebildet?' },
     { id: 'geri', title: 'Fußtechniken (Geri)', ask: 'Welche Fußtechnik zeigt die Grafik?' },
+    { id: 'ashi', title: 'Fußbewegungen (Ashi-sabaki)', ask: 'Welche Fußbewegung zeigt die Grafik?' },
+    { id: 'barai', title: 'Fußfeger (Ashi-barai)', ask: 'Welcher Fußfeger ist abgebildet?' },
     { id: 'waffe', title: 'Körperwaffen', ask: 'Welcher Körperteil ist markiert?' },
     { id: 'kamae', title: 'Haltungen (Kamae)', ask: 'Welche Haltung ist abgebildet?' },
     { id: 'begriff', title: 'Kommandos & Begriffe', ask: 'Welcher Begriff passt zur Grafik?' },
@@ -22,6 +25,7 @@
   const mv = (key) => keyed(`mv:${key}`, () => G.MOVES[key]());
   const wp = (key) => keyed(`wp:${key}`, () => G.WEAPONS[key]());
   const tc = (key) => keyed(`tc:${key}`, () => G.TECH[key]());
+  const as = (key) => keyed(`as:${key}`, () => G.ASHI[key]());
 
   // [Begriff, Bedeutung, Kategorie, Grafik?, Quelle?]
   const E = [
@@ -56,6 +60,9 @@
     ['Yama-zuki', '„Bergfauststoß“: beide Fäuste gleichzeitig, eine Jodan, eine Gedan', 'tsuki', tc('yama-zuki'), PDF(94)],
     ['Otoshi-zuki', 'Fauststoß nach unten', 'tsuki', tc('otoshi-zuki'), PDF(127)],
     ['Nukite', 'Speerhand-Stoß mit den Fingerspitzen (Shihon-nukite = Tate-nukite)', 'tsuki', tc('nukite'), PDF(21)],
+    ['Tate-zuki', 'Fauststoß mit senkrechter Faust (Daumen oben) auf dem kürzesten, geraden Weg', 'tsuki', tc('tate-zuki'), KO],
+    ['Mawashi-zuki', 'Fauststoß im Bogen von außen zum Ziel, z. B. Schläfe oder seitliche Rippen', 'tsuki', tc('mawashi-zuki'), KO],
+    ['Awase-zuki', 'U-förmiger Doppelstoß: oben Jodan, unten Ura-zuki – engere Form des Yama-zuki, Oberkörper aufrecht', 'tsuki', tc('awase-zuki'), KO],
 
     ['Uraken-uchi', 'Schlag mit dem Faustrücken', 'uchi', tc('uraken-uchi')],
     ['Tettsui-uchi', 'Hammerfaustschlag (auch Kentsui-uchi)', 'uchi', tc('tettsui-uchi')],
@@ -64,6 +71,11 @@
     ['Enpi-uchi', 'Ellbogenschlag', 'uchi', tc('enpi-uchi')],
     ['Furi-enpi', 'Schwingender Ellbogenschlag zur Seite (Heian Sandan)', 'uchi', tc('furi-enpi'), PDF(35)],
     ['Ushiro-enpi', 'Ellbogenstoß nach hinten', 'uchi', tc('ushiro-enpi'), PDF(37)],
+    ['Mae-enpi', 'Ellbogenstoß nach vorne: Ellbogen dicht am Körper, gerade Linie zum Ziel', 'uchi', tc('enpi-uchi'), KO],
+    ['Yoko-enpi', 'Ellbogenstoß zur Seite, meist in Kiba-dachi (DJKB: Yoko-Empi-Uchi)', 'uchi', tc('yoko-enpi'), KO],
+    ['Mawashi-enpi', 'Ellbogenschlag im waagerechten Bogen von außen zur Körpermitte', 'uchi', tc('mawashi-enpi'), KO],
+    ['Age-enpi', 'Ellbogenschlag senkrecht nach oben, dicht am Körper (auch Tate-enpi)', 'uchi', tc('age-enpi'), KO],
+    ['Otoshi-enpi', 'Ellbogenschlag senkrecht nach unten, z. B. in Kiba- oder Fudo-dachi', 'uchi', tc('otoshi-enpi'), KO],
     ['Hasami-uchi', 'Zangenschlag mit beiden Fäusten zu beiden Seiten', 'uchi', tc('hasami-uchi'), PDF(90)],
     ['Teisho-uchi', 'Schlag mit dem Handballen', 'uchi', tc('teisho-uchi')],
 
@@ -84,6 +96,9 @@
     ['Tate-shuto-uke', 'Abwehr mit senkrechter Handkante, Arm gestreckt', 'uke', tc('tate-shuto-uke'), PDF(83)],
     ['Teisho-uke', 'Abwehr mit dem Handballen', 'uke', tc('teisho-uke'), PDF(142)],
     ['Uchiotoshi', 'Unterarm schlägt einen Angriff nach unten (Jion)', 'uke', tc('uchiotoshi'), PDF(150)],
+    ['Manji-uke', 'Doppelabwehr: eine Hand wehrt unten ab (Gedan-barai), die andere schützt oben (Jodan-uchi-uke)', 'uke', tc('manji-uke'), KO],
+    ['Te-nagashi-uke', 'Die offene Hand lenkt einen Jodan- oder Chudan-Angriff zur Seite ab – vor allem im Kampf', 'uke', null, KO],
+    ['Gedan-nagashi-uke', 'Ablenkende Abwehr im unteren Bereich, in Gegenrichtung zum Gedan-barai', 'uke', null, KO],
 
     ['Mae-geri', 'Fußtritt nach vorne mit dem Fußballen', 'geri', mv('mae-geri')],
     ['Yoko-geri-keage', 'Seitlicher Schnapptritt', 'geri', tc('yoko-geri-keage')],
@@ -98,6 +113,29 @@
     ['Ren-geri', 'Kombination mehrerer Fußtritte', 'geri', tc('ren-geri'), PO],
     ['Sonoba-geri', 'Fußtritte am Platz (Standübung)', 'geri', tc('sonoba-geri'), PO],
     ['Kizami-geri', 'Fußtritt mit dem vorderen Bein', 'geri', tc('kizami-geri'), PO],
+    ['Mae-geri-kekomi', 'Stoßtritt nach vorne mit Ferse oder Fußballen', 'geri', tc('mae-geri-kekomi'), KO],
+    ['Ura-mawashi-geri', 'Halbkreistritt gegenläufig zum Mawashi-geri, trifft mit Sohle oder Ferse', 'geri', tc('ura-mawashi-geri'), KO],
+    ['Ushiro-mawashi-geri', 'Ura-mawashi-geri aus einer Körperdrehung wie beim Ushiro-geri', 'geri', tc('ushiro-mawashi-geri'), KO],
+    ['Mawashi-hiza-geri', 'Kniestoß im Bogen, waagerecht oder schräg zum Ziel', 'geri', tc('mawashi-hiza-geri'), KO],
+
+    ['Ashi-sabaki', 'Fußarbeit: alle Schritte, mit denen man Distanz und Richtung ändert', 'ashi', null, KO],
+    ['Ayumi-ashi', 'Normaler Schritt: der hintere Fuß wird zum vorderen; bei Ständen mit Breite kommt er in der Schrittmitte zum Standbein (Bogen)', 'ashi', as('ayumi-ashi'), KO],
+    ['Ayumi-ashi auf einer Linie', 'Schritt bei Ständen mit beiden Füßen auf einer Linie (z. B. Kokutsu-dachi): der hintere Fuß geht gerade, ohne Bogen', 'ashi', as('ayumi-ashi-linie'), KO],
+    ['Suri-ashi', 'Gleitschritt', 'ashi', tc('suri-ashi'), PO],
+    ['Okuri-suri-ashi', 'Gleitschritt: zuerst der Fuß, der näher am Ziel ist, dann zieht der andere nach', 'ashi', as('okuri-suri-ashi'), KO],
+    ['Tsugi-suri-ashi', 'Gleitschritt mit größerer Reichweite: erst setzt der hintere Fuß zum vorderen, dann gleitet der vordere vor', 'ashi', as('tsugi-suri-ashi'), KO],
+    ['Yori-ashi', 'Beide Füße gleiten gemeinsam, der Stand bleibt erhalten', 'ashi', as('yori-ashi'), PDF(38)],
+    ['Ashi-fumikae', 'Beinwechsel am Platz: nach vorne erst den vorderen Fuß zurück, dann den hinteren vor', 'ashi', as('ashi-fumikae'), KO],
+    ['Tai-sabaki', 'Körperausweichbewegung', 'ashi', tc('tai-sabaki'), PO],
+    ['Tai-sabaki (45°)', 'Ausweichen mit Drehung um 45°: der hintere Fuß setzt im Bogen um, der vordere dreht am Platz', 'ashi', as('tai-sabaki-45'), KO],
+    ['Tai-sabaki (180°)', 'Drehung um 180°: der hintere Fuß setzt im Bogen um, der vordere dreht am Platz', 'ashi', as('tai-sabaki-180'), KO],
+    ['Yoko-sashi-ashi', 'Seitlicher Übersetzschritt: ein Fuß setzt vor dem anderen über, dann tritt dieser seitlich weiter – z. B. in den Tekki-Kata', 'ashi', as('yoko-sashi-ashi'), KO],
+    ['Shaho-sashi-ashi', 'Übersetzschritt wie Yoko-sashi-ashi, nur diagonal – zum Richtungswechsel in höheren Kata', 'ashi', as('shaho-sashi-ashi'), KO],
+
+    ['Ashi-barai', 'Fußfeger', 'barai', tc('ashi-barai'), PO],
+    ['Teisoku-ashi-barai', 'Fußfeger mit der Fußsohle – mit dem vorderen oder hinteren Fuß', 'barai', tc('teisoku-barai'), KO],
+    ['Haisoku-ashi-barai', 'Fußfeger mit dem Spann, meist mit dem vorderen Fuß aus der Kampfstellung', 'barai', tc('haisoku-barai'), KO],
+    ['Komura-ashi-barai', 'Fußfeger mit der Wade, meist innerhalb einer Kombination', 'barai', tc('komura-barai'), KO],
 
     ['Seiken', 'Faustvorderseite (Knöchel von Zeige- und Mittelfinger)', 'waffe', wp('seiken')],
     ['Uraken', 'Faustrücken', 'waffe', wp('uraken')],
@@ -139,11 +177,7 @@
     ['Maai', 'Kampfdistanz', 'begriff', tc('maai'), PO],
     ['Deai', 'Kontern im Moment des gegnerischen Angriffs', 'begriff', tc('deai'), PO],
     ['Kogeki', 'Angriff', 'begriff', tc('kogeki'), PO],
-    ['Suri-ashi', 'Gleitschritt', 'begriff', tc('suri-ashi'), PO],
-    ['Yori-ashi', 'Beide Füße gleiten gemeinsam, der Stand bleibt erhalten', 'begriff', tc('yori-ashi'), PDF(38)],
-    ['Tai-sabaki', 'Körperausweichbewegung', 'begriff', tc('tai-sabaki'), PO],
     ['Sun-dome', 'Technik kurz vor dem Ziel abstoppen', 'begriff', tc('sun-dome'), PO],
-    ['Ashi-barai', 'Fußfeger', 'begriff', tc('ashi-barai'), PO],
     ['Enbusen', 'Bewegungslinie einer Kata', 'begriff', tc('enbusen'), PDF(4)],
     ['Bunkai', 'Anwendung / Analyse der Kata-Techniken', 'begriff', tc('bunkai')],
   ];
@@ -167,7 +201,7 @@
         const base = { lesson: lid, grp: id, type: 'mc', answer: 0, src: e.src };
         const svg = svgs.get(e);
         const own = svg && !others.some((o) => svgs.get(o) === svg);
-        const anim = e.img && /^(mv|tc):/.test(e.img.key) ? { gfx: e.img.key } : {};
+        const anim = e.img && /^(mv|tc|as):/.test(e.img.key) ? { gfx: e.img.key } : {};
         SK.questions.push(Object.assign({ id: `${id}-a`, q: `Was ist „${e.t}“?`, options: [e.de].concat(pick('de')), explain: '' }, base));
         // Bild nur hier, wenn es keine eigene Bildfrage gibt – sonst wären -b und -c fast gleich.
         SK.questions.push(Object.assign({ id: `${id}-b`, q: `Wie heißt: ${e.de}?`, options: [e.t].concat(pick('t')), explain: '' }, base, svg && !own ? Object.assign({ img: G.dataUri(svg) }, anim) : {}));
@@ -180,7 +214,7 @@
   };
 
   // Hinweis zu den Bewegungsgrafiken – einmal pro Seite (Lexikon, Lektionen mit Bewegungsgrafiken)
-  SK.gfxHint = '<p class="muted small gfx-hint">In den Grafiken: gestrichelt = Ausgangsstellung, blau = bewegtes Körperteil. „▶ Bewegung“ spielt den Ablauf ab.</p>';
+  SK.gfxHint = '<p class="muted small gfx-hint">In den Grafiken: gestrichelt bzw. blass = Ausgangsstellung, blau = bewegtes Körperteil, rot gestrichelt = Weg, Zahlen = Reihenfolge. „▶ Bewegung“ spielt den Ablauf ab.</p>';
   SK.glossaryHtml = function (items) {
     return `<div class="lex-grid">${items
       .map(

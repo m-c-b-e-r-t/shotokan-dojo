@@ -3,7 +3,7 @@
 Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikette, Geschichte, Begriffe, Stände, Kihon, Kumite, detailliertes Kata-Wissen und das DJKB-Prüfungsprogramm (9. Kyu bis 5. Dan).
 
 - Kata-Fragen stammen ausschließlich aus „Karate-Do Kata Vol. 1“ (JKA) – mit Angabe der gedruckten Buchseiten.
-- Getrennte Bereiche: **Wissen** (alle Inhalte + Lexikon mit Grafiken), **Quiz** (Lernpfad, Zufallsmix aus dem Gesamtpool), **Begriffe-Trainer** (Stände, Techniken, Körperwaffen stumpf abfragen), **Prüfungen** (DJKB-Prüfungsprogramm je Gürtel, unterteilt in Kihon, Kata, Kumite und Theorie).
+- Getrennte Bereiche: **Wissen** (alle Inhalte + Lexikon mit Grafiken, Stände als „Figur & Fußbild“, Fußbewegungen als animierte Fußspuren, **Kompakt-Übersicht** je Gürtel zum Drucken unter `#/kompakt`), **Quiz** (Lernpfad, Zufallsmix aus dem Gesamtpool), **Begriffe-Trainer** (Stände, Techniken, Körperwaffen stumpf abfragen), **Prüfungen** (DJKB-Prüfungsprogramm je Gürtel, unterteilt in Kihon, Kata, Kumite und Theorie).
 - **Kata-Ansage** („Kata-Trainer“, eigener Eintrag „Kata“ in der unteren Leiste, alle zehn Kata des Buches): zählt die Kata auf Japanisch im Rhythmus des Buches (fließend, langsam, Kiai; wie im Dojo bis 10, dann wieder ab 1), sagt den Kiai mit an, zeigt jede Stellung auf einer Bodenkarte von oben nach der Embusen-Skizze im Buch und hält den Bildschirm an. Gezählt wird mit japanischer Stimme, das Tempo lässt sich per Regler von 3× langsamer bis 3× schneller einstellen (Mitte = Training); ohne japanische Stimme läuft die Ansage stumm.
 - Lernpfad mit allen Lektionen frei zugänglich, Wiederholung nach Karteikasten-Prinzip.
 - Fortschritt nur lokal im Browser (localStorage), Export/Import unter „Fortschritt“.
@@ -20,6 +20,7 @@ Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikett
 - `tools/version.js` – Versionsnummer setzen (siehe unten).
 - `tools/kata-pdf/` – Python-Skripte, die Text und Fußskizzen aus dem Kata-Buch auswerten (siehe README dort).
 - `tools/register-tabellen.js` – schreibt die Ablauftabellen der Kata aus den App-Daten in `docs/buch-register.md`.
+- `docs/karate-kompakt.md` – Register zum Heft „Karate kompakt“ (Stände, Techniken, Fußbewegungen) in eigenen Worten, mit Hinweis, wo das Wissen in der App steht.
 - `docs/buch-register.md` – Nachschlage-Register zum Buch (Seiten, Kapitel, Hinweise je Bewegung, Abläufe) in eigenen Worten, damit das PDF nicht nötig ist.
 
 ## Neue Version veröffentlichen
@@ -42,6 +43,7 @@ Das Kata-PDF und alle daraus extrahierten Texte (`tools/out/`) sind per `.gitign
 
 - Japan Karate Association: *Karate-Do Kata Vol. 1* (2003)
 - DJKB-Prüfungsordnung (Stand Juli 2013), DJKB-Übersichten Prüfungsprogramm Kihon/Kata/Kumite – djkb.com
+- Fiore Tartaglia: *Karate kompakt – Grundlagen im Überblick* (aus „Die Karate-Essenz“) – nur Fakten in eigenen Worten, keine Bilder oder Texte des Heftes; die Grafiken sind eigene Zeichnungen
 - Allgemeines Wissen u. a. nach Wikipedia (Shōtōkan, Gichin Funakoshi, Japan Karate Association)
 
 Prüfungsangaben ohne Gewähr – maßgeblich ist die jeweils gültige DJKB-Prüfungsordnung.

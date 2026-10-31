@@ -143,6 +143,8 @@
   L.mc('Was bedeutet „Ashi-barai“?', ['Fußfeger', 'Fußtritt nach hinten', 'Stampfen', 'Fußballen'], 'Theorie zum 1. Dan.');
   L.mc('Was bedeutet „Bunkai“?', ['Anwendung bzw. Analyse der Kata-Techniken', 'Grußformel', 'Freikampf', 'Meditation'], 'Kata-Bunkai ist Teil der Dan-Prüfungen.');
   L.mc('Was bedeutet „Yori-ashi“?', ['Beide Füße gleiten gemeinsam in eine Richtung, der Stand bleibt erhalten', 'Kreuzschritt', 'Sprung', 'Halbkreisschritt'], '', S.pdf);
+  L.mc('Wo beginnt nach dem Grundprinzip „Kraft aus dem Boden“ eine Handtechnik?', ['Am Boden – der hintere Fuß drückt aktiv gegen den Boden', 'In der Faust', 'Im Ellbogen', 'Im Kiai'], 'Über Bein, Körpermitte und Hüfte läuft die Kraft zum Ziel.', S.kompakt);
+  L.mc('Womit vergleicht man die Stände, um ihre Bedeutung zu zeigen?', ['Mit dem Fundament eines Gebäudes', 'Mit dem Dach eines Hauses', 'Mit einer Brücke', 'Mit einem Fluss'], '', S.kompakt);
 
   // ---------- Stände ----------
   L = SK.qb('da-grund', S.allg);
@@ -173,6 +175,34 @@
   L.mc('Aus welcher Kata stammt der Name „Hangetsu-dachi“?', ['Hangetsu', 'Heian Shodan', 'Tekki Shodan', 'Jion'], '');
   L.mc('Welche Form hat „Renoji-dachi“?', ['L-Form', 'T-Form', 'V-Form', 'X-Form'], '');
   L.mc('Was ist „Sanchin-dachi“?', ['Sanduhrstand mit nach innen gespannten Knien', 'Reiterstand', 'Kreuzstand', 'Vorwärtsstand'], '');
+  L.mc('Welcher Stand ist um etwa eine Fußlänge kürzer als Zenkutsu-dachi?', ['Hangetsu-dachi', 'Kiba-dachi', 'Kokutsu-dachi', 'Heisoku-dachi'], 'Die Füße stehen dabei etwa schulterbreit.', S.kompakt);
+  L.mc('Wofür eignet sich Fudo-dachi („unbeweglicher Stand“) besonders?', ['Als feste Basis, aus der eine Technik viel Kraft entfalten kann', 'Für schnelle Sprünge', 'Für den Gruß', 'Zum Ausruhen zwischen den Techniken'], '', S.kompakt);
+  L.mc('Woher hat Sanchin-dachi den Namen „Sanduhrstand“?', ['Die Füße werden beim Gehen zur Mitte geführt, der Stand ist sehr kurz – das ergibt die Form einer Sanduhr', 'Man hält ihn genau eine Minute', 'Die Arme bilden eine Sanduhr', 'Er stammt aus der Kata Sanduhr'], '', S.kompakt);
+
+  L = SK.qb('da-ashi', S.kompakt);
+  L.mc('Was ist „Ashi-sabaki“?', ['Fußarbeit – alle Schritte, mit denen man Distanz und Richtung ändert', 'Ein Fußtritt nach hinten', 'Ein Kreuzstand', 'Der Gruß im Stehen'], '');
+  L.mc('Warum beschreibt der hintere Fuß beim Schritt in Zenkutsu-dachi einen Bogen?', ['Der Stand hat Breite – in der Mitte des Schritts kommen die Füße zusammen', 'Damit der Schritt länger wird', 'Um den Partner zu fegen', 'Weil man dabei springt'], '');
+  L.mc('Wie geht der hintere Fuß bei einem Schritt in Kokutsu-dachi (Füße auf einer Linie) nach vorne?', ['Gerade, ohne Bogen', 'Im großen Halbkreis nach außen', 'Er wird nachgezogen, ohne vorne anzukommen', 'Im Sprung'], '');
+  L.mc('Okuri-suri-ashi vorwärts: Welcher Fuß bewegt sich zuerst?', ['Der vordere – er ist näher am Ziel', 'Der hintere', 'Beide gleichzeitig', 'Keiner, es wird gesprungen'], '');
+  L.mc('Okuri-suri-ashi rückwärts: Welcher Fuß bewegt sich zuerst?', ['Der hintere – er ist näher am Ziel', 'Der vordere', 'Beide gleichzeitig', 'Es gibt ihn nur vorwärts'], '');
+  L.mc('Tsugi-suri-ashi vorwärts: Welcher Fuß bewegt sich zuerst?', ['Der hintere – er setzt zum vorderen', 'Der vordere', 'Beide gleichzeitig', 'Der Fuß mit dem meisten Gewicht'], '');
+  L.mc('Tsugi-suri-ashi rückwärts: Welcher Fuß bewegt sich zuerst?', ['Der vordere – er setzt nach hinten', 'Der hintere', 'Beide gleichzeitig', 'Es gibt ihn nur vorwärts'], '');
+  L.mc('Welcher Gleitschritt hat die größere Reichweite?', ['Tsugi-suri-ashi', 'Okuri-suri-ashi', 'Yori-ashi', 'Ashi-fumikae'], '');
+  L.mc('Wofür eignet sich Yori-ashi (beide Füße gleiten gleichzeitig) besonders?', ['Kleine Distanzänderungen, Rhythmuswechsel und das Verschleiern eines Angriffs', 'Große Strecken in kurzer Zeit', 'Drehungen um 180°', 'Den Gruß'], '');
+  L.mc('Was ist „Ashi-fumikae“?', ['Beinwechsel am Platz', 'Gleitschritt nach vorne', 'Fußfeger mit dem Spann', 'Sprung mit Doppeltritt'], '');
+  L.mc('Ashi-fumikae, wenn die Bewegung danach nach vorne geht: Was passiert zuerst?', ['Der vordere Fuß setzt zurück, dann der hintere nach vorne', 'Der hintere Fuß setzt vor, dann der vordere zurück', 'Beide springen gleichzeitig', 'Der vordere Fuß dreht sich auf der Stelle'], 'Die Energie geht in Richtung der Handlung.');
+  L.mc('Wozu dienen die kreisförmigen Körperdrehungen (Tai-sabaki)?', ['Zum Ausweichen aus der Angriffslinie im Kumite und bei Partnerübungen', 'Zum Gruß', 'Zum Aufwärmen der Hüfte', 'Für Sprungtritte'], '');
+  L.mc('Tai-sabaki mit Drehung bis 180°: Was macht der vordere Fuß?', ['Er dreht sich auf der Stelle, der hintere setzt im Bogen um', 'Er setzt im Bogen um, der hintere bleibt', 'Er springt über den hinteren', 'Er wird angehoben'], '');
+  L.mc('Was ist „Yoko-sashi-ashi“?', ['Seitlicher Übersetzschritt: ein Fuß setzt vor dem anderen über, dann tritt dieser seitlich weiter', 'Gleitschritt nach vorne', 'Fußfeger mit der Wade', 'Drehung um 180°'], '');
+  L.mc('In welchen Kata kommt Yoko-sashi-ashi besonders oft vor?', ['In den Tekki-Kata', 'In Heian Shodan', 'In keiner Kata', 'Nur in Jion'], '');
+  L.mc('Mit welchem Fußtritt wird Yoko-sashi-ashi im Kihon meist verbunden?', ['Yoko-geri', 'Mae-geri', 'Ushiro-geri', 'Mikazuki-geri'], '');
+  L.mc('Wie unterscheidet sich Shaho-sashi-ashi von Yoko-sashi-ashi?', ['Er wird diagonal ausgeführt', 'Er wird rückwärts ausgeführt', 'Er wird gesprungen', 'Es gibt keinen Unterschied im Namen'], '');
+  L.mc('Warum muss man Fußarbeit eigens üben?', ['Weil die richtige Distanz für Abwehr und Konter davon abhängt', 'Weil sie in Prüfungen nicht vorkommt', 'Damit die Kata schneller vorbei ist', 'Weil die Hände sonst ermüden'], '');
+  L.mc('Womit fegt Haisoku-ashi-barai?', ['Mit dem Spann', 'Mit der Fußsohle', 'Mit der Wade', 'Mit dem Knie'], '');
+  L.mc('Womit fegt Teisoku-ashi-barai?', ['Mit der Fußsohle', 'Mit dem Spann', 'Mit der Wade', 'Mit der Ferse'], '');
+  L.mc('Womit fegt Komura-ashi-barai?', ['Mit der Wade', 'Mit der Fußsohle', 'Mit dem Spann', 'Mit dem Fußballen'], '');
+  L.mc('Was bewirkt ein Fußfeger im Karate?', ['Der Partner verliert kurz das Gleichgewicht und ist der Folgetechnik ausgeliefert', 'Der Partner wird dauerhaft zu Boden geworfen', 'Er ersetzt die Abwehr', 'Er ist nur ein Aufwärmspiel'], '');
+  L.order('Ordne den Ablauf von Tsugi-suri-ashi vorwärts:', ['Hinterer Fuß setzt zum vorderen', 'Vorderer Fuß gleitet weit nach vorne', 'Technik trifft das Ziel'], '');
 
   // ---------- Kihon ----------
   L = SK.qb('ki-tsuki', S.allg);
@@ -186,6 +216,10 @@
   L.mc('Was ist „Morote-zuki“?', ['Doppelfauststoß mit beiden Fäusten', 'Stoß mit der vorderen Hand', 'Hakenstoß', 'Rückwärtsstoß'], '', S.pdf);
   L.mc('Was ist „Kagi-zuki“?', ['Hakenstoß', 'Aufwärtsstoß', 'Bergfauststoß', 'Gerader Stoß'], '', S.pdf);
   L.mc('Welcher Begriff der Theorie zum 5. Kyu bezeichnet drei Fauststöße hintereinander?', ['Sanbon-zuki', 'Ren-geri', 'Gohon-kumite', 'Kizami-zuki'], '', S.po);
+  L.mc('Was ist „Tate-zuki“?', ['Fauststoß mit senkrechter Faust auf dem kürzesten Weg', 'Fauststoß im Bogen', 'Doppelfauststoß', 'Fauststoß nach unten'], '', S.kompakt);
+  L.mc('Was ist „Mawashi-zuki“?', ['Fauststoß im Bogen von außen zum Ziel', 'Gerader Fauststoß', 'Fauststoß nach oben', 'Fauststoß mit dem Handrücken nach unten'], '', S.kompakt);
+  L.mc('Was unterscheidet Awase-zuki von Yama-zuki?', ['Beim Awase-zuki bleibt der Oberkörper aufrecht, die Form ist enger (U-förmig)', 'Awase-zuki ist ein Fußtritt', 'Beim Awase-zuki stößt nur eine Faust', 'Awase-zuki wird nur nach hinten ausgeführt'], '', S.kompakt);
+  L.mc('Womit wird Kizami-zuki häufig unterstützt, um in die Distanz zu kommen?', ['Mit einem Gleitschritt (Suri-ashi)', 'Mit einem Sprung', 'Mit einer Drehung um 180°', 'Mit einem Fußfeger'], '', S.kompakt);
 
   L = SK.qb('ki-uke', S.allg);
   L.mc('Was ist „Gedan-barai“?', ['Abwehr nach unten (fegend)', 'Abwehr nach oben', 'Abwehr von außen nach innen', 'Handkantenabwehr'], '');
@@ -199,6 +233,8 @@
   L.mc('Was ist „Kakiwake-uke“?', ['Abwehr, bei der beide Arme auseinanderdrücken', 'Abwehr mit einem Arm nach unten', 'Abwehr mit der Ferse', 'Abwehr nach oben mit offenen Händen'], '', S.pdf);
   L.mc('Was ist „Osae-uke“?', ['Drückende Abwehr (nach unten)', 'Schöpfende Abwehr', 'Hakenabwehr', 'Ablenkende Abwehr nach oben'], '', S.pdf);
   L.mc('Wie heißt die zum 8. Kyu geforderte Wendung nach Shuto-uke im Kihon?', ['Beidarmiger Gedan-barai in Zk', 'Age-uke in Kb', 'Soto-uke in Kk', 'Shuto-uke in Zk'], '', S.po);
+  L.mc('Was ist „Manji-uke“?', ['Doppelabwehr: eine Hand unten (Gedan-barai), die andere oben', 'Gekreuzte Abwehr über dem Kopf', 'Abwehr mit beiden Handballen', 'Hakenabwehr mit dem Handgelenk'], '', S.kompakt);
+  L.mc('Was gilt laut Grundprinzip für eine Abwehr ohne schnellen Konter?', ['Sie ist unvollständig – außer man verzichtet bewusst aus taktischen Gründen darauf', 'Sie ist immer die beste Lösung', 'Sie ist in Prüfungen verboten', 'Sie heißt Kime'], '', S.kompakt);
 
   L = SK.qb('ki-uchi', S.allg);
   L.mc('Was ist „Uraken-uchi“?', ['Schlag mit dem Faustrücken', 'Schlag mit der Handkante', 'Schlag mit dem Ellbogen', 'Schlag mit dem Handballen'], '');
@@ -207,6 +243,10 @@
   L.mc('Was ist „Empi-uchi“ (Enpi-uchi)?', ['Ellbogenschlag', 'Knieschlag', 'Kopfstoß', 'Fußtritt'], '');
   L.mc('Welche Technik kommt ab dem 5. Kyu nach Yoko-Empi-Uchi hinzu?', ['Tate-Uraken', 'Mawashi-geri', 'Nukite', 'Age-uke'], '', S.po);
   L.mc('Wodurch unterscheidet sich Uchi von Tsuki laut JKA-Buch?', ['Bei Uchi wirkt die Kraft im rechten Winkel zum Unterarm, bei Tsuki in Richtung des gestreckten Unterarms', 'Uchi ist immer mit offener Hand', 'Uchi ist immer Gedan', 'Es gibt keinen Unterschied'], '', S.pdf);
+  L.mc('Welcher Ellbogenschlag geht senkrecht nach unten?', ['Otoshi-enpi', 'Age-enpi', 'Mawashi-enpi', 'Ushiro-enpi'], '', S.kompakt);
+  L.mc('Welcher Ellbogenschlag geht senkrecht nach oben?', ['Age-enpi', 'Otoshi-enpi', 'Yoko-enpi', 'Mae-enpi'], '', S.kompakt);
+  L.mc('In welchem Stand wird Yoko-enpi bevorzugt ausgeführt?', ['Kiba-dachi', 'Neko-ashi-dachi', 'Heisoku-dachi', 'Kosa-dachi'], '', S.kompakt);
+  L.mc('Woher holen Schlagtechniken (Uchi) wie Uraken- oder Shuto-uchi ihre Kraft?', ['Aus dem Schnappen des Ellbogens', 'Aus einem Sprung', 'Nur aus der Schulter', 'Aus dem Kiai'], '', S.kompakt);
 
   L = SK.qb('ki-geri', S.allg);
   L.mc('Was ist „Mae-geri“?', ['Fußtritt nach vorne', 'Fußtritt zur Seite', 'Fußtritt nach hinten', 'Halbkreisfußtritt'], '');
@@ -222,6 +262,10 @@
   L.mc('In welche Richtung(en) sind seitliche Fußtritte in der DJKB-Prüfung auszuführen?', ['In beide Richtungen', 'Nur nach rechts', 'Nur nach links', 'Nach Wahl des Prüflings'], '', S.po);
   L.mc('Was ist „Mikazuki-geri“?', ['Sicheltritt', 'Stampftritt', 'Fußtritt nach hinten', 'Knietritt'], '', S.pdf);
   L.mc('Was ist „Fumikomi“?', ['Stampftritt / Aufstampfen', 'Sprungtritt', 'Sicheltritt', 'Fegetritt'], '', S.pdf);
+  L.mc('Was ist „Ura-mawashi-geri“?', ['Halbkreistritt gegenläufig zum Mawashi-geri', 'Fußtritt nach vorne', 'Stampftritt', 'Kniestoß'], 'Er trifft mit der Sohle oder der Ferse.', S.kompakt);
+  L.mc('Wie entsteht Ushiro-mawashi-geri?', ['Wie Ura-mawashi-geri, aber aus einer Körperdrehung wie beim Ushiro-geri', 'Aus einem Sprung nach vorne', 'Aus Seiza', 'Wie Mae-geri, nur seitlich'], '', S.kompakt);
+  L.mc('Womit trifft Mae-geri-kekomi?', ['Mit der Ferse oder dem Fußballen', 'Mit dem Spann', 'Mit der Fußkante', 'Mit dem Knie'], '', S.kompakt);
+  L.mc('Was gilt beim Kniestoß (Hiza-geri) für Fuß und Zehen?', ['Sie werden zum Schienbein angezogen', 'Sie werden gestreckt', 'Sie zeigen zur Seite', 'Sie berühren den Boden'], '', S.kompakt);
 
   // ---------- Kumite ----------
   L = SK.qb('ku-formen', S.po);
