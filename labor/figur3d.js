@@ -110,8 +110,7 @@
     [1, -1].forEach((s) => {
       cone(add(add(pel, mul(lp, 0.062 * s)), mul(up, 0.03)), add(add(chest, mul(lc, 0.078 * s)), mul(up, -0.06)), 0.112, 0.12, 5);
     });
-    // Jackensaum als eine glatte Form, darunter ein durchgehendes Gesäß (keine zwei Rundungen)
-    cone(add(pel, mul(up, 0.13)), add(add(pel, mul(up, -0.035)), mul(fp, -0.005)), 0.13, 0.134, 5);
+    // Gesäß als durchgehende Form; darüber hängt die Jacke (Shader: jacket)
     const seat = mul(fp, -0.012);
     cone(add(add(J.hipL, seat), mul(up, -0.01)), add(add(J.hipR, seat), mul(up, -0.01)), 0.092, 0.092, 0);
     cone(J.shL, J.shR, 0.066, 0.066, 0);
@@ -157,7 +156,7 @@ uniform float uF;
 uniform vec4 uA[${N}], uB[${N}];
 uniform float uM[${N}];
 uniform int uN, uMode, uStyle;
-uniform vec3 uPel, uUp, uFwd, uLeft, uHead, uHFwd;
+uniform vec3 uPel, uUp, uFwd, uLeft, uHead, uHFwd, uPFwd, uPLeft;
 uniform vec4 uBound;
 uniform vec2 uBase;
 uniform vec4 uDec[6], uDecP[6];
@@ -165,6 +164,19 @@ const vec3 LIG = normalize(vec3(-0.55, 0.95, 0.45));
 const vec3 FIL = normalize(vec3(0.7, 0.45, -0.6));
 
 float smin(float a, float b, float k){ float h = max(k - abs(a - b), 0.0) / k; return min(a, b) - h * h * k * 0.25; }
+// Unterer Teil der Gi-Jacke: ovaler, leicht ausgestellter Stoff, hinten länger als vorne
+vec3 jq(vec3 p){ vec3 q = p - uPel; return vec3(dot(q, uPLeft), dot(q, uUp), dot(q, uPFwd)); }
+float jbot(float z){ return mix(-0.19, -0.12, smoothstep(-0.12, 0.13, z)); }
+float jacket(vec3 p){
+  vec3 q = jq(p);
+  float top = 0.07, bot = jbot(q.z);
+  float u = clamp((top - q.y) / (top + 0.2), 0.0, 1.0);
+  float rx = mix(0.158, 0.19, u), rz = mix(0.118, 0.152, u * u);
+  float e = length(vec2(q.x / rx, (q.z + 0.006) / rz));
+  float ds = (e - 1.0) * min(rx, rz) * 0.9;
+  float dc = max(q.y - top, bot - q.y);
+  return max(ds, dc) - 0.004;
+}
 vec2 map(vec3 p){
   float d = 1e9, best = 1e9, m = 0.0;
   for (int i = 0; i < ${N}; i++) {
@@ -176,6 +188,9 @@ vec2 map(vec3 p){
     if (di < best) { best = di; m = uM[i]; }
     d = smin(d, di, 0.024);
   }
+  float dj = jacket(p);
+  if (dj < best) m = 6.0;
+  d = smin(d, dj, 0.007);
   return vec2(d, m);
 }
 vec3 nrm(vec3 p){
@@ -239,6 +254,14 @@ vec3 baseCol(float m, vec3 p, out float kind){
       if (ln > 0.0) { if (ln > 0.5) kind = 4.0; return mix(gi, gi * 0.62, ln); }
       if (uu - lu > 0.0 && uu - lu < 0.03) { return gi * 0.965; }
     }
+  }
+  if (m > 5.5) {
+    // Jackensaum, Vorderkante der Jacke
+    vec3 q = jq(p);
+    float hem = 1.0 - smoothstep(0.01, 0.016, q.y - jbot(q.z));
+    float edge = q.z > 0.0 ? 1.0 - smoothstep(0.003, 0.0055, abs(q.x - mix(0.07, 0.1, clamp(-q.y / 0.2, 0.0, 1.0)))) : 0.0;
+    if (edge > 0.5) kind = 4.0;
+    return gi * (1.0 - 0.07 * hem) * (1.0 - 0.36 * edge);
   }
   return gi;
 }
@@ -374,7 +397,7 @@ void main(){
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const U = {};
-    ['uRes', 'uRo', 'uCw', 'uCu', 'uCv', 'uF', 'uA', 'uB', 'uM', 'uN', 'uMode', 'uStyle', 'uPel', 'uUp', 'uFwd', 'uLeft', 'uHead', 'uHFwd', 'uBound', 'uBase', 'uDec', 'uDecP'].forEach((n) => (U[n] = gl.getUniformLocation(pr, n)));
+    ['uRes', 'uRo', 'uCw', 'uCu', 'uCv', 'uF', 'uA', 'uB', 'uM', 'uN', 'uMode', 'uStyle', 'uPel', 'uUp', 'uFwd', 'uLeft', 'uHead', 'uHFwd', 'uPFwd', 'uPLeft', 'uBound', 'uBase', 'uDec', 'uDecP'].forEach((n) => (U[n] = gl.getUniformLocation(pr, n)));
     GL = { ok: true, gl, cv, U };
     return GL;
   }
@@ -402,7 +425,7 @@ void main(){
     let mx = [-1e9, -1e9, -1e9];
     P.forEach(([a, b, ra, rb]) => [[a, ra], [b, rb]].forEach(([q, r]) => { for (let i = 0; i < 3; i++) { mn[i] = Math.min(mn[i], q[i] - r); mx[i] = Math.max(mx[i], q[i] + r); } }));
     const c = mul(add(mn, mx), 0.5);
-    return [c[0], c[1], c[2], len(sub(mx, c)) + 0.03];
+    return [c[0], c[1], c[2], len(sub(mx, c)) + 0.06];
   }
 
   // Zeichnet eine Pose in die 2D-Leinwand ctx. mode: 0 alles, 1 nur Boden, 2 nur Figur
@@ -437,6 +460,8 @@ void main(){
     gl.uniform3fv(U.uLeft, J.lc);
     gl.uniform3fv(U.uHead, J.head);
     gl.uniform3fv(U.uHFwd, J.hf);
+    gl.uniform3fv(U.uPFwd, J.fp);
+    gl.uniform3fv(U.uPLeft, J.lp);
     gl.uniform4fv(U.uBound, bounds(P));
     gl.uniform2f(U.uBase, cam.target[0], cam.target[2]);
     const dec = new Float32Array(24);

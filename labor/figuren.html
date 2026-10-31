@@ -224,7 +224,7 @@
 <body>
   <header>
     <h1>Figuren-<span>Labor</span></h1>
-    <p class="lead">Neuer Vorschlag für alle Bilder mit ganzer Figur: ein Karateka in echtem 3D, direkt im Browser berechnet – Licht, weiche Schatten, Gi mit Revers und Gürtel, Fußabdrücke auf der Matte. <b>Mit dem Finger drehen</b>, abspielen, in Zeitlupe ansehen, als <b>Phasenbild</b> (alle Zwischenstellungen wie auf einer Stroboskop-Fotografie) oder mit der <b>Bahn</b> von Faust und Fuß.</p>
+    <p class="lead">Neuer Vorschlag für alle Bilder mit ganzer Figur: ein Karateka in echtem 3D, direkt im Browser berechnet – Licht, weiche Schatten, Gi mit Jacke, Revers und Gürtel, Fußabdrücke auf der Matte. Ohne Abspielen zeigt jede Karte das <b>Kernbild</b>: den aussagekräftigsten Moment im besten Blickwinkel, mit der Ausgangsstellung blass dahinter. <b>Mit dem Finger drehen</b>, abspielen, in Zeitlupe ansehen, als <b>Phasenbild</b> (alle Zwischenstellungen wie auf einer Stroboskop-Fotografie) oder mit der <b>Bahn</b> von Faust und Fuß.</p>
     <div class="styles" role="group" aria-label="Stil">
       <b>Stil:</b>
       <button data-style="0" aria-pressed="true">Gi (realistisch)</button>
@@ -267,29 +267,29 @@
         {
           kind: 'Stand', title: 'Zenkutsu-dachi', text: 'Vom natürlichen Stand in die Vorwärtsstellung mit Gedan-barai. Die Abdrücke auf der Matte zeigen die Gewichtsverteilung, gestrichelt Länge und Breite des Standes.',
           keys: [{ t: 0, p: YOI }, { t: 0.15, p: YOI }, { t: 0.85, p: ZK, e: 'io' }],
-          dur: 2.2, start: 1, eff: (J) => J.ankleL,
-          cam: { target: [0, 0.68, 0.06], dist: 4.4, yaw: -58, pitch: 18 },
+          dur: 2.2, start: 1, eff: (J) => J.ankleL, ghost: [],
+          cam: { target: [0, 0.68, 0.06], dist: 4.3, yaw: -62, pitch: 20 },
           labels: true, old: () => SK.gfx.stanceSideSvg('zenkutsu'),
         },
         {
           kind: 'Handtechnik', title: 'Gyaku-zuki', text: 'Die Hüfte dreht von halbseitlich (Hanmi) nach vorne, die hintere Faust stößt, die vordere zieht zur Hüfte (Hikite). In 3D sieht man die Hüftdrehung, die eine flache Skizze nicht zeigen kann.',
           keys: [{ t: 0, p: ZK }, { t: 0.25, p: ZK }, { t: 0.6, p: ZK_GZ, e: 'kime' }],
-          dur: 1.5, start: 1, eff: (J) => J.fistR,
-          cam: { target: [0, 0.78, 0.2], dist: 4.0, yaw: -48, pitch: 12 },
+          dur: 1.5, start: 1, eff: (J) => J.fistR, ghost: [0],
+          cam: { target: [0, 0.78, 0.2], dist: 4.0, yaw: -52, pitch: 16 },
           old: () => SK.gfx.MOVES['gyaku-zuki'](),
         },
         {
           kind: 'Fußtritt', title: 'Mae-geri', text: 'Knie hoch, Unterschenkel schnappt nach vorne, sofort zurück. Das Phasenbild zeigt Ausholen, Treffen und Zurückziehen in einem Bild.',
           keys: [{ t: 0, p: ZK }, { t: 0.12, p: ZK }, { t: 0.36, p: CHAMBER }, { t: 0.5, p: KICK, e: 'kime' }, { t: 0.64, p: CHAMBER }, { t: 0.9, p: ZK }],
-          dur: 2.0, start: 0.5, eff: (J) => J.toeR,
-          cam: { target: [0, 0.8, 0.35], dist: 4.4, yaw: -82, pitch: 8 },
+          dur: 2.0, start: 0.5, eff: (J) => J.toeR, ghost: [0.36],
+          cam: { target: [0, 0.8, 0.42], dist: 4.3, yaw: -90, pitch: 6 },
           old: () => SK.gfx.MOVES['mae-geri'](),
         },
         {
           kind: 'Schritt', title: 'Oi-zuki', text: 'Schritt nach vorne: der hintere Fuß kommt in der Mitte zum Standbein und geht im Bogen nach vorne, am Ende stößt die Faust auf der Seite des vorderen Beins. Der blasse Abdruck zeigt, wo der Fuß gestartet ist.',
           keys: [{ t: 0, p: ZK }, { t: 0.12, p: ZK }, { t: 0.5, p: OI_MID }, { t: 0.82, p: OI_END, e: 'kime' }],
-          dur: 2.0, start: 1, eff: (J) => J.ankleR, ghostR: true,
-          cam: { target: [0, 0.7, 0.62], dist: 4.9, yaw: -64, pitch: 22 },
+          dur: 2.0, start: 1, eff: (J) => J.ankleR, ghostR: true, ghost: [0],
+          cam: { target: [0, 0.72, 0.62], dist: 4.8, yaw: -74, pitch: 16 },
           old: () => SK.gfx.MOVES['oi-zuki'](),
         },
       ];
@@ -312,9 +312,10 @@
             <button data-t="slow" aria-pressed="false">Zeitlupe</button>
             <button data-t="phase" aria-pressed="false">Phasenbild</button>
             <button data-t="trail" aria-pressed="true">Bahn</button>
+            <button data-t="ghostOn" aria-pressed="true">Ausgangsstellung</button>
           </div>
           <div class="row">
-            <button data-v="schraeg" aria-pressed="true">Schräg</button>
+            <button data-v="kern" aria-pressed="true" title="Bester Moment und Blickwinkel">Kernbild</button>
             <button data-v="seite" aria-pressed="false">Seite</button>
             <button data-v="vorne" aria-pressed="false">Vorne</button>
             <button data-v="oben" aria-pressed="false">Oben</button>
@@ -325,7 +326,7 @@
         const cv = card.querySelector('canvas');
         const v = {
           ex, cv, ctx: cv.getContext('2d'), card,
-          pose: F.timeline(ex.keys), t: ex.start, playing: false, slow: false, phase: false, trail: true,
+          pose: F.timeline(ex.keys), t: ex.start, playing: false, slow: false, phase: false, trail: true, ghostOn: true,
           cam: Object.assign({}, ex.cam), home: Object.assign({}, ex.cam), dirty: true, visible: true,
         };
         v.start = F.solve(v.pose(0));
@@ -346,12 +347,18 @@
           b.setAttribute('aria-pressed', String(v[k]));
           v.dirty = true;
         }));
-        const presets = { schraeg: v.home.yaw, seite: -90, vorne: 0, oben: null };
+        const presets = { kern: v.home.yaw, seite: -90, vorne: 0, oben: null };
         card.querySelectorAll('[data-v]').forEach((b) => (b.onclick = () => {
           card.querySelectorAll('[data-v]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
           const k = b.dataset.v;
           if (k === 'oben') Object.assign(v.cam, { yaw: v.home.yaw, pitch: 84 });
-          else Object.assign(v.cam, { yaw: presets[k], pitch: k === 'schraeg' ? v.home.pitch : 6 });
+          else if (k === 'kern') {
+            // Kernbild: der aussagekräftigste Moment aus dem Blickwinkel, in dem man die Technik am besten erkennt
+            Object.assign(v.cam, v.home);
+            v.t = ex.start;
+            v.playing = false;
+            play.textContent = '▶ Abspielen';
+          } else Object.assign(v.cam, { yaw: presets[k], pitch: 6 });
           v.dirty = true;
         }));
         range.oninput = () => { v.t = range.value / 1000; v.playing = false; play.textContent = '▶ Abspielen'; v.dirty = true; };
@@ -464,7 +471,14 @@
         if (v.ex.ghostR) decals.push(Object.assign(foot(v.start, 'R', 0.35, 0.3)));
         v.ctx.clearRect(0, 0, w, h);
         let C;
-        if (v.phase) {
+        const ghosts = !v.playing && v.ghostOn && !v.phase ? v.ex.ghost.filter((x) => Math.abs(x - t) > 0.05) : [];
+        if (ghosts.length) {
+          // Standbild: Ausgangsstellung blass hinter der Endstellung
+          C = F.draw(v.ctx, w, h, P, v.cam, { mode: 1, style, decals });
+          ghosts.forEach((x) => { v.ctx.globalAlpha = 0.3; F.draw(v.ctx, w, h, v.pose(x), v.cam, { mode: 2, style }); });
+          v.ctx.globalAlpha = 1;
+          F.draw(v.ctx, w, h, P, v.cam, { mode: 2, style });
+        } else if (v.phase) {
           // Phasenbild: Boden, blasse Zwischenstellungen, aktuelle Stellung obenauf
           C = F.draw(v.ctx, w, h, P, v.cam, { mode: 1, style, decals });
           const steps = [0.2, 0.35, 0.5, 0.65, 0.8].map((x) => v.ex.keys[0].t + x * (v.ex.keys[v.ex.keys.length - 1].t - v.ex.keys[0].t)).filter((x) => Math.abs(x - t) > 0.04);
