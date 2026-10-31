@@ -955,5 +955,13 @@
   });
   route();
 
+  // App auf dem Gerät ablegen (sw.js) – erst nach dem Laden, damit es den Start nicht bremst.
+  // Lokal nur mit ?sw, sonst würden beim Entwickeln alte Dateien aus dem Speicher kommen.
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || /[?&]sw\b/.test(location.search))) {
+    const reg = () => navigator.serviceWorker.register('sw.js').catch(() => {});
+    if (document.readyState === 'complete') reg();
+    else window.addEventListener('load', reg);
+  }
+
   SK.debug = { units, lessonIndex, qByLesson };
 })();

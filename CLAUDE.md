@@ -10,6 +10,7 @@
 - `tools/test/smoke.html` nur direkt vor dem Push laufen lassen, nicht nach jeder Änderung – muss „OK“ melden.
 - Bei jeder veröffentlichten Änderung die Version mit `node tools/version.js patch|minor|major` hochzählen (setzt Version, Datum, Uhrzeit und `?v=` in `index.html`). Die Version steht im Commit-Titel, z. B. „… (v1.11.1)“.
 - Neue Skripte in `index.html`, `tools/test/validate.html` und `tools/test/smoke.html` gleichermaßen eintragen.
+- Die Startseite steht zusätzlich fest in `index.html` (für schnelles Laden): Änderungen an `viewStart()` in `js/app.js` dort mitziehen. Grafiken und Lektionstexte nicht beim Start erzeugen, sondern erst bei Bedarf (`learn: () => …`, `SK.util.lazy`).
 
 ## Kata-Ansage (Bodenkarte) ändern
 - Korrekturen an einer bestimmten Stelle einer Kata möglichst in den Daten dieser Kata (`ansage` in `data/kata-*.js`) machen, nicht in den allgemeinen Regeln in `js/kata-ansage.js` (Stände, Ausgleich, Gewichte). Muss doch eine allgemeine Regel geändert werden, vorher sagen, welche Kata und Stände sie betrifft.

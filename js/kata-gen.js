@@ -198,7 +198,7 @@
     for (let from = 1; from <= k.moves; from += CHUNK) {
       const to = Math.min(k.moves, from + CHUNK - 1);
       const lid = `${k.id}-b${from}`;
-      unit.lessons.push({ id: lid, title: `Bewegungen ${from}–${to}`, learn: moveTable(k, from, to) });
+      unit.lessons.push({ id: lid, title: `Bewegungen ${from}–${to}`, learn: () => moveTable(k, from, to) });
       L = SK.qb(lid, P(k.firstPage));
       for (let n = from; n <= to; n++) {
         const row = k.seq[n - 1];
@@ -222,7 +222,7 @@
     unit.lessons.push({
       id: ordId,
       title: 'Reihenfolge & Nummern',
-      learn: `<p>Hier wird der gesamte Ablauf geprüft: Bewegungsfolgen sortieren und Techniken der richtigen Bewegungsnummer zuordnen.</p>${moveTable(k, 1, k.moves)}`,
+      learn: () => `<p>Hier wird der gesamte Ablauf geprüft: Bewegungsfolgen sortieren und Techniken der richtigen Bewegungsnummer zuordnen.</p>${moveTable(k, 1, k.moves)}`,
     });
     L = SK.qb(ordId, P(k.firstPage));
     for (let s = 1; s + 3 <= k.moves; s += 2) {
@@ -236,6 +236,7 @@
       L.mc(`${k.name}: In welcher Bewegung wird „${row[2]}“ ausgeführt?`, numberOptions(row[0], k.moves, 3), `Stand: ${row[1]}`, P(row[3]));
     });
     addContext(k, new Set(unit.lessons.map((l) => l.id)));
+    SK.lazyLearn(unit);
     return unit;
   }
 

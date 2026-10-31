@@ -4,27 +4,29 @@
   'use strict';
   const G = SK.gfx;
   const grid = (...figs) => `<div class="gfx-grid">${figs.join('')}</div>`;
+  // Standbilder erst erzeugen, wenn eine Lektion sie zeigt.
   const S = {
-    musubi: G.stanceFigure('musubi'),
-    heisoku: G.stanceFigure('heisoku'),
-    hachiji: G.stanceFigure('hachiji'),
-    zenkutsu: G.stanceFigure('zenkutsu', false, 'Hidari Zenkutsu-dachi'),
-    zenkutsuR: G.stanceFigure('zenkutsu', true, 'Migi Zenkutsu-dachi'),
-    kokutsu: G.stanceFigure('kokutsu', false, 'Migi Kokutsu-dachi'),
-    kokutsuL: G.stanceFigure('kokutsu', true, 'Hidari Kokutsu-dachi'),
-    kiba: G.stanceFigure('kiba'),
-    kosa: G.stanceFigure('kosa', true, 'Migi Ashi-mae Kosa-dachi'),
-    neko: G.stanceFigure('neko'),
-    fudo: G.stanceFigure('fudo'),
-    hangetsu: G.stanceFigure('hangetsu'),
-    sanchin: G.stanceFigure('sanchin'),
-    renoji: G.stanceFigure('renoji'),
-    teiji: G.stanceFigure('teiji'),
-    ashizenkutsu: G.stanceFigure('ashizenkutsu', false, 'Hidari Ashi-zenkutsu'),
-    hizakutsu: G.stanceFigure('hizakutsu', false, 'Hidari Hizakutsu'),
-    ashidachi: G.stanceFigure('ashidachi', false, 'Hidari Ashi-dachi'),
-    orishiki: G.stanceFigure('orishiki', false, 'Migi Ashi Orishiki Hidari Hiza-tate'),
+    musubi: () => G.stanceFigure('musubi'),
+    heisoku: () => G.stanceFigure('heisoku'),
+    hachiji: () => G.stanceFigure('hachiji'),
+    zenkutsu: () => G.stanceFigure('zenkutsu', false, 'Hidari Zenkutsu-dachi'),
+    zenkutsuR: () => G.stanceFigure('zenkutsu', true, 'Migi Zenkutsu-dachi'),
+    kokutsu: () => G.stanceFigure('kokutsu', false, 'Migi Kokutsu-dachi'),
+    kokutsuL: () => G.stanceFigure('kokutsu', true, 'Hidari Kokutsu-dachi'),
+    kiba: () => G.stanceFigure('kiba'),
+    kosa: () => G.stanceFigure('kosa', true, 'Migi Ashi-mae Kosa-dachi'),
+    neko: () => G.stanceFigure('neko'),
+    fudo: () => G.stanceFigure('fudo'),
+    hangetsu: () => G.stanceFigure('hangetsu'),
+    sanchin: () => G.stanceFigure('sanchin'),
+    renoji: () => G.stanceFigure('renoji'),
+    teiji: () => G.stanceFigure('teiji'),
+    ashizenkutsu: () => G.stanceFigure('ashizenkutsu', false, 'Hidari Ashi-zenkutsu'),
+    hizakutsu: () => G.stanceFigure('hizakutsu', false, 'Hidari Hizakutsu'),
+    ashidachi: () => G.stanceFigure('ashidachi', false, 'Hidari Ashi-dachi'),
+    orishiki: () => G.stanceFigure('orishiki', false, 'Migi Ashi Orishiki Hidari Hiza-tate'),
   };
+  Object.keys(S).forEach((k) => SK.util.lazy(S, k, S[k]));
   const W = (key, caption, note) => G.figure(G.WEAPONS[key](), caption, note, `wp:${key}`);
   const M = (key, caption, note) => G.figure(G.MOVES[key](), caption, note, `mv:${key}`);
   const T = (key, caption, note) => G.figure(G.TECH[key](), caption, note, `tc:${key}`);
@@ -36,7 +38,7 @@
       lessons: [
         {
           id: 'et-dojo', title: 'Im Dojo', minGrade: '9kyu',
-          learn: `
+          learn: () => `
             <p><b>Dojo</b> bedeutet „Ort des Weges“. Karate beginnt und endet mit Respekt (Rei).</p>
             <ul>
               <li><b>Rei</b> – Gruß / Verbeugung. Im Stand meist aus <b>Musubi-dachi</b>.</li>
@@ -52,7 +54,7 @@
         },
         {
           id: 'et-dojokun', title: 'Dojo-Kun', minGrade: '9kyu',
-          learn: `
+          learn: () => `
             <p>Das <b>Dojo-Kun</b> sind die fünf Leitsätze des Shotokan-Karate. Jeder beginnt mit <b>„Hitotsu“</b> („eins“ / „erstens“) – das zeigt, dass alle gleich wichtig sind.</p>
             <ol>
               <li><b>Hitotsu! Jinkaku kansei ni tsutomuru koto</b> – Nach Vollendung des Charakters streben.</li>
@@ -69,7 +71,7 @@
       lessons: [
         {
           id: 'ge-funakoshi', title: 'Gichin Funakoshi', minGrade: '9kyu',
-          learn: `
+          learn: () => `
             <ul>
               <li><b>Gichin Funakoshi</b> (1868–1957) stammt aus <b>Shuri auf Okinawa</b> und gilt als Vater des modernen Karate.</li>
               <li>Seine Lehrer waren u. a. <b>Anko Azato</b> und <b>Anko Itosu</b>.</li>
@@ -81,7 +83,7 @@
         },
         {
           id: 'ge-jka', title: 'JKA & DJKB', minGrade: '8kyu',
-          learn: `
+          learn: () => `
             <ul>
               <li>Die <b>Japan Karate Association (JKA)</b> wurde 1949 gegründet; Funakoshi wird im JKA-Kata-Buch als ihr „Grand Master“ bezeichnet.</li>
               <li><b>Masatoshi Nakayama</b> (1913–1987) war langjähriger Chefausbilder der JKA und Autor von <i>Best Karate</i> und <i>Dynamic Karate</i>. Unter ihm entstand das JKA-Instruktorenprogramm.</li>
@@ -92,7 +94,7 @@
         },
         {
           id: 'ge-nijukun', title: 'Niju-Kun (20 Regeln)', minGrade: '6kyu',
-          learn: `
+          learn: () => `
             <p>Die <b>Shoto Niju-Kun</b> sind Funakoshis 20 Leitsätze. Eine Auswahl:</p>
             <ol>
               <li>Karate beginnt mit Rei und endet mit Rei.</li>
@@ -124,7 +126,7 @@
       lessons: [
         {
           id: 'te-zahlen', title: 'Zählen & Richtungen', minGrade: '9kyu',
-          learn: `
+          learn: () => `
             <table class="moves"><tbody>
               <tr><td>1</td><td>Ichi</td><td>6</td><td>Roku</td></tr>
               <tr><td>2</td><td>Ni</td><td>7</td><td>Shichi (Nana)</td></tr>
@@ -143,7 +145,7 @@
         },
         {
           id: 'te-koerper', title: 'Körperwaffen', minGrade: '8kyu',
-          learn: `
+          learn: () => `
             <ul>
               <li><b>Seiken</b> – Vorderseite der Faust (Knöchel von Zeige- und Mittelfinger)</li>
               <li><b>Uraken</b> – Faustrücken</li>
@@ -162,7 +164,7 @@
         },
         {
           id: 'te-konzepte', title: 'Wichtige Konzepte', minGrade: '7kyu',
-          learn: `
+          learn: () => `
             <ul>
               <li><b>Kiai</b> – Kampfschrei; Vereinigung von Kraft und Geist im Moment der Technik.</li>
               <li><b>Kime</b> – Konzentration aller Kraft im Treffpunkt; <b>Kime-Waza</b> – entscheidende (abschließende) Technik.</li>
@@ -201,7 +203,7 @@
       lessons: [
         {
           id: 'da-grund', title: 'Grund- & Natürliche Stände', minGrade: '9kyu',
-          learn: `<p>Stabile Stände sind das <b>Fundament</b> jeder Technik: Steht der Körper nicht sicher, verpufft die Kraft von Armen und Beinen. Jede Grafik zeigt die Füße von oben mit der Gewichtsverteilung; „Figur &amp; Fußbild“ zeigt darüber die Figur – gestrichelte Linien verbinden jeden Fuß mit seinem Abdruck, das Fadenkreuz markiert den Schwerpunkt, darunter stehen ungefähre Maße.</p>
+          learn: () => `<p>Stabile Stände sind das <b>Fundament</b> jeder Technik: Steht der Körper nicht sicher, verpufft die Kraft von Armen und Beinen. Jede Grafik zeigt die Füße von oben mit der Gewichtsverteilung; „Figur &amp; Fußbild“ zeigt darüber die Figur – gestrichelte Linien verbinden jeden Fuß mit seinem Abdruck, das Fadenkreuz markiert den Schwerpunkt, darunter stehen ungefähre Maße.</p>
             ${grid(S.musubi, S.heisoku, S.hachiji)}
             <ul>
               <li><b>Musubi-dachi</b>: Grußstellung – Fersen zusammen, Fußspitzen geöffnet; im Shotokan der Stand für den Gruß im Stehen (Ritsu-rei).</li>
@@ -211,7 +213,7 @@
         },
         {
           id: 'da-kampf', title: 'Zenkutsu, Kokutsu, Kiba', minGrade: '9kyu',
-          learn: `${grid(S.zenkutsu, S.zenkutsuR, S.kokutsu, S.kokutsuL, S.kiba)}
+          learn: () => `${grid(S.zenkutsu, S.zenkutsuR, S.kokutsu, S.kokutsuL, S.kiba)}
             <p class="muted small">Die Prozentzahlen zeigen, wie das Gewicht verteilt ist. „Figur & Fußbild“ zeigt die Figur und darunter dieselben Füße von oben – gestrichelte Linien verbinden jeden Fuß mit seinem Abdruck, das Fadenkreuz markiert den Schwerpunkt. Im JKA-Kata-Buch heißt Zenkutsu-dachi nach dem <b>vorderen</b> Bein, Kokutsu-dachi nach dem <b>hinteren</b> (belasteten) Bein – z. B. „Migi Kokutsu-dachi, Hidari Shuto-uke“: rechtes Bein hinten, linkes vorne.</p>
             <ul>
               <li><b>Zenkutsu-dachi (Zk)</b> – Vorwärtsstellung: vorderes Knie gebeugt (über dem Fuß), hinteres Bein gestreckt, Gewicht überwiegend vorne. Der am häufigsten genutzte Stand im Shotokan.</li>
@@ -223,7 +225,7 @@
         },
         {
           id: 'da-weitere', title: 'Weitere Stände', minGrade: '5kyu',
-          learn: `${grid(S.kosa, S.neko, S.fudo, S.hangetsu, S.sanchin, S.renoji, S.teiji)}
+          learn: () => `${grid(S.kosa, S.neko, S.fudo, S.hangetsu, S.sanchin, S.renoji, S.teiji)}
             <ul>
               <li><b>Kosa-dachi</b> – Kreuzstand (Begriff der Theorie zum 1. Dan); auch für Anwendungen mit Körperdrehung.</li>
               <li><b>Neko-ashi-dachi</b> – Katzenfußstand, fast das ganze Gewicht hinten – wie eine Katze kurz vor dem Sprung.</li>
@@ -237,7 +239,7 @@
         },
         {
           id: 'da-ashi', title: 'Fußbewegungen (Ashi-sabaki)', minGrade: '8kyu',
-          learn: `
+          learn: () => `
             <p>Gute Beweglichkeit auf dem Boden ist nicht selbstverständlich und muss eigens geübt werden. Selbst Fortgeschrittene schätzen die Distanz oft falsch ein: Eine Abwehr scheitert, weil sie nicht durch Gleitschritt oder Körperdrehung unterstützt wird, oder der Konter wird schwach, weil der Abstand zu kurz oder zu groß ist.</p>
             <p class="muted small">So liest man die Fußbilder: Blick von oben, „vorne“ ist oben. Blass = Ausgangslage, kräftig rot = Endlage, rot gestrichelt = Weg des Fußes, Zahlen = Reihenfolge. „▶ Bewegung“ spielt den Schritt ab.</p>
             <h4>Schreiten (Ayumi-ashi)</h4>
@@ -277,7 +279,7 @@
       lessons: [
         {
           id: 'ki-tsuki', title: 'Tsuki – Fauststöße', minGrade: '9kyu',
-          learn: `
+          learn: () => `
             <ul>
               <li><b>Choku-zuki</b> – gerader Fauststoß im Stand.</li>
               <li><b>Oi-zuki</b> (Jun-zuki) – Stoß mit der Hand der Seite des vorderen Beins, meist mit Schritt.</li>
@@ -296,7 +298,7 @@
         },
         {
           id: 'ki-uke', title: 'Uke – Abwehrtechniken', minGrade: '9kyu',
-          learn: `
+          learn: () => `
             <ul>
               <li><b>Gedan-barai</b> – Abwehr nach unten (fegend).</li>
               <li><b>Age-uke</b> – Abwehr nach oben (Jodan).</li>
@@ -317,7 +319,7 @@
         },
         {
           id: 'ki-uchi', title: 'Uchi – Schläge', minGrade: '7kyu',
-          learn: `
+          learn: () => `
             <ul>
               <li><b>Uraken-uchi</b> – Faustrückenschlag (z. B. Tate-uraken, Yoko-mawashi-uchi).</li>
               <li><b>Tettsui-uchi / Kentsui-uchi</b> – Hammerfaustschlag.</li>
@@ -342,7 +344,7 @@
         },
         {
           id: 'ki-geri', title: 'Geri – Fußtritte', minGrade: '8kyu',
-          learn: `
+          learn: () => `
             <ul>
               <li><b>Mae-geri</b> – Fußtritt nach vorne (Fußballen); Keage = schnappend, Kekomi = stoßend.</li>
               <li><b>Yoko-geri-keage</b> – seitlicher Schnapptritt; <b>Yoko-geri-kekomi</b> – seitlicher Stoßtritt (Fußkante).</li>
@@ -367,7 +369,7 @@
       lessons: [
         {
           id: 'ku-formen', title: 'Kumite-Formen', minGrade: '9kyu',
-          learn: `
+          learn: () => `
             <ul>
               <li><b>Gohon-Kumite</b> – Fünfschritt-Kumite: 5 Angriffe fortlaufend, 5 Abwehren, dann Gegenangriff mit Kiai (DJKB: 8. und 7. Kyu).</li>
               <li><b>Kihon-Ippon-Kumite</b> – Einschritt-Grundkumite: ein angesagter Angriff, Abwehr und Konter (DJKB: 9. Kyu sowie 6.–3. Kyu).</li>
@@ -381,7 +383,7 @@
         },
         {
           id: 'ku-prinzipien', title: 'Prinzipien im Kumite', minGrade: '6kyu',
-          learn: `
+          learn: () => `
             <p>Aus den Vorbemerkungen der DJKB-Prüfungsordnung:</p>
             <ul>
               <li><b>Stufe I (9.–7. Kyu)</b>: Kihon nur vorwärts, damit sich Anfänger auf die Stellung konzentrieren können. Im Kumite zielgenau und mit korrekter Distanz – der Abwehrende blockt dicht vor seinem Körper kraftvoll.</li>
@@ -395,4 +397,5 @@
       ],
     },
   ];
+  SK.generalUnits.forEach(SK.lazyLearn);
 })();

@@ -20,9 +20,12 @@
   };
   SK.bookSrc = (n) => `${SK.BOOK_SOURCE}, ${SK.bookPages(n)}`;
   // Bei jeder veröffentlichten Änderung hochzählen: node tools/version.js patch|minor|major (setzt auch ?v= in index.html)
-  SK.VERSION = '1.40.0';
+  SK.VERSION = '1.41.0';
   SK.VERSION_DATE = '31.10.2026';
-  SK.VERSION_TIME = '12:56';
+  SK.VERSION_TIME = '13:44';
+
+  // Lektionstexte als Funktion (learn: () => `…`) werden erst beim ersten Öffnen erzeugt.
+  SK.lazyLearn = (unit) => unit.lessons.forEach((l) => typeof l.learn === 'function' && SK.util.lazy(l, 'learn', l.learn));
 
   SK.util = {
     shuffle(arr) {
@@ -52,6 +55,22 @@
       const d = new Date(isoDate + 'T12:00:00');
       d.setDate(d.getDate() + days);
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    },
+    // Eigenschaft erst beim ersten Lesen berechnen (z. B. Grafiken), danach als fester Wert – spart Zeit beim Start.
+    lazy(obj, prop, fn) {
+      Object.defineProperty(obj, prop, {
+        configurable: true,
+        enumerable: true,
+        get() {
+          const v = fn();
+          Object.defineProperty(obj, prop, { value: v, writable: true, configurable: true, enumerable: true });
+          return v;
+        },
+        set(v) {
+          Object.defineProperty(obj, prop, { value: v, writable: true, configurable: true, enumerable: true });
+        },
+      });
+      return obj;
     },
     el(tag, attrs, ...children) {
       const node = document.createElement(tag);

@@ -401,6 +401,7 @@
 
   /* ---------- HTML und Einbinden ---------- */
   function html(key, o) {
+    start();
     const opt = o || {};
     const e = D[split(key).id];
     const anim = e && !e.still;
@@ -576,8 +577,14 @@
     });
     window.addEventListener('resize', () => kick());
   }
-  if (document.body) init();
-  else document.addEventListener('DOMContentLoaded', init);
+  // Erst einrichten, wenn die erste Figur gebraucht wird – die WebGL-Prüfung kostet beim Start Zeit.
+  let started = false;
+  function start() {
+    if (started) return;
+    started = true;
+    if (document.body) init();
+    else document.addEventListener('DOMContentLoaded', init);
+  }
 
   SK.fig3d = { ok, has, html, entry, paint, still };
 })();

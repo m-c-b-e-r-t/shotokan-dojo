@@ -33,6 +33,15 @@
 
   async function run() {
     try {
+      // Startseite in index.html (sofort sichtbar) muss zu viewStart() passen.
+      if (location.protocol === 'file:') log.push('Startseite in index.html: übersprungen (file://)');
+      else {
+        const doc = new DOMParser().parseFromString(await (await fetch('../../index.html')).text(), 'text/html');
+        const norm = (n) => (n ? n.outerHTML.replace(/>\s+</g, '><').replace(/\s+/g, ' ') : 'FEHLT');
+        const same = ['.hero', '.tiles'].every((s) => norm(doc.querySelector(`#app > ${s}`)) === norm(app.querySelector(`:scope > ${s}`)));
+        log.push(`Startseite in index.html: ${same ? 'gleich wie viewStart()' : 'FEHLER'}`);
+        if (!same) throw new Error('Startseite in index.html weicht von viewStart() in js/app.js ab');
+      }
       for (const g of SK.grades.concat([SK.higherDan])) {
         location.hash = `#/exam/${g.id}`;
         await wait();

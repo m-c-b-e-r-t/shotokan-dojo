@@ -191,22 +191,29 @@
     SK.glossaryCats.forEach((c) => {
       const items = SK.glossary.filter((e) => e.cat === c.id);
       const lid = `gl-${c.id}`;
-      unit.lessons.push({ id: lid, title: c.title, learn: SK.glossaryHtml(items) });
-      // Quizbilder ohne Beschriftung (würde die Antwort verraten); Animation per Knopf (q.gfx)
-      const svgs = new Map(items.map((e) => [e, e.img ? G.plainSvg(e.img) : null]));
+      unit.lessons.push(SK.util.lazy({ id: lid, title: c.title }, 'learn', () => SK.glossaryHtml(items)));
+      // Quizbilder ohne Beschriftung (würde die Antwort verraten); Animation per Knopf (q.gfx).
+      // Bilder erst erzeugen, wenn eine Frage sie zeigt – gleicher Grafik-Schlüssel = gleiches Bild.
+      const uris = new Map();
+      const uri = (e) => () => {
+        if (!uris.has(e.img.key)) uris.set(e.img.key, G.dataUri(G.plainSvg(e.img)));
+        return uris.get(e.img.key);
+      };
       items.forEach((e) => {
         const others = items.filter((o) => o !== e);
         const pick = (field) => SK.util.shuffle(others.map((o) => o[field]).filter((v, i, a) => v !== e[field] && a.indexOf(v) === i)).slice(0, 3);
         const id = `gl-${slug(e.t)}`;
         const base = { lesson: lid, grp: id, type: 'mc', answer: 0, src: e.src };
-        const svg = svgs.get(e);
-        const own = svg && !others.some((o) => svgs.get(o) === svg);
+        const own = !!e.img && !others.some((o) => o.img && o.img.key === e.img.key);
         const anim = e.img && /^(mv|tc|as):/.test(e.img.key) ? { gfx: e.img.key } : {};
         SK.questions.push(Object.assign({ id: `${id}-a`, q: `Was ist „${e.t}“?`, options: [e.de].concat(pick('de')), explain: '' }, base));
         // Bild nur hier, wenn es keine eigene Bildfrage gibt – sonst wären -b und -c fast gleich.
-        SK.questions.push(Object.assign({ id: `${id}-b`, q: `Wie heißt: ${e.de}?`, options: [e.t].concat(pick('t')), explain: '' }, base, svg && !own ? Object.assign({ img: G.dataUri(svg) }, anim) : {}));
+        const qb = Object.assign({ id: `${id}-b`, q: `Wie heißt: ${e.de}?`, options: [e.t].concat(pick('t')), explain: '' }, base, e.img && !own ? anim : {});
+        if (e.img && !own) SK.util.lazy(qb, 'img', uri(e));
+        SK.questions.push(qb);
         if (own) {
-          SK.questions.push(Object.assign({ id: `${id}-c`, q: c.ask, img: G.dataUri(svg), options: [e.t].concat(pick('t')), explain: e.de }, base, anim));
+          const qc = Object.assign({ id: `${id}-c`, q: c.ask, options: [e.t].concat(pick('t')), explain: e.de }, base, anim);
+          SK.questions.push(SK.util.lazy(qc, 'img', uri(e)));
         }
       });
     });

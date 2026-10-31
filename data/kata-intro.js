@@ -14,7 +14,7 @@
       {
         id: 'kb-buch',
         title: 'Über das Buch',
-        learn: `
+        learn: () => `
           <p><b>Karate-Do Kata Vol. 1</b> ist das offizielle Lehrbuch der <b>JKA (Shihan-kai)</b>. Die englische Ausgabe erschien 2003 und fasst die japanischen Bände 1 und 2 zusammen.</p>
           <ul>
             <li>Ziel: Die Kata sollen nach <b>einem einheitlichen Modell</b> definiert werden. Die Arbeit begann im April 1993 durch die Instruktoren des JKA-Hauptquartiers und wurde im September 1993 vom Shihan-kai genehmigt.</li>
@@ -27,7 +27,7 @@
       {
         id: 'kb-prinzipien',
         title: 'Prinzipien der Kata',
-        learn: `
+        learn: () => `
           <ul>
             <li>Das Ziel des Karate liegt in der Fähigkeit, <b>Kime</b> zu erzeugen – reines Kime entsteht nur durch unendlich intensives Üben.</li>
             <li>Eine Kata besteht aus Techniken, Ständen, <b>Enbusen</b> (Bewegungslinie), Anzahl der Bewegungen sowie drei Schlüsselelementen:
@@ -40,7 +40,7 @@
       {
         id: 'kb-begriffe',
         title: 'Begriffe & Definitionen',
-        learn: `
+        learn: () => `
           <ul>
             <li><b>Tsuki vs. Uchi</b>: Bei Tsuki wirkt die Kraft in Richtung des <i>gestreckten</i> Unterarms, bei Uchi im <i>rechten Winkel</i> dazu.</li>
             <li><b>Enpi</b> bezeichnet jede Ellbogentechnik. Zu Tsuki gehören Yoko-, Ushiro- und Otoshi-enpi; zu Uchi gehören Tate-, Mae-, Mawashi- und Furi-enpi.</li>
@@ -65,7 +65,7 @@
       {
         id: 'kb-ziele',
         title: 'Trefferzonen (Anhang)',
-        learn: `
+        learn: () => `
           <div class="gfx-grid">${SK.gfx.figure(SK.gfx.targets(), 'Trefferzonen', 'Auswahl nach dem Anhang des Buchs', 'fig:targets')}</div>
           <ul>
             <li><b>Kasumi / Komekami</b> – Schläfe</li>
@@ -126,4 +126,5 @@
     L.mc('Welcher Begriff bezeichnet den Bereich zwischen Oberlippe und Nasenansatz?', ['Jinchu (Bika)', 'Kasumi', 'Myojo', 'Inazuma'], '', P(174));
     L.mc('Was bezeichnet INAZUMA?', ['Den Bereich unter den schwebenden Rippen', 'Die Schläfe', 'Den Oberarm', 'Die Kniekehle'], '', P(174));
   };
+  SK.lazyLearn(SK.kataIntroUnit);
 })();

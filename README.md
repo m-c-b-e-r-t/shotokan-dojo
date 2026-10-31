@@ -30,6 +30,12 @@ Statische Lern- und Quiz-App (Deutsch) zu Shotokan-Karate nach JKA/DJKB: Etikett
 
 `node tools/version.js patch` (bzw. `minor`, `major` oder z. B. `1.12.0`) setzt Versionsnummer, Datum und Uhrzeit in `js/core.js` und hängt `?v=<Version>` an alle Dateien in `index.html`, damit Browser nach dem Update keine alten Dateien verwenden. Ohne Argument prüft das Skript, ob `index.html` zur Version passt.
 
+## Ladezeit und Offline-Betrieb
+
+- Die Startseite (Leitspruch und Karten) steht fest in `index.html` und erscheint, bevor die Skripte geladen sind. Wird `viewStart()` in `js/app.js` geändert, `index.html` mitziehen – `tools/test/smoke.html` meldet Abweichungen.
+- Grafiken, Lektionstexte und Quizbilder entstehen erst beim Öffnen (`learn: () => …` und `SK.util.lazy`), nicht beim Start.
+- `sw.js` (Service Worker) legt die App auf dem Gerät ab: ab dem zweiten Besuch fast sofort da, auch offline. Er liest die Dateiliste aus `index.html` und muss bei neuen Versionen nicht angepasst werden. Er läuft nur über https (GitHub Pages); lokal mit `?sw` zum Testen.
+
 ## Fragen-IDs
 
 Fragen-IDs ergeben sich aus Lektion, Fragetext und richtiger Antwort (`SK.qb` in `js/core.js`). Fragen dürfen daher eingefügt, gelöscht und umsortiert werden, ohne dass der gespeicherte Fortschritt bei anderen Fragen landet. Wird Fragetext oder Lösung geändert, gilt die Frage als neu. `data/legacy-ids.js` ist eingefroren und überträgt nur alte Speicherstände (bis v1.10.1, laufende Nummern) einmalig auf die neuen IDs.
