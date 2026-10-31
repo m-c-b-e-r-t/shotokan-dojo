@@ -109,9 +109,11 @@
     const { pel, chest, up, lc, lp, fp } = J;
     [1, -1].forEach((s) => {
       cone(add(add(pel, mul(lp, 0.062 * s)), mul(up, 0.03)), add(add(chest, mul(lc, 0.078 * s)), mul(up, -0.06)), 0.112, 0.12, 5);
-      cone(add(add(pel, mul(lp, 0.06 * s)), mul(up, 0.13)), add(add(pel, mul(lp, 0.064 * s)), mul(up, -0.07)), 0.11, 0.114, 5);
     });
-    cone(J.hipL, J.hipR, 0.086, 0.086, 0);
+    // Jackensaum als eine glatte Form, darunter ein durchgehendes Gesäß (keine zwei Rundungen)
+    cone(add(pel, mul(up, 0.13)), add(add(pel, mul(up, -0.035)), mul(fp, -0.005)), 0.13, 0.134, 5);
+    const seat = mul(fp, -0.012);
+    cone(add(add(J.hipL, seat), mul(up, -0.01)), add(add(J.hipR, seat), mul(up, -0.01)), 0.092, 0.092, 0);
     cone(J.shL, J.shR, 0.066, 0.066, 0);
     cone(add(chest, mul(up, 0.02)), add(add(chest, mul(up, 0.16)), mul(J.hf, -0.02)), 0.05, 0.046, 1);
     cone(add(J.head, mul(J.hf, -0.012)), add(J.head, mul(J.hf, 0.008)), 0.1, 0.1, 4);
@@ -160,6 +162,7 @@ uniform vec4 uBound;
 uniform vec2 uBase;
 uniform vec4 uDec[6], uDecP[6];
 const vec3 LIG = normalize(vec3(-0.55, 0.95, 0.45));
+const vec3 FIL = normalize(vec3(0.7, 0.45, -0.6));
 
 float smin(float a, float b, float k){ float h = max(k - abs(a - b), 0.0) / k; return min(a, b) - h * h * k * 0.25; }
 vec2 map(vec3 p){
@@ -226,11 +229,14 @@ vec3 baseCol(float m, vec3 p, out float kind){
   if (m > 1.5 && m < 2.5) { kind = 2.0; return ink; }
   if (m > 4.5) {
     vec3 q = p - uPel; float hh = dot(q, uUp), uu = dot(q, uLeft), ff = dot(q, uFwd);
-    if (hh > 0.062 && hh < 0.118) { kind = 2.0; return ink; }
+    float bt = smoothstep(0.06, 0.064, hh) * (1.0 - smoothstep(0.116, 0.12, hh));
+    if (bt > 0.5) kind = 2.0;
+    if (bt > 0.0) return mix(gi, ink, bt);
     if (ff > 0.0 && hh > 0.37 && abs(uu) < (hh - 0.37) * 0.85) { kind = 1.0; return skin; }
     float lu = mix(0.115, -0.03, clamp((hh - 0.12) / 0.27, 0.0, 1.0));
     if (ff > 0.0 && hh > 0.118 && hh < 0.43) {
-      if (abs(uu - lu) < 0.0045) { kind = 4.0; return gi * 0.62; }
+      float ln = 1.0 - smoothstep(0.003, 0.0055, abs(uu - lu));
+      if (ln > 0.0) { if (ln > 0.5) kind = 4.0; return mix(gi, gi * 0.62, ln); }
       if (uu - lu > 0.0 && uu - lu < 0.03) { return gi * 0.965; }
     }
   }
@@ -256,6 +262,7 @@ vec3 shadeFig(vec3 p, vec3 rd, float m){
   vec3 lin = dif * sh * vec3(1.25, 1.18, 1.05);
   lin += (0.55 + 0.45 * n.y) * sky * 0.42 * ao;
   lin += (0.5 - 0.5 * n.y) * bounce * 0.22 * ao;
+  lin += clamp(dot(n, FIL), 0.0, 1.0) * vec3(0.32, 0.34, 0.4) * ao;
   if (kind == 1.0) lin += vec3(0.25, 0.08, 0.04) * clamp(dot(n, LIG) + 0.4, 0.0, 1.0) * ao; // Haut: warme Streuung
   vec3 col = c * lin;
   if (uStyle == 2) {

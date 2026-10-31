@@ -452,7 +452,8 @@
       }
 
       function render(v) {
-        const dpr = Math.min(window.devicePixelRatio || 1, v.playing || v.dragging ? 1.25 : 2);
+        // Stillstand in voller Bildschirmschärfe (bis 3×), beim Abspielen und Drehen bis 2×
+        const dpr = Math.min(window.devicePixelRatio || 1, v.playing || v.dragging ? 2 : 3);
         const w = Math.round(v.cv.clientWidth * dpr);
         const h = Math.round(w * 0.8);
         if (v.cv.width !== w || v.cv.height !== h) { v.cv.width = w; v.cv.height = h; }
